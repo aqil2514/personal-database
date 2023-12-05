@@ -2,9 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const BASIC_STYLES = "font-playfair text-white px-1 font-bold rounded hover:bg-white hover:text-cyan-900";
+const BASIC_STYLES = "font-playfair text-white text-xl px-1 font-bold rounded hover:bg-white hover:text-cyan-900";
 const ACTIVE_ROUTE = "bg-white !text-cyan-900";
-const LI_STYLES = "py-2";
+const LI_STYLES = "py-2 text-right";
 
 export default function NavMenu() {
   return (

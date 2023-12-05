@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 
 export default async function AdminPage() {
   const session = await getServerSession();
+  console.log(session);
 
   if (!session) {
     redirect("/");
