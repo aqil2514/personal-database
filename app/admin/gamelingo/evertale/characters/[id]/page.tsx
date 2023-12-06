@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, createContext, useContext, useCallback } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -36,11 +36,15 @@ export default function Detail() {
     }
   }
 
+  const getDataCallback = useCallback(() => {
+    getData();
+  }, [getData]);
+
   useEffect(() => {
     if (!character) {
-      getData();
+      getDataCallback();
     }
-  }, [getData, character]);
+  }, [getDataCallback, character]);
 
   return loading ? (
     <p className={P_STYLE1}>Memuat Data...</p>
@@ -190,11 +194,16 @@ function CharStatus() {
       setLoading(false);
     }
   }
+
+  const getDataCallback = useCallback(() => {
+    getData();
+  }, [getData]);
+
   useEffect(() => {
     if (!leaderSkill) {
-      getData();
+      getDataCallback();
     }
-  }, [getData, leaderSkill]);
+  }, [getDataCallback, leaderSkill]);
 
   return (
     <div>
