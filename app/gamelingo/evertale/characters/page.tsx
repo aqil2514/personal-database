@@ -13,7 +13,7 @@ export default function Characters() {
   async function getData() {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/gamelingo/evertale", { cache: "no-store" });
+      const res = await fetch("/api/gamelingo/evertale", { cache: "no-store" });
 
       if (!res.ok) {
         throw new Error("Failed to fetch data");
