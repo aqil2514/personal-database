@@ -4,7 +4,8 @@ import { useParams } from "next/navigation";
 import React, { useState, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import * as prettier from "prettier/standalone";
+import prettierPluginHtml from "prettier/plugins/html";
 
 const CharacterContext = createContext(null);
 const FIGURE_STYLE = "my-4 text-center";
@@ -16,6 +17,7 @@ export default function Detail() {
   const { id } = useParams();
   const [character, setCharacter] = useState<React.ComponentState>();
   const [loading, setLoading] = useState<false | true>(false);
+  const [htmlSrc, setHtmlSrc] = useState<React.ComponentState>("");
   const router = useRouter();
   const html = useRef<HTMLDivElement>(null);
 
@@ -43,7 +45,36 @@ export default function Detail() {
   }, [getDataCallback, character]);
 
   async function clickHandler() {
-    let code = html.current?.innerHTML ?? "";
+    let src = html.current?.innerHTML ?? "";
+    const tailwind = `  <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          width: {
+            nav: "11rem",
+          },
+          padding: {
+            nav: "0.5rem 1rem",
+          },
+          fontFamily: {
+            playfair: ["var(--font-playfair-display)"],
+            roboto: ["var(--font-roboto)"],
+            merriweather: ["var(--font-merriweather)"],
+            poppins: ["var(--font-poppins)"],
+          },
+          backgroundImage: {
+            "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+            "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+          },
+        },
+      }
+    }
+  </script>
+    `;
+
+    const code = await prettier.format(`${tailwind} ${src}`, { semi: false, parser: "html", plugins: [prettierPluginHtml] });
+    setHtmlSrc(code);
 
     await navigator.clipboard.writeText(code);
 
@@ -60,18 +91,18 @@ export default function Detail() {
         </span>
         <h1 className="text-center font-merriweather font-bold">{character?.charStatus?.charName}</h1>
         <figure className={FIGURE_STYLE}>
-          <Image className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f1Img} alt={character?.charStatus?.charName} />
+          <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f1Img} alt={character?.charStatus?.charName} />
           <figcaption>{character?.charStatus?.charName + " Form 1"}</figcaption>
         </figure>
         {character?.charImage?.f2Img && (
           <figure className={FIGURE_STYLE}>
-            <Image className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f2Img} alt={character?.charStatus?.charName} />
+            <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f2Img} alt={character?.charStatus?.charName} />
             <figcaption>{character?.charStatus?.charName + " Form 2"}</figcaption>
           </figure>
         )}
         {character?.charImage?.f3Img && (
           <figure className={FIGURE_STYLE}>
-            <Image className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f3Img} alt={character?.charStatus?.charName} />
+            <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f3Img} alt={character?.charStatus?.charName} />
             <figcaption>{character?.charStatus?.charName + " Form 3"}</figcaption>
           </figure>
         )}
@@ -80,9 +111,13 @@ export default function Detail() {
         <CharProfile />
         <CharActiveSkill />
         <CharPassiveSkill />
-        <button onClick={clickHandler} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
-          Copy HTML
-        </button>
+        <div>
+          <h2 className={SECTION_TITLE_STYLE}>HTML Source Code:</h2>
+          <textarea className="block my-2 w-full h-40" name="html" id="html" value={htmlSrc} disabled></textarea>
+          <button onClick={clickHandler} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
+            Rapihkan HTML
+          </button>
+        </div>
       </div>
     </CharacterContext.Provider>
   );
