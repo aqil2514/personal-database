@@ -111,6 +111,8 @@ export default function Detail() {
         <CharProfile />
         <CharActiveSkill />
         <CharPassiveSkill />
+      </div>
+      
         <div>
           <h2 className={SECTION_TITLE_STYLE}>HTML Source Code:</h2>
           <textarea className="block my-2 w-full h-40" name="html" id="html" value={htmlSrc} disabled></textarea>
@@ -118,7 +120,6 @@ export default function Detail() {
             Rapihkan HTML
           </button>
         </div>
-      </div>
     </CharacterContext.Provider>
   );
 }
