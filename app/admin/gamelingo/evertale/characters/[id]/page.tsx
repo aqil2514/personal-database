@@ -40,7 +40,7 @@ export default function Detail() {
     if (!character) {
       getData();
     }
-  }, []);
+  }, [getData, character]);
 
   return loading ? (
     <p className={P_STYLE1}>Memuat Data...</p>
@@ -194,7 +194,7 @@ function CharStatus() {
     if (!leaderSkill) {
       getData();
     }
-  }, []);
+  }, [getData, leaderSkill]);
 
   return (
     <div>
