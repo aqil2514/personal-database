@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useState, useEffect, createContext, useContext, useCallback } from "react";
+import React, { useState, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -17,6 +17,7 @@ export default function Detail() {
   const [character, setCharacter] = useState<React.ComponentState>();
   const [loading, setLoading] = useState<false | true>(false);
   const router = useRouter();
+  const html = useRef<HTMLDivElement>(null);
 
   const getDataCallback = useCallback(async () => {
     try {
@@ -26,7 +27,6 @@ export default function Detail() {
       const characters = data.chars;
       const selected = characters?.chars?.find((char: React.ComponentState) => char._id === id);
 
-      console.log(selected);
       setCharacter(selected);
       document.title = `Personal Database - ${selected.charStatus.charName}`;
     } catch (error) {
@@ -42,11 +42,19 @@ export default function Detail() {
     }
   }, [getDataCallback, character]);
 
+  async function clickHandler() {
+    let code = html.current?.innerHTML ?? "";
+
+    await navigator.clipboard.writeText(code);
+
+    alert("Teks HTML sudah di-copy!");
+  }
+
   return loading ? (
     <p className={P_STYLE1}>Memuat Data...</p>
   ) : (
     <CharacterContext.Provider value={character}>
-      <div className="p-10 w-full">
+      <div className="p-10 w-full" ref={html}>
         <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
           &lt;
         </span>
@@ -72,6 +80,9 @@ export default function Detail() {
         <CharProfile />
         <CharActiveSkill />
         <CharPassiveSkill />
+        <button onClick={clickHandler} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
+          Copy HTML
+        </button>
       </div>
     </CharacterContext.Provider>
   );
