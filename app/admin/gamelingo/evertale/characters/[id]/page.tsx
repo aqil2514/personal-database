@@ -85,34 +85,35 @@ export default function Detail() {
     <p className={P_STYLE1}>Memuat Data...</p>
   ) : (
     <CharacterContext.Provider value={character}>
-      <div className="p-10 w-full" ref={html}>
-        <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
-          &lt;
-        </span>
-        <h1 className="text-center font-merriweather font-bold">{character?.charStatus?.charName}</h1>
-        <figure className={FIGURE_STYLE}>
-          <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f1Img} alt={character?.charStatus?.charName} />
-          <figcaption>{character?.charStatus?.charName + " Form 1"}</figcaption>
-        </figure>
-        {character?.charImage?.f2Img && (
+      <div className="p-10 w-full">
+        <div ref={html}>
+          <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
+            &lt;
+          </span>
+          <h1 className="text-center font-merriweather font-bold">{character?.charStatus?.charName}</h1>
           <figure className={FIGURE_STYLE}>
-            <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f2Img} alt={character?.charStatus?.charName} />
-            <figcaption>{character?.charStatus?.charName + " Form 2"}</figcaption>
+            <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f1Img} alt={character?.charStatus?.charName} />
+            <figcaption>{character?.charStatus?.charName + " Form 1"}</figcaption>
           </figure>
-        )}
-        {character?.charImage?.f3Img && (
-          <figure className={FIGURE_STYLE}>
-            <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f3Img} alt={character?.charStatus?.charName} />
-            <figcaption>{character?.charStatus?.charName + " Form 3"}</figcaption>
-          </figure>
-        )}
-        {character?.charIntro && Object.keys(character.charIntro).length > 0 && <CharIntro />}
-        <CharStatus />
-        <CharProfile />
-        <CharActiveSkill />
-        <CharPassiveSkill />
-      </div>
-      
+          {character?.charImage?.f2Img && (
+            <figure className={FIGURE_STYLE}>
+              <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f2Img} alt={character?.charStatus?.charName} />
+              <figcaption>{character?.charStatus?.charName + " Form 2"}</figcaption>
+            </figure>
+          )}
+          {character?.charImage?.f3Img && (
+            <figure className={FIGURE_STYLE}>
+              <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f3Img} alt={character?.charStatus?.charName} />
+              <figcaption>{character?.charStatus?.charName + " Form 3"}</figcaption>
+            </figure>
+          )}
+          {character?.charIntro && Object.keys(character.charIntro).length > 0 && <CharIntro />}
+          <CharStatus />
+          <CharProfile />
+          <CharActiveSkill />
+          <CharPassiveSkill />
+        </div>
+
         <div>
           <h2 className={SECTION_TITLE_STYLE}>HTML Source Code:</h2>
           <textarea className="block my-2 w-full h-40" name="html" id="html" value={htmlSrc} disabled></textarea>
@@ -120,6 +121,7 @@ export default function Detail() {
             Rapihkan HTML
           </button>
         </div>
+      </div>
     </CharacterContext.Provider>
   );
 }
