@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import React, { useState, useEffect, createContext, useContext } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const CharacterContext = createContext(null);
 const FIGURE_STYLE = "my-4 text-center";
@@ -11,7 +12,7 @@ const IMAGE_STYILE = "max-w-screen-sm rounded block mx-auto";
 const SECTION_TITLE_STYLE = "font-merriweather text-center font-bold mt-5 text-xl";
 const P_STYLE1 = "font-poppins";
 
-export default function () {
+export default function Detail() {
   const { id } = useParams();
   const [character, setCharacter] = useState<React.ComponentState>();
   const [loading, setLoading] = useState<false | true>(false);
@@ -51,18 +52,18 @@ export default function () {
         </span>
         <h1 className="text-center font-merriweather font-bold">{character?.charStatus?.charName}</h1>
         <figure className={FIGURE_STYLE}>
-          <img className={IMAGE_STYILE} src={character?.charImage?.f1Img} alt={character?.charStatus?.charName} />
+          <Image className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f1Img} alt={character?.charStatus?.charName} />
           <figcaption>{character?.charStatus?.charName + " Form 1"}</figcaption>
         </figure>
         {character?.charImage?.f2Img && (
           <figure className={FIGURE_STYLE}>
-            <img className={IMAGE_STYILE} src={character?.charImage?.f2Img} alt={character?.charStatus?.charName} />
+            <Image className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f2Img} alt={character?.charStatus?.charName} />
             <figcaption>{character?.charStatus?.charName + " Form 2"}</figcaption>
           </figure>
         )}
         {character?.charImage?.f3Img && (
           <figure className={FIGURE_STYLE}>
-            <img className={IMAGE_STYILE} src={character?.charImage?.f3Img} alt={character?.charStatus?.charName} />
+            <Image className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f3Img} alt={character?.charStatus?.charName} />
             <figcaption>{character?.charStatus?.charName + " Form 3"}</figcaption>
           </figure>
         )}
