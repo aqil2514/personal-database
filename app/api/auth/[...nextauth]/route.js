@@ -16,11 +16,11 @@ const authOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ account, profile }: { account: any; profile: any }) {
+    async signIn({ account, profile }) {
       if (account.provider === "google") {
         return profile.email_verified && profile.email.startsWith("muhamadaqil383@gmail.com");
       }
-      return true; // Do different verification for other providers that don't have `email_verified`
+      return true;
     },
   },
 };
