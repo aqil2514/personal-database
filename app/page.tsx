@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import Data from "./components/Data";
 
 export const metadata: Metadata = {
-  title: "Personal Database - Admin",
+  title: "Personal Database - Home",
 };
 
 export default async function AdminPage() {
