@@ -18,7 +18,7 @@ export default function Detail() {
   const [loading, setLoading] = useState<false | true>(false);
   const router = useRouter();
 
-  async function getData() {
+  const getDataCallback = useCallback(async () => {
     try {
       setLoading(true);
       const { data } = await axios.get("/api/gamelingo/evertale");
@@ -34,11 +34,7 @@ export default function Detail() {
     } finally {
       setLoading(false);
     }
-  }
-
-  const getDataCallback = useCallback(() => {
-    getData();
-  }, [getData]);
+  }, [id]);
 
   useEffect(() => {
     if (!character) {
