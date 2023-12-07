@@ -51,7 +51,7 @@ export default function Form() {
       setDataLeaderSkill(data.leaderskills.leaderskills);
       setDataUnitConjure(data.conjures.conjures);
 
-      document.title = `Personal Database - ${selected.charStatus.charName}`;
+      document.title = `Edit ${selected.charStatus.charName} - Personal Database `;
     } catch (error) {
       console.error(error);
     } finally {
@@ -176,7 +176,7 @@ function CharIntro() {
               Gacha Text ID:
               <textarea
                 className={TEXTAREA_STYLE}
-                value={character?.charIntro?.gachaTextEn}
+                value={character?.charIntro?.gachaTextId}
                 onChange={(e) => setCharacter({ ...character, charIntro: { ...character, gachaTextId: e.target.value } })}
                 placeholder="Gacha Text ID..."
                 defaultValue=""
