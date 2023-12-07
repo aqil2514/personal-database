@@ -10,12 +10,20 @@ export default function CharStatus() {
       <label htmlFor="unit-name">
         {" "}
         Unit Name :{" "}
-        <input className={INPUT_STYLE} value={character?.charStatus?.charName} onChange={(e) => setCharacter({ ...character, charStatus: { ...character, charName: e.target.value } })} type="text" name="charName" id="unit-name" />
+        <input className={INPUT_STYLE} value={character?.charStatus?.charName} onChange={(e) => setCharacter({ ...character, charStatus: { ...character.charStatus, charName: e.target.value } })} type="text" name="charName" id="unit-name" />
       </label>
       <label htmlFor="unit-link">
         {" "}
         Link Character Post :{" "}
-        <input className={INPUT_STYLE} value={character?.charStatus?.charLink} onChange={(e) => setCharacter({ ...character, charStatus: { ...character, charLink: e.target.value } })} type="text" name="charLink" id="unit-link" required />
+        <input
+          className={INPUT_STYLE}
+          value={character?.charStatus?.charLink}
+          onChange={(e) => setCharacter({ ...character, charStatus: { ...character.charStatus, charLink: e.target.value } })}
+          type="text"
+          name="charLink"
+          id="unit-link"
+          required
+        />
       </label>
       <label htmlFor="select-status-element">
         {" "}
@@ -23,7 +31,7 @@ export default function CharStatus() {
         <select
           className={SELECT_STYLE}
           value={character?.charStatus?.statusElement}
-          onChange={(e) => setCharacter({ ...character, charStatus: { ...character, statusElement: e.target.value } })}
+          onChange={(e) => setCharacter({ ...character, charStatus: { ...character.charStatus, statusElement: e.target.value } })}
           name="statusElement"
           id="select-element"
           required
@@ -59,7 +67,7 @@ function Weapon() {
           className={SELECT_STYLE}
           name="firstWeapon"
           value={character?.charStatus?.firstWeapon}
-          onChange={(e) => setCharacter({ ...character, charStatus: { ...character, firstWeapon: e.target.value } })}
+          onChange={(e) => setCharacter({ ...character, charStatus: { ...character.charStatus, firstWeapon: e.target.value } })}
           id="select-weapon-1"
           required
         >
@@ -75,7 +83,13 @@ function Weapon() {
       <label htmlFor="select-weapon-2">
         {" "}
         Select Second Weapon :{" "}
-        <select className={SELECT_STYLE} name="secondWeapon" value={character?.charStatus?.secondWeapon} onChange={(e) => setCharacter({ ...character, charStatus: { ...character, secondWeapon: e.target.value } })} id="select-second-weapon">
+        <select
+          className={SELECT_STYLE}
+          name="secondWeapon"
+          value={character?.charStatus?.secondWeapon}
+          onChange={(e) => setCharacter({ ...character, charStatus: { ...character.charStatus, secondWeapon: e.target.value } })}
+          id="select-second-weapon"
+        >
           <option>Select Second Weapon</option>
           {dataWeapon?.map((dw: React.ComponentState) => (
             <option value={dw.name} key={dw.id} id={dw.id}>
@@ -126,7 +140,13 @@ function LeaderSkill() {
         <label htmlFor="leader-skill">
           {" "}
           Leader Skill : {""}
-          <select className={SELECT_STYLE} value={character?.charStatus?.leaderSkill} onChange={(e) => setCharacter({ ...character, charStatus: { ...character, leaderSkill: e.target.value } })} name="leaderSkill" id="leader-skill">
+          <select
+            className={SELECT_STYLE}
+            value={character?.charStatus?.leaderSkill}
+            onChange={(e) => setCharacter({ ...character, charStatus: { ...character.charStatus, leaderSkill: e.target.value } })}
+            name="leaderSkill"
+            id="leader-skill"
+          >
             <option value="null">Select Leader Skill</option>
             {dataLeaderSkill &&
               dataLeaderSkill?.map((dls: React.ComponentState) => (
@@ -223,7 +243,7 @@ function Conjures() {
         <label htmlFor="conjures">
           {" "}
           Conjures : {""}
-          <select className={SELECT_STYLE} value={character?.charStatus?.conjures} onChange={(e) => setCharacter({ ...character, charStatus: { ...character, conjures: e.target.value } })} name="conjures" id="conjures">
+          <select className={SELECT_STYLE} value={character?.charStatus?.conjures} onChange={(e) => setCharacter({ ...character, charStatus: { ...character.charStatus, conjures: e.target.value } })} name="conjures" id="conjures">
             <option value={"null"}>Select Conjures</option>
             {dataUnitConjure &&
               dataUnitConjure?.map((du: React.ComponentState) => (

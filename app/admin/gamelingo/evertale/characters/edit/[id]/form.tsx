@@ -30,13 +30,14 @@ const FormContext = createContext<any>(null);
 
 export default function Form() {
   const [loading, setLoading] = useState<false | true>(false);
+  const [oldCharacter, setOldCharacter] = useState<React.ComponentState>();
   const [character, setCharacter] = useState<React.ComponentState>();
   const [dataLeaderSkill, setDataLeaderSkill] = useState<DataLeader[]>();
   const [dataUnitConjure, setDataUnitConjure] = useState<DataUnitConjure[]>();
   const [dataWeapon, setDataWeapon] = useState<React.ComponentState>();
-  const [skills, setSkills] = useState<React.ComponentState>([]);
   const { id } = useParams();
   const router = useRouter();
+
   const getDataCallback = useCallback(async () => {
     try {
       setLoading(true);
@@ -46,6 +47,7 @@ export default function Form() {
       const selected = characters?.chars?.find((char: React.ComponentState) => char._id === id);
 
       setCharacter(selected);
+      setOldCharacter(selected);
       console.log(selected);
       setDataWeapon(data.weapons.weapons);
       setDataLeaderSkill(data.leaderskills.leaderskills);
@@ -65,6 +67,46 @@ export default function Form() {
     }
   }, [getDataCallback, character]);
 
+  type AnyObject = Record<string, any>;
+
+  function detectChanges(initialObject: AnyObject, modifiedObject: AnyObject): AnyObject {
+    const changes: AnyObject = {};
+
+    // Iterate through initialObject's keys
+    Object.keys(initialObject).forEach((key) => {
+      // Compare values of the same key in both objects
+      if (initialObject[key] !== modifiedObject[key]) {
+        changes[key] = modifiedObject[key];
+      }
+    });
+
+    return changes;
+  }
+
+  async function submitHandler(e: any) {
+    try {
+      e.preventDefault();
+      const sure = confirm("Yakin dengan perubahannya?");
+      if (!sure) {
+        return;
+      }
+
+      const { data } = await axios.put("/api/gamelingo/evertale", {
+        submitData: character,
+        typeData: "character",
+      });
+
+      alert(data.msg);
+      router.replace(`/admin/gamelingo/evertale/characters/${character?._id}`);
+    } catch (error) {
+      console.error;
+    }
+
+    // const result = detectChanges(oldCharacter, character);
+
+    // console.log(result);
+  }
+
   return loading ? (
     <p>Loading...</p>
   ) : (
@@ -72,21 +114,24 @@ export default function Form() {
       <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 mx-2 rounded font-bold text-white">
         &lt;
       </span>
-      <form>
+      <form onSubmit={(e) => submitHandler(e)}>
         <CharImages />
 
         <CharIntro />
 
-        <StatusContext.Provider value={{ dataLeaderSkill, dataUnitConjure, skills, dataWeapon }}>
+        <StatusContext.Provider value={{ dataLeaderSkill, dataUnitConjure, dataWeapon }}>
           <CharStatus />
         </StatusContext.Provider>
 
-        {/* <CharProfile /> */}
+        <CharProfile />
 
         <ActiveSkill />
 
         <PassiveSkill />
-        {/* <Button /> */}
+        <button className={ADD_BUTTON_STYLE + " m-4"}>Ubah Data</button>
+        <button onClick={() => setCharacter(oldCharacter)} type="button" className={ADD_BUTTON_STYLE + " m-4"}>
+          Reset Pembaruan
+        </button>
       </form>
     </FormContext.Provider>
   );
@@ -102,13 +147,104 @@ function CharImages() {
         Char Name : <input className={INPUT_STYLE} value={character?.charStatus?.charName} disabled type="text" name="charName" id="char" required />
       </label>
       <label htmlFor="f1Img">
-        Form 1 Image : <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character, f1Img: e.target.value } })} value={character?.charImage?.f1Img} type="text" name="f1Img" id="f1Img" required />
+        Form 1 Image :{" "}
+        <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character.charImage, f1Img: e.target.value } })} value={character?.charImage?.f1Img} type="text" name="f1Img" id="f1Img" required />
       </label>
       <label htmlFor="f2Img">
-        Form 2 Image : <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character, f2Img: e.target.value } })} value={character?.charImage?.f2Img} type="text" name="f2Img" id="f2Img" />
+        Form 2 Image : <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character.charImage, f2Img: e.target.value } })} value={character?.charImage?.f2Img} type="text" name="f2Img" id="f2Img" />
       </label>
       <label htmlFor="f3Img">
-        Form 3 Image : <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character, f3Img: e.target.value } })} value={character?.charImage?.f3Img} type="text" name="f3Img" id="f3Img" />
+        Form 3 Image : <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character.charImage, f3Img: e.target.value } })} value={character?.charImage?.f3Img} type="text" name="f3Img" id="f3Img" />
+      </label>
+    </div>
+  );
+}
+
+function CharProfile() {
+  const { character, setCharacter } = useContext(FormContext);
+
+  return (
+    <div id="character-profil" className={SECTION_STYLE}>
+      <h3 className={SECTION_TITLE_STYLE}>Character Profile</h3>
+      <label htmlFor="part-1-en">
+        {" "}
+        English part 1 :{" "}
+        <textarea
+          className={TEXTAREA_STYLE}
+          value={character?.charProfile?.part1En}
+          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part1En: e.target.value } })}
+          placeholder="English Part 1..."
+          defaultValue=""
+          name="part-1-en"
+          required
+          id="part-1-en"
+        />
+      </label>
+      <label htmlFor="part-1-id">
+        {" "}
+        Indonesia part 1 :{" "}
+        <textarea
+          className={TEXTAREA_STYLE}
+          value={character?.charProfile?.part1Id}
+          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part1Id: e.target.value } })}
+          placeholder="Indonesia Part 1..."
+          defaultValue=""
+          name="part-1-id"
+          required
+          id="part-1-id"
+        />
+      </label>
+      <label htmlFor="part-2-en">
+        {" "}
+        English part 2 :{" "}
+        <textarea
+          className={TEXTAREA_STYLE}
+          value={character?.charProfile?.part2En}
+          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part2En: e.target.value } })}
+          placeholder="English Part 2..."
+          defaultValue=""
+          name="part-2-en"
+          id="part-2-en"
+        />
+      </label>
+      <label htmlFor="part-2-id">
+        {" "}
+        Indonesia part 2 :{" "}
+        <textarea
+          className={TEXTAREA_STYLE}
+          value={character?.charProfile?.part2Id}
+          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part2Id: e.target.value } })}
+          placeholder="Indonesia Part 2..."
+          defaultValue=""
+          name="part-2-id"
+          id="part-2-id"
+        />
+      </label>
+      <label htmlFor="part-3-en">
+        {" "}
+        English part 3 :{" "}
+        <textarea
+          className={TEXTAREA_STYLE}
+          value={character?.charProfile?.part3En}
+          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part3En: e.target.value } })}
+          placeholder="English Part 3..."
+          defaultValue=""
+          name="part-3-en"
+          id="part-3-en"
+        />
+      </label>
+      <label htmlFor="part-3-id">
+        {" "}
+        Indonesia part 3 :{" "}
+        <textarea
+          className={TEXTAREA_STYLE}
+          value={character?.charProfile?.part3Id}
+          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part3Id: e.target.value } })}
+          placeholder="Indonesia Part 3..."
+          defaultValue=""
+          name="part-3-id"
+          id="part-3-id"
+        />
       </label>
     </div>
   );
@@ -137,7 +273,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.gachaIntroEn}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, gachaIntroEn: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaIntroEn: e.target.value } })}
                 placeholder="Gacha Intro EN..."
                 defaultValue=""
                 name="gachaIntroEn"
@@ -150,7 +286,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.gachaIntroId}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, gachaIntroId: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaIntroId: e.target.value } })}
                 placeholder="Gacha Intro ID..."
                 defaultValue=""
                 name="gachaIntroId"
@@ -163,7 +299,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.gachaTextEn}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, gachaTextEn: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaTextEn: e.target.value } })}
                 placeholder="Gacha Text EN..."
                 defaultValue=""
                 name="gachaTextEn"
@@ -177,7 +313,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.gachaTextId}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, gachaTextId: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaTextId: e.target.value } })}
                 placeholder="Gacha Text ID..."
                 defaultValue=""
                 name="gachaTextId"
@@ -191,7 +327,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.loginTextEn}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, loginTextEn: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, loginTextEn: e.target.value } })}
                 placeholder="Login Text EN..."
                 defaultValue=""
                 name="loginTextEn"
@@ -205,7 +341,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.loginTextId}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, loginTextId: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, loginTextId: e.target.value } })}
                 placeholder="Login Text ID..."
                 defaultValue=""
                 name="loginTextId"
@@ -219,7 +355,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text1En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text1En: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text1En: e.target.value } })}
                 placeholder="Text 1 EN..."
                 defaultValue=""
                 name="text1En"
@@ -233,7 +369,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text1Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text1Id: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text1Id: e.target.value } })}
                 placeholder="Text 1 ID..."
                 defaultValue=""
                 name="text1Id"
@@ -247,7 +383,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text2En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text2En: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text2En: e.target.value } })}
                 placeholder="Text 2 EN..."
                 defaultValue=""
                 name="text2En"
@@ -261,7 +397,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text2Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text2Id: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text2Id: e.target.value } })}
                 placeholder="Text 2 ID..."
                 defaultValue=""
                 name="text2Id"
@@ -274,7 +410,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text3En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text3En: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text3En: e.target.value } })}
                 placeholder="Text 3 EN..."
                 defaultValue=""
                 name="text3En"
@@ -288,7 +424,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text3Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text3Id: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text3Id: e.target.value } })}
                 placeholder="Text 3 ID..."
                 defaultValue=""
                 name="text3Id"
@@ -301,7 +437,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text4En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text4En: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text4En: e.target.value } })}
                 placeholder="Text 4 EN..."
                 defaultValue=""
                 name="text4En"
@@ -315,7 +451,7 @@ function CharIntro() {
               <textarea
                 className={TEXTAREA_STYLE}
                 value={character?.charIntro?.text4Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character, text4Id: e.target.value } })}
+                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text4Id: e.target.value } })}
                 placeholder="Text 4 ID..."
                 defaultValue=""
                 name="text4Id"

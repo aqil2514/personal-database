@@ -81,15 +81,11 @@ export async function DELETE(req: Request) {
 }
 
 export async function PUT(req: any) {
-  const { oldName, newName, newLink, updatedData, selectedData } = await req.json();
+  const { submitData, typeData } = await req.json();
 
-  if (selectedData === "characters") {
-    await updateCharacters(updatedData);
+  if (typeData === "character") {
+    const result = await updateCharacters(submitData);
 
-    return Response.json({ msg: "Data berhasil diubah", updatedData });
-  } else if (selectedData === "conjures") {
-    await updateConjures(oldName, newName, newLink);
-
-    return Response.json({ msg: "data berhasil diubah" });
+    return Response.json({ msg: "Data berhasil diubah", result });
   }
 }
