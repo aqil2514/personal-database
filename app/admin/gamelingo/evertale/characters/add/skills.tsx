@@ -15,7 +15,7 @@ export default function Skills() {
 
 function ActiveSkill({ skills, setSkills }: { skills: React.ComponentState; setSkills: React.ComponentState }) {
   const [deleteMode, setDeleteMode] = useState<true | false>(false);
-  const [inputSkill, setInputSkill] = useState<React.ComponentState>({ skillName: "", skillTU: "", skillSpirit: "", skillTarget: "", descEn: "", descId: "" });
+  const [inputSkill, setInputSkill] = useState<React.ComponentState>({ skillName: "", TU: "", spirit: "", target: "", descEn: "", descId: "" });
 
   function addHandler() {
     const compare = skills?.find((s: React.ComponentState) => s?.activeSkills?.skillName === inputSkill?.skillName);
@@ -28,7 +28,7 @@ function ActiveSkill({ skills, setSkills }: { skills: React.ComponentState; setS
     setDeleteMode(false);
 
     setSkills([...skills, { activeSkills: inputSkill }]);
-    setInputSkill({ skillName: "", skillTU: "", skillSpirit: "", skillTarget: "", descEn: "", descId: "" });
+    setInputSkill({ skillName: "", TU: "", spirit: "", target: "", descEn: "", descId: "" });
   }
 
   function deleteHandler() {
@@ -44,15 +44,15 @@ function ActiveSkill({ skills, setSkills }: { skills: React.ComponentState; setS
       </label>
       <label htmlFor="skill-spirit">
         Spirit :
-        <input className={INPUT_STYLE} value={inputSkill.skillSpirit} onChange={(e) => setInputSkill({ ...inputSkill, skillSpirit: e.target.value })} type="number" name="skillSpirit" id="skill-spirit" />
+        <input className={INPUT_STYLE} value={inputSkill.spirit} onChange={(e) => setInputSkill({ ...inputSkill, spirit: e.target.value })} type="number" name="spirit" id="skill-spirit" />
       </label>
       <label htmlFor="skill-target">
         Target :
-        <input className={INPUT_STYLE} value={inputSkill.skillTarget} onChange={(e) => setInputSkill({ ...inputSkill, skillTarget: e.target.value })} type="text" name="skillTarget" id="skill-target" />
+        <input className={INPUT_STYLE} value={inputSkill.target} onChange={(e) => setInputSkill({ ...inputSkill, target: e.target.value })} type="text" name="target" id="skill-target" />
       </label>
       <label htmlFor="skill-tu">
         TU :
-        <input className={INPUT_STYLE} value={inputSkill.skillTU} onChange={(e) => setInputSkill({ ...inputSkill, skillTU: e.target.value })} type="number" name="skillTU" id="skill-tu" />
+        <input className={INPUT_STYLE} value={inputSkill.TU} onChange={(e) => setInputSkill({ ...inputSkill, TU: e.target.value })} type="number" name="TU" id="skill-tu" />
       </label>
       <label htmlFor="desc-en">
         Description :
@@ -107,15 +107,15 @@ function ActiveSkill({ skills, setSkills }: { skills: React.ComponentState; setS
                   </li>
                   <li>
                     <strong>Skill Spirit : </strong>
-                    {as?.activeSkills?.skillSpirit}
+                    {as?.activeSkills?.spirit}
                   </li>
                   <li>
                     <strong>Skill TU : </strong>
-                    {as?.activeSkills?.skillTU}
+                    {as?.activeSkills?.TU}
                   </li>
                   <li>
                     <strong>Skill Target: </strong>
-                    {as?.activeSkills?.skillTarget}
+                    {as?.activeSkills?.target}
                   </li>
                   <li>
                     <strong>Skill Description : </strong>

@@ -4,8 +4,10 @@ import { useParams } from "next/navigation";
 import React, { useState, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import * as prettier from "prettier/standalone";
 import prettierPluginHtml from "prettier/plugins/html";
+import { PenFill } from "react-bootstrap-icons";
 
 const CharacterContext = createContext(null);
 const FIGURE_STYLE = "my-4 text-center";
@@ -30,6 +32,7 @@ export default function Detail() {
       const selected = characters?.chars?.find((char: React.ComponentState) => char._id === id);
 
       setCharacter(selected);
+      console.log(selected);
       document.title = `Personal Database - ${selected.charStatus.charName}`;
     } catch (error) {
       console.error(error);
@@ -86,10 +89,16 @@ export default function Detail() {
   ) : (
     <CharacterContext.Provider value={character}>
       <div className="p-10 w-full">
-        <div ref={html}>
-          <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
+        <div className="flex flex-row ">
+          <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 mx-2 rounded font-bold text-white">
             &lt;
           </span>
+          <Link className="bg-amber-600 cursor-pointer px-4 py-2 mx-2 rounded font-bold text-white" title="Edit Character" href={`/admin/gamelingo/evertale/characters/edit/${character?._id}`}>
+            <PenFill />
+          </Link>
+        </div>
+
+        <div ref={html}>
           <h1 className="text-center font-merriweather font-bold">{character?.charStatus?.charName}</h1>
           <figure className={FIGURE_STYLE}>
             <img className={IMAGE_STYILE} width={720} height={720} src={character?.charImage?.f1Img} alt={character?.charStatus?.charName} />
@@ -120,6 +129,9 @@ export default function Detail() {
           <button onClick={clickHandler} className="bg-emerald-600 cursor-pointer px-4 py-2 rounded font-bold text-white">
             Rapihkan HTML
           </button>
+          <a href={character?.charStatus?.charLink} target="_blank" className="mx-4">
+            <button className="bg-amber-600 cursor-pointer px-4 py-2 rounded font-bold text-white">Kunjungi Halaman</button>
+          </a>
         </div>
       </div>
     </CharacterContext.Provider>
@@ -258,10 +270,6 @@ function CharStatus() {
         {character?.charStatus?.charName}
       </p>
       <p className={P_STYLE1}>
-        <strong>Unit Link : </strong>
-        {character?.charStatus?.charLink}
-      </p>
-      <p className={P_STYLE1}>
         <strong>Unit Element : </strong>
         {character?.charStatus?.statusElement}
       </p>
@@ -288,7 +296,7 @@ function CharStatus() {
         {character?.charStatus?.firstWeapon}
         {character?.charStatus?.secondWeapon !== "Select Second Weapon" && " & " + character?.charStatus?.secondWeapon}
       </p>
-      {character?.charStatus?.conjures !== "null" && (
+      {character?.charStatus?.conjures !== "null" && character?.charStatus?.conjures && (
         <p className={P_STYLE1}>
           <strong>Unit Conjures : </strong>
           {character?.charStatus?.conjures}
