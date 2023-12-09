@@ -69,7 +69,7 @@ export default function Data() {
         return;
       }
 
-      const charName = characters.filter((char: any) => char?.charName?.toLowerCase().includes(keyword));
+      const charName = dataBlog.filter((char: any) => char?.charName?.toLowerCase().includes(keyword));
 
       setDataBlog(charName);
     }
