@@ -114,7 +114,7 @@ function DataBlog({ dataBlog }: { dataBlog: React.ComponentState }) {
             <td className={"text-center " + BORDER}>{i++}</td>
             <td className={`px-2 ${BORDER}`}>{char?.charName}</td>
             <td className={"hover:bg-emerald-500 text-center " + BORDER}>
-              <a href={`${char?.charLink.replace("http", "https")}`} target="_blank">
+              <a href={char?.charLink} target="_blank">
                 Detail
               </a>
             </td>
