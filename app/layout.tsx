@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react";
+
 import type { Metadata } from "next";
 import { Roboto, Playfair_Display, Merriweather, Poppins } from "next/font/google";
 import "./globals.css";
@@ -47,6 +49,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <main className="flex flex-row">
             <NavMenu />
             {children}
+            <Analytics />
           </main>
         </SessionProvider>
       </body>
