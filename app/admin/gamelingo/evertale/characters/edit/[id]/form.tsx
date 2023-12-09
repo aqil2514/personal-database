@@ -115,13 +115,13 @@ export default function Form() {
         &lt;
       </span>
       <form onSubmit={(e) => submitHandler(e)}>
-        <CharImages />
-
-        <CharIntro />
-
         <StatusContext.Provider value={{ dataLeaderSkill, dataUnitConjure, dataWeapon }}>
           <CharStatus />
         </StatusContext.Provider>
+
+        <CharImages />
+
+        <CharIntro />
 
         <CharProfile />
 

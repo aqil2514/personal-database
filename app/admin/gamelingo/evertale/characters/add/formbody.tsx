@@ -65,13 +65,13 @@ export default function FormBody() {
     <p>Loading...</p>
   ) : (
     <form action={formAction}>
-      <CharImages />
-
-      <CharIntro />
-
       <StatusContext.Provider value={{ dataLeaderSkill, dataUnitConjure, skills, dataWeapon }}>
         <CharStatus />
       </StatusContext.Provider>
+
+      <CharImages />
+
+      <CharIntro />
 
       <CharProfile />
 
