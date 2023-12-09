@@ -146,7 +146,7 @@ function PassiveSkill({ skills, setSkills }: { skills: React.ComponentState; set
   const [dataPassiveSkill, setDataPassiveSkill] = useState<DataPassiveSkill[]>([]);
   const [deleteMode, setDeleteMode] = useState<true | false>(false);
 
-  const [other, setOther] = useState<true | false>(false);
+  const [other, setOther] = useState<true | false>(true);
 
   async function getData() {
     try {
