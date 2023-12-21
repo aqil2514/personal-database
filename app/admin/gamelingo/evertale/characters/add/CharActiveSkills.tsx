@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE, TEXTAREA_STYLE, ADD_BUTTON_STYLE, ICON_DELETE_STYLE, DELETE_BUTTON_STYLE, useData } from "./formbody";
+import { useData } from "./formbody";
+import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE, TEXTAREA_STYLE, ADD_BUTTON_STYLE, ICON_DELETE_STYLE, DELETE_BUTTON_STYLE } from "@/app/components/Styles";
 import { activeSkillsType } from "../../component/data";
 
 type ActiveSkillState = {
