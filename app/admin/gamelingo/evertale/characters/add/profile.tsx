@@ -1,4 +1,5 @@
-import { SECTION_STYLE, SECTION_TITLE_STYLE, TEXTAREA_STYLE, useData } from "./formbody";
+import { useData } from "./formbody";
+import { SECTION_STYLE, SECTION_TITLE_STYLE, TEXTAREA_STYLE } from "@/app/components/Styles";
 
 export default function CharProfile() {
   const { data, setData } = useData();
