@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { P_STYLE1, SECTION_TITLE_STYLE } from "./page";
+import { P_STYLE1, SECTION_TITLE_STYLE } from "@/app/components/Styles";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 export default function CharStatus({ charStatus }: { charStatus: React.ComponentState }) {

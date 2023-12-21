@@ -1,4 +1,4 @@
-import { P_STYLE1, SECTION_TITLE_STYLE } from "./page";
+import { P_STYLE1, SECTION_TITLE_STYLE } from "@/app/components/Styles";
 
 export default function CharPassiveSkill({ charPassiveSkill }: { charPassiveSkill: React.ComponentState }) {
   return (

@@ -12,9 +12,6 @@ import CharProfile from "./CharProfile";
 import CharActiveSkill from "./CharActiveSkill";
 import CharPassiveSkill from "./CharPassiveSkill";
 
-export const SECTION_TITLE_STYLE = "font-merriweather text-center font-bold mt-5 text-xl";
-export const P_STYLE1 = "font-poppins";
-
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
 export default function Detail() {
