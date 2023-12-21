@@ -41,7 +41,7 @@ export default function Detail() {
 
       <CharStatus charStatus={data.char.charStatus} />
 
-      {Object.keys(data.char.charIntro).length !== 0 && <CharIntro charIntro={data.char.charIntro} />}
+      {Object.keys(data.char.charIntro).length > 1 && <CharIntro charIntro={data.char.charIntro} />}
 
       <CharProfile charProfile={data.char.charProfile} />
 

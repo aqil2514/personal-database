@@ -21,18 +21,24 @@ export default function CharStatus({ charStatus }: { charStatus: React.Component
         <strong>Unit Rank : </strong>
         {charStatus.charRank}
       </p>
-      <p className={P_STYLE1}>
-        <strong>Unit Leader Skill : </strong>
-        {charStatus.charLeaderSkill}
-      </p>
-      <p className={P_STYLE1}>
-        <strong>Description : </strong>
-        {!data || isLoading ? "Mengambil data..." : data.ls.descEn}
-      </p>
-      <p className={P_STYLE1}>
-        <strong>Deskripsi : </strong>
-        {!data || isLoading ? "Mengambil data..." : data.ls.descId}
-      </p>
+      {charStatus.charLeaderSkill && (
+        <p className={P_STYLE1}>
+          <strong>Unit Leader Skill : </strong>
+          {charStatus.charLeaderSkill}
+        </p>
+      )}
+      {charStatus.charLeaderSkill && (
+        <p className={P_STYLE1}>
+          <strong>Description : </strong>
+          {!data || isLoading ? "Mengambil data..." : data.ls.descEn}
+        </p>
+      )}
+      {charStatus.charLeaderSkill && (
+        <p className={P_STYLE1}>
+          <strong>Deskripsi : </strong>
+          {!data || isLoading ? "Mengambil data..." : data.ls.descId}
+        </p>
+      )}
       <p className={P_STYLE1}>
         <strong>Unit Element : </strong>
         {charStatus.charElement}
@@ -45,18 +51,22 @@ export default function CharStatus({ charStatus }: { charStatus: React.Component
         <strong>Unit Weapon : </strong>
         {charStatus.charWeapon1}
       </p>
-      <p className={P_STYLE1}>
-        <strong>Unit FA Weapon : </strong>
-        {charStatus.charWeapon2}
-      </p>
+      {charStatus.charWeapon2 && (
+        <p className={P_STYLE1}>
+          <strong>Unit FA Weapon : </strong>
+          {charStatus.charWeapon2}
+        </p>
+      )}
       <p className={P_STYLE1}>
         <strong>Conjure / Non Conjured : </strong>
         {charStatus.isConjured ? "Conjure" : "Non-Conjured"}
       </p>
-      <p className={P_STYLE1}>
-        <strong>Unit Conjure : </strong>
-        {charStatus.charConjure}
-      </p>
+      {charStatus.charConjure && (
+        <p className={P_STYLE1}>
+          <strong>Unit Conjure : </strong>
+          {charStatus.charConjure}
+        </p>
+      )}
     </div>
   );
 }
