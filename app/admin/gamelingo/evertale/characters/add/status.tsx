@@ -1,6 +1,7 @@
 // import { useState } from "react";
 import { charElement, charRank, charWeapon } from "../../component/data";
-import { SECTION_STYLE, INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE, useData } from "./formbody";
+import { useData } from "./formbody";
+import { SECTION_STYLE, INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE } from "@/app/components/Styles";
 import useSWR from "swr";
 
 const Data = ({ info }: { info: any }) => {
