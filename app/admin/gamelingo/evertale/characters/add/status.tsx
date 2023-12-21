@@ -1,251 +1,180 @@
-import { useState } from "react";
-import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE, SELECT_STYLE, TEXTAREA_STYLE, ADD_BUTTON_STYLE } from "./formbody";
-import { useStatus } from "./formbody";
-import axios from "axios";
+// import { useState } from "react";
+import { charElement, charRank, charWeapon } from "../../component/data";
+import { SECTION_STYLE, INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE, useData } from "./formbody";
+import useSWR from "swr";
 
-export default function CharStatus() {
+const Data = ({ info }: { info: any }) => {
+  const { data, setData } = useData();
   return (
     <div id="character-status" className={SECTION_STYLE}>
-      <h3 className={SECTION_TITLE_STYLE}>Character Status</h3>
       <label htmlFor="unit-name">
         {" "}
-        Unit Name : <input className={INPUT_STYLE} type="text" name="charName" id="unit-name" />
+        Unit Name : <input value={data?.charStatus?.charName} onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charName: e.target.value } })} className={INPUT_STYLE} type="text" name="charName" id="unit-name" />
       </label>
-      <label htmlFor="unit-link">
-        {" "}
-        Link Character Post : <input className={INPUT_STYLE} type="text" name="charLink" id="unit-link" required />
-      </label>
-      <label htmlFor="select-status-element">
-        {" "}
-        Element :{" "}
-        <select className={SELECT_STYLE} name="statusElement" id="select-element" required>
-          <option value="null">Select Element</option>
-          <option value="Fire">Fire</option>
-          <option value="Water">Water</option>
-          <option value="Earth">Earth</option>
-          <option value="Storm">Storm</option>
-          <option value="Light">Light</option>
-          <option value="Dark">Dark</option>
-        </select>
-      </label>
-      <Weapon />
-
-      <LeaderSkill />
-
-      <Conjures />
-    </div>
-  );
-}
-
-function Weapon() {
-  const { dataWeapon } = useStatus();
-  return (
-    <>
-      <label htmlFor="select-weapon-1">
-        {" "}
-        Select First Weapon :{" "}
-        <select className={SELECT_STYLE} name="firstWeapon" defaultValue={"null"} id="select-weapon-1" required>
-          <option value="null">Select First Weapon</option>
-          {dataWeapon &&
-            dataWeapon?.map((dw: React.ComponentState) => (
-              <option value={dw.name} key={dw.id} id={dw.id}>
-                {dw.name}
-              </option>
-            ))}
-        </select>
-      </label>
-      <label htmlFor="select-weapon-2">
-        {" "}
-        Select Second Weapon :{" "}
-        <select className={SELECT_STYLE} name="secondWeapon" defaultValue={"null"} id="select-second-weapon">
-          <option>Select Second Weapon</option>
-          {dataWeapon?.map((dw: React.ComponentState) => (
-            <option value={dw.name} key={dw.id} id={dw.id}>
-              {dw.name}
+      <label htmlFor="charRank">
+        Unit Rank :
+        <select className={SELECT_STYLE} value={data?.charStatus?.charRank} onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charRank: e.target.value } })} name="charRank" id="charRank" defaultValue={undefined}>
+          <option value={undefined}>Rank Character</option>
+          {charRank?.map((r: any, i: number) => (
+            <option value={r.rank} key={`rank-${i++}`}>
+              {r.rank}
             </option>
           ))}
         </select>
       </label>
-    </>
-  );
-}
-
-function LeaderSkill() {
-  const { dataLeaderSkill } = useStatus();
-  const [addMode, setAddMode] = useState(false);
-  const [leaderSkill, setLeaderSkill] = useState({ name: "", descEN: "", descID: "" });
-  const [loading, setLoading] = useState(false);
-
-  async function clickHandler() {
-    const { name, descEN, descID } = leaderSkill;
-    try {
-      setLoading(true);
-      const res = await axios.post("/api/gamelingo/evertale", {
-        formBodyDLS: {
-          name,
-          descEN,
-          descID,
-        },
-        typeData: "leaderSkill",
-      });
-
-      const { data } = res;
-
-      alert(data.msg);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-  return (
-    <>
-      <label htmlFor="add-dls-checkbox">
-        <input type="checkbox" name="add-dls-checkbox" id="add-dls-checkbox" onChange={() => setAddMode(!addMode)} checked={addMode} /> Leader Skill Baru <br />
-      </label>
-      {!addMode && (
-        <label htmlFor="leader-skill">
-          {" "}
-          Leader Skill : {""}
-          <select className={SELECT_STYLE} name="leaderSkill" id="leader-skill">
-            <option value="null">Select Leader Skill</option>
-            {dataLeaderSkill &&
-              dataLeaderSkill?.map((dls: React.ComponentState) => (
-                <option key={dls.id} value={dls.id}>
-                  {dls.name}
-                </option>
-              ))}
-          </select>
+      <div id="isConjured">
+        Conjure / Non-Conjure :
+        <label htmlFor="conjure" className="mx-8">
+          <input type="radio" name="isConjured" id="conjure" value="Conjure" onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, isConjured: e.target.value } })} /> Conjure
         </label>
-      )}
-      {addMode && (
-        <>
-          <label htmlFor="new-leader-skill-name">
-            Leader Skill Name :
-            <input
-              type="text"
-              className={INPUT_STYLE}
-              value={loading ? "Mengirim Data..." : leaderSkill.name}
-              disabled={loading}
-              onChange={(e) => setLeaderSkill({ ...leaderSkill, name: e.target.value })}
-              placeholder="Leader Skill Name..."
-              name="new-leader-skill-name"
-              id="new-leader-skill-name"
-            />
-          </label>
-          <label htmlFor="new-leader-skill-desc-en">
-            Leader Skill Description :
-            <textarea
-              className={TEXTAREA_STYLE}
-              value={loading ? "Mengirim Data..." : leaderSkill.descEN}
-              disabled={loading}
-              onChange={(e) => setLeaderSkill({ ...leaderSkill, descEN: e.target.value })}
-              placeholder="Leader Skill Description..."
-              name="new-leader-skill-desc-en"
-              id="new-leader-skill-desc-en"
-            />
-          </label>
-          <label htmlFor="new-leader-skill-desc-id">
-            Deskripsi Leader Skill:
-            <textarea
-              className={TEXTAREA_STYLE}
-              value={loading ? "Mengirim Data..." : leaderSkill.descID}
-              disabled={loading}
-              onChange={(e) => setLeaderSkill({ ...leaderSkill, descID: e.target.value })}
-              placeholder="Deskripsi Leader Skill..."
-              name="new-leader-skill-desc-id"
-              id="new-leader-skill-desc-id"
-            />
-          </label>
-          <button onClick={clickHandler} disabled={loading} className={ADD_BUTTON_STYLE + " block"} type="button">
-            {loading ? "Mengirim Data" : "Tambah Leader Skill Baru"}
-          </button>
-        </>
-      )}
-    </>
-  );
-}
-
-function Conjures() {
-  const { dataUnitConjure } = useStatus();
-  const [addMode, setAddMode] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [conjures, setConjures] = useState({ name: "", link: "" });
-
-  async function clickHandler() {
-    const { name, link } = conjures;
-    try {
-      setLoading(true);
-      const res = await axios.post("/api/gamelingo/evertale", {
-        formBodyConjures: {
-          name,
-          link,
-        },
-        typeData: "conjures",
-      });
-
-      const { data } = res;
-
-      alert(data.msg);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  return (
-    <>
-      <label htmlFor="add-conjures-checkbox">
-        <input type="checkbox" name="add-conjures-checkbox" id="add-conjures-checkbox" onChange={() => setAddMode(!addMode)} checked={addMode} /> Conjures Baru <br />
-      </label>
-      {!addMode && (
-        <label htmlFor="conjures">
-          {" "}
-          Conjures : {""}
-          <select className={SELECT_STYLE} name="conjures" id="conjures">
-            <option value={"null"}>Select Conjures</option>
-            {dataUnitConjure &&
-              dataUnitConjure?.map((du: React.ComponentState) => (
-                <option value={du.id} key={du.id}>
-                  {du.name}
-                </option>
-              ))}
-          </select>
+        <label htmlFor="non-conjure" className="mx-8">
+          <input type="radio" name="isConjured" id="non-conjure" value="Non-Conjured" onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, isConjured: e.target.value } })} /> Non-Conjure
         </label>
-      )}
-      {addMode && (
-        <>
-          <label htmlFor="new-leader-skill-name">
-            Conjures Name :
-            <input
-              type="text"
-              className={INPUT_STYLE}
-              value={loading ? "Mengirim Data..." : conjures.name}
-              disabled={loading}
-              onChange={(e) => setConjures({ ...conjures, name: e.target.value })}
-              placeholder="Leader Skill Name..."
-              name="new-leader-skill-name"
-              id="new-leader-skill-name"
-            />
+      </div>
+      <div id="charTeam">
+        CharTeam:
+        <div className="flex flex-row flex-wrap">
+          <label htmlFor="poison-team">
+            <input className="ml-4 mr-2" type="checkbox" name="poison-team" value="Poison Team" id="poison-team" />
+            Poison Team
           </label>
-          <label htmlFor="new-leader-skill-desc-en">
-            Conjures Link :
-            <textarea
-              className={TEXTAREA_STYLE}
-              value={loading ? "Mengirim Data..." : conjures.link}
-              disabled={loading}
-              onChange={(e) => setConjures({ ...conjures, link: e.target.value })}
-              placeholder="Leader Skill Description..."
-              name="new-leader-skill-desc-en"
-              id="new-leader-skill-desc-en"
-            />
+          <label htmlFor="Burn-team">
+            <input className="ml-4 mr-2" type="checkbox" name="Burn-team" value="Burn Team" id="Burn-team" />
+            Burn Team
           </label>
-          <button onClick={clickHandler} disabled={loading} className={ADD_BUTTON_STYLE + " block"} type="button">
-            {loading ? "Mengirim Data" : "Tambah Conjures Baru"}
+          <label htmlFor="Sleep-team">
+            <input className="ml-4 mr-2" type="checkbox" name="Sleep-team" value="Sleep Team" id="Sleep-team" />
+            Sleep Team
+          </label>
+          <label htmlFor="cursed-sleep-team">
+            <input className="ml-4 mr-2" type="checkbox" name="cursed-sleep-team" value="Cursed Sleep Team" id="cursed-sleep-team" />
+            Cursed Sleep Team
+          </label>
+          <label htmlFor="Blood-team">
+            <input className="ml-4 mr-2" type="checkbox" name="Blood-team" value="Blood Team" id="Blood-team" />
+            Blood Team
+          </label>
+          <label htmlFor="Stun-team">
+            <input className="ml-4 mr-2" type="checkbox" name="Stun-team" value="Stun Team" id="Stun-team" />
+            Stun Team
+          </label>
+          <label htmlFor="General-team">
+            <input className="ml-4 mr-2" type="checkbox" name="General-team" value="General Team" id="General-team" />
+            General Team
+          </label>
+          <label htmlFor="Other-team">
+            <input className="ml-4 mr-2" type="checkbox" name="Other-team" value="Other Team" id="Other-team" />
+            Other Team
+          </label>
+          <button
+            className={ADD_BUTTON_STYLE + " block"}
+            type="button"
+            onClick={() => {
+              const els = document.querySelectorAll("#charTeam label input");
+              const value: string[] = [];
+              els.forEach((el: any) => {
+                if (el.checked) {
+                  value.push(el.value);
+                }
+              });
+              setData({ ...data, charStatus: { ...data.charStatus, charTeam: value } });
+            }}
+          >
+            Fiksasi
           </button>
-        </>
-      )}
-    </>
+        </div>
+      </div>
+      <label htmlFor="charElement">
+        Unit Rank :
+        <select
+          className={SELECT_STYLE}
+          value={data?.charStatus?.charElement}
+          onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charElement: e.target.value } })}
+          name="charElement"
+          id="charElement"
+          defaultValue={undefined}
+        >
+          <option value={undefined}>Element Character</option>
+          {charElement?.map((e: any, i: number) => (
+            <option value={e.element} key={`element-${i++}`}>
+              {e.element}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label htmlFor="charWeapon1">
+        Unit Weapon 1 :
+        <select
+          className={SELECT_STYLE}
+          value={data?.charStatus?.charWeapon1}
+          onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charWeapon1: e.target.value } })}
+          name="charWeapon1"
+          id="charWeapon1"
+          defaultValue={undefined}
+        >
+          <option value={undefined}>Select Weapon</option>
+          {charWeapon?.map((e: any, i: number) => (
+            <option value={e.name} key={`weapon-I-${i++}`}>
+              {e.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label htmlFor="charWeapon2">
+        Unit Weapon 2 :
+        <select
+          className={SELECT_STYLE}
+          value={data?.charStatus?.charWeapon2}
+          onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charWeapon2: e.target.value } })}
+          name="charWeapon2"
+          id="charWeapon2"
+          defaultValue={undefined}
+        >
+          <option value={undefined}>Select Weapon</option>
+          {charWeapon?.map((e: any, i: number) => (
+            <option value={e.name} key={`weapon-II-${i++}`}>
+              {e.name}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label htmlFor="leaderSkill">
+        Leader Skill :
+        <select
+          className={SELECT_STYLE}
+          value={data?.charStatus?.leaderSkill}
+          onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, leaderSkill: e.target.value } })}
+          name="leaderSkill"
+          id="leaderSkill"
+          defaultValue={undefined}
+        >
+          <option value={undefined}>Select Leader Skill</option>
+          {info?.lsData?.map((e: any, i: number) => (
+            <option value={e} key={`weapon-II-${i++}`}>
+              {e}
+            </option>
+          ))}
+        </select>
+      </label>
+      <label htmlFor="conjure">
+        Conjure :
+        <select className={SELECT_STYLE} value={data?.charStatus?.conjure} onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, conjure: e.target.value } })} name="conjure" id="conjure" defaultValue={undefined} disabled>
+          <option value={undefined} disabled>
+            Rapihin Karakter dulu
+          </option>
+        </select>
+      </label>
+    </div>
   );
+};
+
+const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
+
+export default function CharStatus() {
+  const URL = "/api/gamelingo/newEvertale?category=lschar";
+  const { data, isLoading, error } = useSWR(URL, fetcher);
+
+  if (!data || isLoading) return <p>Mengambil data...</p>;
+  if (error) return <p>Error...</p>;
+  return <Data info={data} />;
 }
