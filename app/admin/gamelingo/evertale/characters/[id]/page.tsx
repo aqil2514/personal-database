@@ -1,7 +1,6 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import React, { useState, useEffect, createContext, useContext, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PenFill } from "react-bootstrap-icons";
@@ -13,8 +12,6 @@ import CharProfile from "./CharProfile";
 import CharActiveSkill from "./CharActiveSkill";
 import CharPassiveSkill from "./CharPassiveSkill";
 
-export const FIGURE_STYLE = "my-4 text-center";
-export const IMAGE_STYILE = "max-w-screen-sm rounded block mx-auto";
 export const SECTION_TITLE_STYLE = "font-merriweather text-center font-bold mt-5 text-xl";
 export const P_STYLE1 = "font-poppins";
 

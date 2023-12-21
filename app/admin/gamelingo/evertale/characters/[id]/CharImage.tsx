@@ -1,4 +1,5 @@
-import { FIGURE_STYLE, IMAGE_STYILE } from "./page";
+const FIGURE_STYLE = "my-4 text-center";
+const IMAGE_STYILE = "max-w-screen-sm rounded block mx-auto";
 
 export default function CharImage({ charImage, charName }: { charImage: React.ComponentState; charName: React.ComponentState }) {
   return (
