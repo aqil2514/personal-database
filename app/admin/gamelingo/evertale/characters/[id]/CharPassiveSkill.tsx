@@ -15,7 +15,7 @@ export default function CharPassiveSkill({ charPassiveSkill }: { charPassiveSkil
           </p>
           <p className={P_STYLE1}>
             <strong>Skill Type : </strong>
-            {cps.typeSkill}
+            {cps.typeSkill.join(", ")}
           </p>
           <article>
             <strong>Skill Description : </strong>

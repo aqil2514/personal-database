@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE, useCharacter } from "./form";
-import { charRank, charWeapon } from "../../../component/data";
+import { charRank, charTeamType, charWeapon } from "../../../component/data";
 import useSWR from "swr";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
 export default function CharStatus() {
-  const URL = "/api/gamelingo/newEvertale?category=lschar";
+  const URL = "/api/gamelingo/newEvertale?category=statusResource";
 
   const { character, setCharacter } = useCharacter();
   const { data, isLoading, error } = useSWR(URL, fetcher);
+  console.log(data);
   return (
     <div id="character-status" className={SECTION_STYLE}>
       <h3 className={SECTION_TITLE_STYLE}>Character Status</h3>
@@ -59,47 +60,37 @@ export default function CharStatus() {
       <div id="isConjured">
         Conjure / Non-Conjure :
         <label htmlFor="conjure" className="mx-8">
-          <input type="radio" name="isConjured" id="conjure" value="Conjure" onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, isConjured: e.target.value } })} /> Conjure
+          <input
+            type="radio"
+            name="isConjured"
+            checked={character?.charStatus?.isConjured === true}
+            id="conjure"
+            value="Conjure"
+            onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, isConjured: e.target.value } })}
+          />{" "}
+          Conjure
         </label>
         <label htmlFor="non-conjure" className="mx-8">
-          <input type="radio" name="isConjured" id="non-conjure" value="Non-Conjured" onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, isConjured: e.target.value } })} /> Non-Conjure
+          <input
+            type="radio"
+            name="isConjured"
+            id="non-conjure"
+            checked={character?.charStatus?.isConjured === false}
+            value="Non-Conjured"
+            onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, isConjured: e.target.value } })}
+          />{" "}
+          Non-Conjure
         </label>
       </div>
       <div id="charTeam">
         CharTeam:
         <div className="flex flex-row flex-wrap">
-          <label htmlFor="poison-team">
-            <input className="ml-4 mr-2" type="checkbox" name="poison-team" value="Poison Team" id="poison-team" />
-            Poison Team
-          </label>
-          <label htmlFor="Burn-team">
-            <input className="ml-4 mr-2" type="checkbox" name="Burn-team" value="Burn Team" id="Burn-team" />
-            Burn Team
-          </label>
-          <label htmlFor="Sleep-team">
-            <input className="ml-4 mr-2" type="checkbox" name="Sleep-team" value="Sleep Team" id="Sleep-team" />
-            Sleep Team
-          </label>
-          <label htmlFor="cursed-sleep-team">
-            <input className="ml-4 mr-2" type="checkbox" name="cursed-sleep-team" value="Cursed Sleep Team" id="cursed-sleep-team" />
-            Cursed Sleep Team
-          </label>
-          <label htmlFor="Blood-team">
-            <input className="ml-4 mr-2" type="checkbox" name="Blood-team" value="Blood Team" id="Blood-team" />
-            Blood Team
-          </label>
-          <label htmlFor="Stun-team">
-            <input className="ml-4 mr-2" type="checkbox" name="Stun-team" value="Stun Team" id="Stun-team" />
-            Stun Team
-          </label>
-          <label htmlFor="General-team">
-            <input className="ml-4 mr-2" type="checkbox" name="General-team" value="General Team" id="General-team" />
-            General Team
-          </label>
-          <label htmlFor="Other-team">
-            <input className="ml-4 mr-2" type="checkbox" name="Other-team" value="Other Team" id="Other-team" />
-            Other Team
-          </label>
+          {charTeamType.map((type: string, i: number) => (
+            <label htmlFor={type} key={i++}>
+              <input className="ml-4 mr-2" checked={character?.charStatus?.charTeam.find((team: string) => team === type)} type="checkbox" name={`char-team-${i++}`} value={type} id={type} />
+              {type}
+            </label>
+          ))}
           <button
             className={ADD_BUTTON_STYLE + " block"}
             type="button"
@@ -176,16 +167,18 @@ export default function CharStatus() {
         Conjure :
         <select
           className={SELECT_STYLE}
-          value={character?.charStatus?.conjure}
-          onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, conjure: e.target.value } })}
+          value={character?.charStatus?.charConjure}
+          onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, charConjure: e.target.value } })}
           name="conjure"
           id="conjure"
           defaultValue={undefined}
-          disabled
         >
-          <option value={undefined} disabled>
-            Rapihin Karakter dulu
-          </option>
+          <option value={undefined}>Select Conjure</option>
+          {data?.conjure?.map((conjure: string, i: number) => (
+            <option value={conjure} key={`conjure-${i++}`}>
+              {conjure}
+            </option>
+          ))}
         </select>
       </label>
     </div>

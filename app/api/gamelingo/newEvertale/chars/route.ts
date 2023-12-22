@@ -29,8 +29,8 @@ export async function GET(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const { submitData } = await req.json();
-  const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill } = submitData;
+  const { submitData, action } = await req.json();
+  const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill, charId } = submitData;
 
   //CharStatus Validation Start
 
@@ -59,6 +59,9 @@ export async function PUT(req: NextRequest) {
     if (charStatus.charWeapon2 === "Select Weapon") {
       charStatus.charWeapon2 = undefined;
     }
+    if (charStatus.charConjure === "Select Conjure") {
+      charStatus.charConjure = undefined;
+    }
   }
 
   //CharStatus Validation End
@@ -66,16 +69,13 @@ export async function PUT(req: NextRequest) {
   // charImage Validation Start
 
   if (charImage) {
-    charImage.f1Img = charImage.f1Img.trim();
-    charImage.f2Img = charImage.f2Img.trim();
-    charImage.f3Img = charImage.f3Img.trim();
-    if (charImage.f1Img.trim().length === 0) {
+    if (!charImage.f1Img) {
       return NextResponse.json({ msg: "Char Image Pertama belum diisi" }, { status: 422 });
     }
-    if (charImage.f2Img.trim().length === 0) {
+    if (!charImage.f2Img) {
       charImage.f2Img = undefined;
     }
-    if (charImage.f3Img.trim().length === 0) {
+    if (!charImage.f3Img) {
       charImage.f3Img = undefined;
     }
   }
@@ -85,21 +85,6 @@ export async function PUT(req: NextRequest) {
   // charIntro Validation Start
 
   if (charIntro) {
-    charIntro.gachaIntroEn = charIntro.gachaIntroEn.trim();
-    charIntro.gachaIntroId = charIntro.gachaIntroId.trim();
-    charIntro.gachaTextEn = charIntro.gachaTextEn.trim();
-    charIntro.gachaTextId = charIntro.gachaTextId.trim();
-    charIntro.loginTextEn = charIntro.loginTextEn.trim();
-    charIntro.loginTextId = charIntro.loginTextId.trim();
-    charIntro.text1En = charIntro.text1En.trim();
-    charIntro.text1Id = charIntro.text1Id.trim();
-    charIntro.text2En = charIntro.text2En.trim();
-    charIntro.text2Id = charIntro.text2Id.trim();
-    charIntro.text3En = charIntro.text3En.trim();
-    charIntro.text3Id = charIntro.text3Id.trim();
-    charIntro.text4En = charIntro.text4En.trim();
-    charIntro.text4Id = charIntro.text4Id.trim();
-
     if (charIntro.gachaIntroEn && charIntro.gachaIntroId.length === 0) {
       return NextResponse.json({ msg: "Gacha Intro belum diterjemahkan" }, { status: 422 });
     }
@@ -156,13 +141,6 @@ export async function PUT(req: NextRequest) {
 
   // CharProfile Validation Start
   if (charProfile) {
-    charProfile.part1En = charProfile.part1En.trim();
-    charProfile.part1Id = charProfile.part1Id.trim();
-    charProfile.part2En = charProfile.part2En.trim();
-    charProfile.part2Id = charProfile.part2Id.trim();
-    charProfile.part3En = charProfile.part3En.trim();
-    charProfile.part3Id = charProfile.part3Id.trim();
-
     if (!charProfile.part1En) {
       return NextResponse.json({ msg: "Char Profile 1 wajib diisi" }, { status: 422 });
     }
@@ -233,5 +211,12 @@ export async function PUT(req: NextRequest) {
   }
   // CharPassiveSkill Validation End
 
-  return NextResponse.json({ charPassiveSkill }, { status: 200 });
+  if (action === "see") {
+    return NextResponse.json({ submitData }, { status: 200 });
+  }
+  if (action === "update") {
+    const char = await Character.findOneAndUpdate({ charId: new ObjectId(charId) }, { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill }, { new: true });
+
+    return NextResponse.json({ msg: "Update Character Sukses", char }, { status: 200 });
+  }
 }

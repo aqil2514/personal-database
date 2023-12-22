@@ -65,7 +65,7 @@ export default function ActiveSkill() {
             <div id="active-skill-type-container" className="flex flex-nowrap flex-row justify-evenly">
               {activeSkillsType.map((type: string, index: number) => (
                 <label htmlFor={type + i + 1} key={`active-skill-${i}-type-${index++}`}>
-                  <input className="mx-2" type="checkbox" data-active-skill={i + 1} name={`active-skill-${i}-type-${index++}`} id={type + i + 1} value={type} />
+                  <input className="mx-2" type="checkbox" checked={nas?.typeSkill.find((q: string) => q === type)} data-active-skill={i + 1} name={`active-skill-${i}-type-${index++}`} id={type + i + 1} value={type} />
                   {type}
                 </label>
               ))}

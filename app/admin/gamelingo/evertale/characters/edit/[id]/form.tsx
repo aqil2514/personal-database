@@ -19,18 +19,6 @@ export const ADD_BUTTON_STYLE = "bg-green-800 text-white font-bold py-2 px-4 rou
 export const DELETE_BUTTON_STYLE = "bg-rose-800 text-white font-bold py-2 px-4 rounded m-1";
 export const ICON_DELETE_STYLE = "text-rose-800 cursor-pointer";
 
-interface DataLeader {
-  id: string;
-  name: string;
-}
-
-interface DataUnitConjure {
-  id: string;
-  name: string;
-}
-
-const SkillsContext = createContext<any>(null);
-const StatusContext = createContext<any>(null);
 const FormContext = createContext<any>(null);
 
 export default function Form() {
@@ -72,9 +60,12 @@ export default function Form() {
     axios
       .put("/api/gamelingo/newEvertale/chars", {
         submitData: character,
+        action: "update",
       })
       .then((res) => {
-        console.log(res);
+        const data = res.data;
+        alert(data.msg);
+        router.back();
       })
       .catch((err) => {
         if (err.response.status === 422) {
@@ -87,13 +78,29 @@ export default function Form() {
         }
         console.error(err);
       });
+  }
 
-    // alert(data.msg);
-    // router.replace(`/admin/gamelingo/evertale/characters/${character?._id}`);
-
-    // const result = detectChanges(oldCharacter, character);
-
-    // console.log(result);
+  async function seeHandler() {
+    axios
+      .put("/api/gamelingo/newEvertale/chars", {
+        submitData: character,
+        action: "see",
+      })
+      .then((res) => {
+        alert("Lihat data lebih lanjut di Console Log (CTRL + SHIFT + I)");
+        console.log(res.data);
+      })
+      .catch((err) => {
+        if (err.response.status === 422) {
+          alert(err.response.data.msg);
+          return;
+        }
+        if (err.response.status === 500) {
+          alert("Ada kesalahan pada server");
+          return;
+        }
+        console.error(err);
+      });
   }
 
   return loading ? (
@@ -116,7 +123,7 @@ export default function Form() {
 
         <PassiveSkill />
         <button className={ADD_BUTTON_STYLE + " m-4"}>Kirim Data</button>
-        <button type="button" className={ADD_BUTTON_STYLE + " m-4"} onClick={() => console.log(character)}>
+        <button type="button" className={ADD_BUTTON_STYLE + " m-4"} onClick={seeHandler}>
           Lihat Data
         </button>
         <button onClick={() => setCharacter(oldCharacter)} type="button" className={ADD_BUTTON_STYLE + " m-4"}>
@@ -125,10 +132,6 @@ export default function Form() {
       </form>
     </FormContext.Provider>
   );
-}
-
-export function useStatus() {
-  return useContext(StatusContext);
 }
 
 export function useCharacter() {

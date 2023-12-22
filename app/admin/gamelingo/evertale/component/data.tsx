@@ -83,6 +83,8 @@ export const charWeapon = [
   },
 ];
 
-export const activeSkillsType = ["Dreamhunt", "StealthWorthy", "Sleep", "No Damage", "Healer"];
+export const activeSkillsType = ["Dreamhunt", "StealthWorthy", "Sleep", "No Damage", "Damage", "Buff", "Poisoner", "Healer"];
 
-export const passiveSkillsType = ["ATK Buff", "Max HP Buff", "Weapon Mastery", "Elemental Resist", "Unique Skill", "Weapon Resist", "Negative Effect Resist"];
+export const passiveSkillsType = ["ATK Buff", "Max HP Buff", "Enter Battle Buff", "Weapon Mastery", "Elemental Resist", "Unique Skill", "Weapon Resist", "Effect Immunity", "Negative Effect Resist"];
+
+export const charTeamType = ["Poison Team", "Burn Team", "Sleep Team", "Cursed Sleep Team", "Blood Team", "Stun Team", "General Team", "Stealth Team", "Other Team"];

@@ -30,13 +30,13 @@ export default function CharStatus({ charStatus }: { charStatus: React.Component
       {charStatus.charLeaderSkill && (
         <p className={P_STYLE1}>
           <strong>Description : </strong>
-          {!data || isLoading ? "Mengambil data..." : data.ls.descEn}
+          {!data || isLoading ? "Mengambil data..." : data?.ls?.descEn}
         </p>
       )}
       {charStatus.charLeaderSkill && (
         <p className={P_STYLE1}>
           <strong>Deskripsi : </strong>
-          {!data || isLoading ? "Mengambil data..." : data.ls.descId}
+          {!data || isLoading ? "Mengambil data..." : data?.ls?.descId}
         </p>
       )}
       <p className={P_STYLE1}>
@@ -45,7 +45,7 @@ export default function CharStatus({ charStatus }: { charStatus: React.Component
       </p>
       <p className={P_STYLE1}>
         <strong>Unit Team : </strong>
-        {charStatus.charTeam}
+        {charStatus.charTeam.join(", ")}
       </p>
       <p className={P_STYLE1}>
         <strong>Unit Weapon : </strong>

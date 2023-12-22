@@ -3,6 +3,7 @@ import connectMongoDB from "@/lib/mongoose";
 import Character from "@/models/Character";
 import LeaderSkill from "@/models/LeaderSkill";
 import Passive from "@/models/PassiveSkills";
+import { TypeSkill } from "@/models/TypeSkills";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -28,6 +29,14 @@ export async function GET(req: NextRequest) {
     }));
 
     return NextResponse.json({ chars }, { status: 200 });
+  } else if (category === "statusResource") {
+    const ls = await LeaderSkill.find();
+    const lsData = ls.filter((l: any) => l.name !== "Leader Skill").map((l: any) => l.name);
+    const con = await Character.find({ "charStatus.isConjured": true });
+    const conjure = con.map((c: any) => c.charStatus.charName);
+    const rss = await TypeSkill.find();
+
+    return NextResponse.json({ lsData, conjure, rss: rss[0] }, { status: 200 });
   }
 
   return NextResponse.json({ category }, { status: 200 });
@@ -99,6 +108,7 @@ export async function OPTIONS(req: NextRequest) {
             text2En: char.charIntro.text2En,
             text2Id: char.charIntro.text2Id,
             text3En: char.charIntro.text3En,
+            text3Id: char.charIntro.text3Id,
             text4En: char.charIntro.text4En,
             text4Id: char.charIntro.text4Id,
           },
@@ -132,7 +142,7 @@ export async function OPTIONS(req: NextRequest) {
           })),
           charPassiveSkill: char.charPassiveSkill.map((as: any) => ({
             skillName: as.name,
-            typeSkill: "unset",
+            typeSkill: [],
             skillDescEn: as.descEn,
             skillDescId: as.descId,
           })),

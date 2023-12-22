@@ -54,7 +54,7 @@ interface CharacterActiveSkill {
 }
 interface CharacterPassiveSkill {
   skillName: String;
-  typeSkill: String;
+  typeSkill: String[];
   skillDescEn: String;
   skillDescId: String;
 }
@@ -114,7 +114,7 @@ const CharacterActiveSkillSchema = new Schema<CharacterActiveSkill>({
 
 const CharacterPassiveSkillSchema = new Schema<CharacterPassiveSkill>({
   skillName: { type: String, required: true },
-  typeSkill: { type: String, required: true },
+  typeSkill: { type: [String], required: true },
   skillDescEn: { type: String, required: true },
   skillDescId: { type: String, required: true },
 });

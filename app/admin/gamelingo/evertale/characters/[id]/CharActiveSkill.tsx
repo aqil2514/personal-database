@@ -15,7 +15,7 @@ export default function CharActiveSkill({ charActiveSkill }: { charActiveSkill: 
           </p>
           <p className={P_STYLE1}>
             <strong>Skill Type : </strong>
-            {cas.typeSkill}
+            {cas.typeSkill.join(", ")}
           </p>
           <p className={P_STYLE1}>
             <strong>Skill Spirit : </strong>
