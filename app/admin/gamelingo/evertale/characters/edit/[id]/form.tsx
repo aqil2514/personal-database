@@ -2,8 +2,11 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useContext, createContext, useCallback, useState, useEffect } from "react";
-import CharStatus from "./status";
+import CharStatus from "./CharStatus";
 import axios from "axios";
+import CharImages from "./CharImage";
+import CharIntro from "./CharIntro";
+import CharProfile from "./CharProfile";
 
 export const SECTION_TITLE_STYLE = "font-merriweather text-center font-bold mt-5";
 export const SECTION_STYLE = "w-full px-4";
@@ -32,28 +35,18 @@ export default function Form() {
   const [loading, setLoading] = useState<false | true>(false);
   const [oldCharacter, setOldCharacter] = useState<React.ComponentState>();
   const [character, setCharacter] = useState<React.ComponentState>();
-  const [dataLeaderSkill, setDataLeaderSkill] = useState<DataLeader[]>();
-  const [dataUnitConjure, setDataUnitConjure] = useState<DataUnitConjure[]>();
-  const [dataWeapon, setDataWeapon] = useState<React.ComponentState>();
   const { id } = useParams();
   const router = useRouter();
 
   const getDataCallback = useCallback(async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get("/api/gamelingo/evertale");
+      const { data } = await axios.get(`/api/gamelingo/newEvertale/chars?id=${id}`);
 
-      const characters = data.chars;
-      const selected = characters?.chars?.find((char: React.ComponentState) => char._id === id);
+      setOldCharacter(data.char);
+      setCharacter(data.char);
 
-      setCharacter(selected);
-      setOldCharacter(selected);
-      console.log(selected);
-      setDataWeapon(data.weapons.weapons);
-      setDataLeaderSkill(data.leaderskills.leaderskills);
-      setDataUnitConjure(data.conjures.conjures);
-
-      document.title = `Edit ${selected.charStatus.charName} - Personal Database `;
+      document.title = `Edit ${data.char.charStatus.charName} - Personal Database `;
     } catch (error) {
       console.error(error);
     } finally {
@@ -67,22 +60,6 @@ export default function Form() {
     }
   }, [getDataCallback, character]);
 
-  type AnyObject = Record<string, any>;
-
-  function detectChanges(initialObject: AnyObject, modifiedObject: AnyObject): AnyObject {
-    const changes: AnyObject = {};
-
-    // Iterate through initialObject's keys
-    Object.keys(initialObject).forEach((key) => {
-      // Compare values of the same key in both objects
-      if (initialObject[key] !== modifiedObject[key]) {
-        changes[key] = modifiedObject[key];
-      }
-    });
-
-    return changes;
-  }
-
   async function submitHandler(e: any) {
     try {
       e.preventDefault();
@@ -91,15 +68,17 @@ export default function Form() {
         return;
       }
 
-      const { data } = await axios.put("/api/gamelingo/evertale", {
+      const { data } = await axios.put("/api/gamelingo/newEvertale/chars", {
         submitData: character,
-        typeData: "character",
       });
 
-      alert(data.msg);
-      router.replace(`/admin/gamelingo/evertale/characters/${character?._id}`);
+      console.log(data);
+
+      // alert(data.msg);
+      // router.replace(`/admin/gamelingo/evertale/characters/${character?._id}`);
     } catch (error) {
-      console.error;
+      alert("Kesalahan validasi");
+      console.error(error);
     }
 
     // const result = detectChanges(oldCharacter, character);
@@ -115,9 +94,7 @@ export default function Form() {
         &lt;
       </span>
       <form onSubmit={(e) => submitHandler(e)}>
-        <StatusContext.Provider value={{ dataLeaderSkill, dataUnitConjure, dataWeapon }}>
-          <CharStatus />
-        </StatusContext.Provider>
+        <CharStatus />
 
         <CharImages />
 
@@ -125,345 +102,18 @@ export default function Form() {
 
         <CharProfile />
 
-        <ActiveSkill />
+        {/* <ActiveSkill />
 
-        <PassiveSkill />
-        <button className={ADD_BUTTON_STYLE + " m-4"}>Ubah Data</button>
+        <PassiveSkill /> */}
+        <button className={ADD_BUTTON_STYLE + " m-4"}>Kirim Data</button>
+        <button type="button" className={ADD_BUTTON_STYLE + " m-4"} onClick={() => console.log(character)}>
+          Lihat Data
+        </button>
         <button onClick={() => setCharacter(oldCharacter)} type="button" className={ADD_BUTTON_STYLE + " m-4"}>
           Reset Pembaruan
         </button>
       </form>
     </FormContext.Provider>
-  );
-}
-
-function CharImages() {
-  const { character, setCharacter } = useContext(FormContext);
-
-  return (
-    <div id="character-images" className={SECTION_STYLE}>
-      <h3 className={SECTION_TITLE_STYLE}>Character Images</h3>
-      <label htmlFor="char">
-        Char Name : <input className={INPUT_STYLE} value={character?.charStatus?.charName} disabled type="text" name="charName" id="char" required />
-      </label>
-      <label htmlFor="f1Img">
-        Form 1 Image :{" "}
-        <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character.charImage, f1Img: e.target.value } })} value={character?.charImage?.f1Img} type="text" name="f1Img" id="f1Img" required />
-      </label>
-      <label htmlFor="f2Img">
-        Form 2 Image : <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character.charImage, f2Img: e.target.value } })} value={character?.charImage?.f2Img} type="text" name="f2Img" id="f2Img" />
-      </label>
-      <label htmlFor="f3Img">
-        Form 3 Image : <input className={INPUT_STYLE} onChange={(e) => setCharacter({ ...character, charImage: { ...character.charImage, f3Img: e.target.value } })} value={character?.charImage?.f3Img} type="text" name="f3Img" id="f3Img" />
-      </label>
-    </div>
-  );
-}
-
-function CharProfile() {
-  const { character, setCharacter } = useContext(FormContext);
-
-  return (
-    <div id="character-profil" className={SECTION_STYLE}>
-      <h3 className={SECTION_TITLE_STYLE}>Character Profile</h3>
-      <label htmlFor="part-1-en">
-        {" "}
-        English part 1 :{" "}
-        <textarea
-          className={TEXTAREA_STYLE}
-          value={character?.charProfile?.part1En}
-          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part1En: e.target.value } })}
-          placeholder="English Part 1..."
-          defaultValue=""
-          name="part-1-en"
-          required
-          id="part-1-en"
-        />
-      </label>
-      <label htmlFor="part-1-id">
-        {" "}
-        Indonesia part 1 :{" "}
-        <textarea
-          className={TEXTAREA_STYLE}
-          value={character?.charProfile?.part1Id}
-          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part1Id: e.target.value } })}
-          placeholder="Indonesia Part 1..."
-          defaultValue=""
-          name="part-1-id"
-          required
-          id="part-1-id"
-        />
-      </label>
-      <label htmlFor="part-2-en">
-        {" "}
-        English part 2 :{" "}
-        <textarea
-          className={TEXTAREA_STYLE}
-          value={character?.charProfile?.part2En}
-          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part2En: e.target.value } })}
-          placeholder="English Part 2..."
-          defaultValue=""
-          name="part-2-en"
-          id="part-2-en"
-        />
-      </label>
-      <label htmlFor="part-2-id">
-        {" "}
-        Indonesia part 2 :{" "}
-        <textarea
-          className={TEXTAREA_STYLE}
-          value={character?.charProfile?.part2Id}
-          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part2Id: e.target.value } })}
-          placeholder="Indonesia Part 2..."
-          defaultValue=""
-          name="part-2-id"
-          id="part-2-id"
-        />
-      </label>
-      <label htmlFor="part-3-en">
-        {" "}
-        English part 3 :{" "}
-        <textarea
-          className={TEXTAREA_STYLE}
-          value={character?.charProfile?.part3En}
-          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part3En: e.target.value } })}
-          placeholder="English Part 3..."
-          defaultValue=""
-          name="part-3-en"
-          id="part-3-en"
-        />
-      </label>
-      <label htmlFor="part-3-id">
-        {" "}
-        Indonesia part 3 :{" "}
-        <textarea
-          className={TEXTAREA_STYLE}
-          value={character?.charProfile?.part3Id}
-          onChange={(e) => setCharacter({ ...character, charProfile: { ...character.charProfile, part3Id: e.target.value } })}
-          placeholder="Indonesia Part 3..."
-          defaultValue=""
-          name="part-3-id"
-          id="part-3-id"
-        />
-      </label>
-    </div>
-  );
-}
-
-function CharIntro() {
-  const [isCharInfo, setIsCharInfo] = useState<false | true>(true);
-  const { character, setCharacter } = useContext(FormContext);
-
-  return (
-    <>
-      <div id="character-intro" className={SECTION_STYLE}>
-        <h3 className={SECTION_TITLE_STYLE}>Character Intro</h3>
-
-        <div>
-          <label htmlFor="isthere-char-info">
-            Char Info
-            <input type="checkbox" name="isthere-char-info" onChange={() => setIsCharInfo(!isCharInfo)} id="isthere-char-info" />
-          </label>
-        </div>
-        {isCharInfo ? (
-          <>
-            <label htmlFor="gacha-intro-en">
-              {" "}
-              Gacha Intro EN :
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.gachaIntroEn}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaIntroEn: e.target.value } })}
-                placeholder="Gacha Intro EN..."
-                defaultValue=""
-                name="gachaIntroEn"
-                id="gacha-intro-en"
-              />
-            </label>
-            <label htmlFor="gacha-intro-id">
-              {" "}
-              Gacha Intro ID :
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.gachaIntroId}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaIntroId: e.target.value } })}
-                placeholder="Gacha Intro ID..."
-                defaultValue=""
-                name="gachaIntroId"
-                id="gacha-intro-id"
-              />
-            </label>
-            <label htmlFor="gacha-text-en">
-              {" "}
-              Gacha Text EN:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.gachaTextEn}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaTextEn: e.target.value } })}
-                placeholder="Gacha Text EN..."
-                defaultValue=""
-                name="gachaTextEn"
-                id="gacha-text-en"
-              />
-            </label>
-
-            <label htmlFor="gacha-text-id">
-              {" "}
-              Gacha Text ID:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.gachaTextId}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, gachaTextId: e.target.value } })}
-                placeholder="Gacha Text ID..."
-                defaultValue=""
-                name="gachaTextId"
-                id="gacha-text-id"
-              />
-            </label>
-
-            <label htmlFor="login-text-en">
-              {" "}
-              Login Text EN:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.loginTextEn}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, loginTextEn: e.target.value } })}
-                placeholder="Login Text EN..."
-                defaultValue=""
-                name="loginTextEn"
-                id="login-text-en"
-              />
-            </label>
-
-            <label htmlFor="login-text-id">
-              {" "}
-              Login Text ID:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.loginTextId}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, loginTextId: e.target.value } })}
-                placeholder="Login Text ID..."
-                defaultValue=""
-                name="loginTextId"
-                id="login-text-id"
-              />
-            </label>
-
-            <label htmlFor="text1-en">
-              {" "}
-              Text 1 EN:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text1En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text1En: e.target.value } })}
-                placeholder="Text 1 EN..."
-                defaultValue=""
-                name="text1En"
-                id="text1-en"
-              />
-            </label>
-
-            <label htmlFor="text1-id">
-              {" "}
-              Text 1 ID:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text1Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text1Id: e.target.value } })}
-                placeholder="Text 1 ID..."
-                defaultValue=""
-                name="text1Id"
-                id="text1-id"
-              />
-            </label>
-
-            <label htmlFor="text2-en">
-              {" "}
-              Text 2 EN:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text2En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text2En: e.target.value } })}
-                placeholder="Text 2 EN..."
-                defaultValue=""
-                name="text2En"
-                id="text2-en"
-              />
-            </label>
-
-            <label htmlFor="text2-id">
-              {" "}
-              Text 2 ID:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text2Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text2Id: e.target.value } })}
-                placeholder="Text 2 ID..."
-                defaultValue=""
-                name="text2Id"
-                id="text2-id"
-              />
-            </label>
-            <label htmlFor="text3-en">
-              {" "}
-              Text 3 EN:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text3En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text3En: e.target.value } })}
-                placeholder="Text 3 EN..."
-                defaultValue=""
-                name="text3En"
-                id="text3-en"
-              />
-            </label>
-
-            <label htmlFor="text3-id">
-              {" "}
-              Text 3 ID:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text3Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text3Id: e.target.value } })}
-                placeholder="Text 3 ID..."
-                defaultValue=""
-                name="text3Id"
-                id="text3-id"
-              />
-            </label>
-            <label htmlFor="text4-en">
-              {" "}
-              Text 4 EN:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text4En}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text4En: e.target.value } })}
-                placeholder="Text 4 EN..."
-                defaultValue=""
-                name="text4En"
-                id="text4-en"
-              />
-            </label>
-
-            <label htmlFor="text4-id">
-              {" "}
-              Text 4 ID:
-              <textarea
-                className={TEXTAREA_STYLE}
-                value={character?.charIntro?.text4Id}
-                onChange={(e) => setCharacter({ ...character, charIntro: { ...character.charIntro, text4Id: e.target.value } })}
-                placeholder="Text 4 ID..."
-                defaultValue=""
-                name="text4Id"
-                id="text4-id"
-              />
-            </label>
-          </>
-        ) : (
-          <p>Belum ada data infonya</p>
-        )}
-      </div>
-    </>
   );
 }
 

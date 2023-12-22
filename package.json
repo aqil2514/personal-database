@@ -19,6 +19,7 @@
     "react": "^18",
     "react-bootstrap-icons": "^1.10.3",
     "react-dom": "^18",
+    "react-query": "^3.39.3",
     "swr": "^2.2.4"
   },
   "devDependencies": {
