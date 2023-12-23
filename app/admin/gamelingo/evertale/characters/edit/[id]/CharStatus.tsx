@@ -141,10 +141,11 @@ export default function CharStatus() {
             const els = document.querySelectorAll("#charTeam label input");
             const value: string[] = [];
             els.forEach((el: any) => {
-              if (el.defaultChecked) {
+              if (el.checked) {
                 value.push(el.value);
               }
             });
+            alert(`${value.length} buah CharTeam telah dipilih : "${value.join(", ")}"`);
             setCharacter({ ...character, charStatus: { ...character.charStatus, charTeam: value } });
           }}
         >

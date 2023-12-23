@@ -109,6 +109,7 @@ export default function PassiveSkill() {
                     value.push(el.value);
                   }
                 });
+                alert(`${value.length} buah opsi telah dipilih sebagai Passive Skill Type: ${value.join(", ")}`);
                 setCharacter({
                   ...character,
                   charPassiveSkill: [

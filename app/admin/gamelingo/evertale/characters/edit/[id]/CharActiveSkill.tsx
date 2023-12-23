@@ -133,6 +133,7 @@ export default function ActiveSkill() {
                     value.push(el.value);
                   }
                 });
+                alert(`${value.length} buah opsi telah dipilih sebagai Active Skill Type: ${value.join(", ")}`);
                 setCharacter({
                   ...character,
                   charActiveSkill: [
