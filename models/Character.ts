@@ -18,6 +18,7 @@ interface CharacterIntro {
   text2En: String;
   text2Id: String;
   text3En: String;
+  text3Id: String;
   text4En: String;
   text4Id: String;
 }
@@ -77,6 +78,7 @@ const CharacterIntroSchema = new Schema<CharacterIntro>({
   text2En: { type: String, required: false },
   text2Id: { type: String, required: false },
   text3En: { type: String, required: false },
+  text3Id: { type: String, required: false },
   text4En: { type: String, required: false },
   text4Id: { type: String, required: false },
 });
@@ -132,5 +134,5 @@ export const CharacterSchema = new Schema(
   { timestamps: true }
 );
 
-const Character = mongoose.models.echars || mongoose.model("echars", CharacterSchema);
+const Character = mongoose.models.chars || mongoose.model("chars", CharacterSchema);
 export default Character;

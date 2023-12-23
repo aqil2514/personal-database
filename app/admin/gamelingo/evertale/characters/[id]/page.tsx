@@ -32,7 +32,7 @@ export default function Detail() {
         <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 mx-2 rounded font-bold text-white">
           &lt;
         </span>
-        <Link className="bg-amber-600 cursor-pointer px-4 py-2 mx-2 rounded font-bold text-white" title="Edit Character" href={`/admin/gamelingo/evertale/characters/edit/${data.char.charId}`}>
+        <Link className="bg-amber-600 cursor-pointer px-4 py-2 mx-2 rounded font-bold text-white" title="Edit Character" href={`/admin/gamelingo/evertale/characters/edit/${data.char._id}`}>
           <PenFill />
         </Link>
       </div>

@@ -67,7 +67,7 @@ export default function CharStatus() {
           <input
             type="radio"
             name="isConjured"
-            checked={character?.charStatus?.isConjured === true}
+            defaultChecked={character?.charStatus?.isConjured === true}
             id="conjure"
             value="Conjure"
             onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, isConjured: e.target.value } })}
@@ -79,7 +79,7 @@ export default function CharStatus() {
             type="radio"
             name="isConjured"
             id="non-conjure"
-            checked={character?.charStatus?.isConjured === false}
+            defaultChecked={character?.charStatus?.isConjured === false}
             value="Non-Conjured"
             onChange={(e) => setCharacter({ ...character, charStatus: { ...character?.charStatus, isConjured: e.target.value } })}
           />{" "}
@@ -91,7 +91,7 @@ export default function CharStatus() {
         <div className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded-xl h-1/6 overflow-y-scroll">
           {data?.rss?.typeCharTeam?.map((type: string, i: number) => (
             <label htmlFor={type} key={i++}>
-              <input className="ml-4 mr-2" checked={character?.charStatus?.charTeam.find((team: string) => team === type)} type="checkbox" name={`char-team-${i++}`} value={type} id={type} />
+              <input className="ml-4 mr-2" defaultChecked={character?.charStatus?.charTeam.find((team: string) => team === type)} type="checkbox" name={`char-team-${i++}`} value={type} id={type} />
               {type}
             </label>
           ))}
@@ -141,7 +141,7 @@ export default function CharStatus() {
             const els = document.querySelectorAll("#charTeam label input");
             const value: string[] = [];
             els.forEach((el: any) => {
-              if (el.checked) {
+              if (el.defaultChecked) {
                 value.push(el.value);
               }
             });

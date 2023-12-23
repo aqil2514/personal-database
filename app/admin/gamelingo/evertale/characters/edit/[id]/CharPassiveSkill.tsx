@@ -55,7 +55,7 @@ export default function PassiveSkill() {
                 ?.filter((type: string) => type.toLowerCase().includes(searchTerm.toLowerCase()))
                 .map((type: string, index: number) => (
                   <label className="mx-2 my-2" htmlFor={type + i + 1} key={`passive-skill-${i}-type-${index++}`}>
-                    <input className="mx-2" type="checkbox" checked={nps?.typeSkill.find((q: string) => q === type)} data-passive-skill={i + 1} name={`passive-skill-${i}-type-${index++}`} id={type + i + 1} value={type} />
+                    <input className="mx-2" type="checkbox" defaultChecked={nps?.typeSkill.find((q: string) => q === type)} data-passive-skill={i + 1} name={`passive-skill-${i}-type-${index++}`} id={type + i + 1} value={type} />
                     {type}
                   </label>
                 ))}

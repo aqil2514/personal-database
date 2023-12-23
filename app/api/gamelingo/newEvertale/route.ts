@@ -31,12 +31,20 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ chars }, { status: 200 });
   } else if (category === "statusResource") {
     const ls = await LeaderSkill.find();
-    const lsData = ls.filter((l: any) => l.name !== "Leader Skill").map((l: any) => l.name);
+    const lsData = ls
+      .filter((l: any) => l.name !== "Leader Skill")
+      .map((l: any) => l.name)
+      .sort();
     const con = await Character.find({ "charStatus.isConjured": true });
-    const conjure = con.map((c: any) => c.charStatus.charName);
-    const rss = await TypeSkill.find();
+    const conjure = con.map((c: any) => c.charStatus.charName).sort();
+    const datarss = await TypeSkill.find();
+    const rss = {
+      typeCharTeam: datarss[0].typeCharTeam.sort(),
+      typeActiveSkill: datarss[0].typeActiveSkill.sort(),
+      typePassiveSkill: datarss[0].typePassiveSkill.sort(),
+    };
 
-    return NextResponse.json({ lsData, conjure, rss: rss[0] }, { status: 200 });
+    return NextResponse.json({ lsData, conjure, rss }, { status: 200 });
   }
 
   return NextResponse.json({ category }, { status: 200 });
@@ -112,70 +120,70 @@ export async function OPTIONS(req: NextRequest) {
       return NextResponse.json({ msg: `Ditemukan ${data.length}`, data }, { status: 200 });
     }
   } else if (category === "chars") {
-    if (activity === "migration") {
-      const chars = await getChars();
-      for (const char of chars.chars) {
-        const data = {
-          charId: char.char_id,
-          charImage: {
-            f1Img: char.charImage.f1Img,
-            f2Img: char.charImage.f2Img,
-            f3Img: char.charImage.f3Img,
-          },
-          charIntro: {
-            gachaIntroEn: char.charIntro.gachaIntroEn,
-            gachaIntroId: char.charIntro.gachaIntroId,
-            gachaTextEn: char.charIntro.gachaTextEn,
-            gachaTextId: char.charIntro.gachaTextId,
-            loginTextEn: char.charIntro.loginTextEn,
-            loginTextId: char.charIntro.loginTextId,
-            text1En: char.charIntro.text1En,
-            text1Id: char.charIntro.text1Id,
-            text2En: char.charIntro.text2En,
-            text2Id: char.charIntro.text2Id,
-            text3En: char.charIntro.text3En,
-            text3Id: char.charIntro.text3Id,
-            text4En: char.charIntro.text4En,
-            text4Id: char.charIntro.text4Id,
-          },
-          charStatus: {
-            charName: char.charStatus.charName,
-            charRank: char.charStatus.charRank,
-            charTeam: [],
-            charElement: char.charStatus.statusElement,
-            charWeapon1: char.charStatus.firstWeapon,
-            charWeapon2: char.charStatus.secondWeapon,
-            charLeaderSkill: char.charStatus.leaderSkill,
-            charConjure: char.charStatus.conjures,
-            isConjured: false,
-          },
-          charProfile: {
-            part1En: char.charProfile.part1En,
-            part1Id: char.charProfile.part1Id,
-            part2En: char.charProfile.part2En,
-            part2Id: char.charProfile.part2Id,
-            part3En: char.charProfile.part3En,
-            part3Id: char.charProfile.part3Id,
-          },
-          charActiveSkill: char.charActiveSkill.map((as: any) => ({
-            skillName: as.name,
-            typeSkill: [],
-            skillSpirit: as.spirit,
-            skillTarget: as.target,
-            skillTu: as.TU,
-            skillDescEn: as.descEn,
-            skillDescId: as.descId,
-          })),
-          charPassiveSkill: char.charPassiveSkill.map((as: any) => ({
-            skillName: as.name,
-            typeSkill: [],
-            skillDescEn: as.descEn,
-            skillDescId: as.descId,
-          })),
-        };
-        await Character.create(data);
-      }
-    }
+    // if (activity === "migration") {
+    //   const chars = await Character.find();
+    //   for (const char of chars) {
+    //     const data = {
+    //       charId: char.char_id,
+    //       charImage: {
+    //         f1Img: char.charImage.f1Img,
+    //         f2Img: char.charImage.f2Img,
+    //         f3Img: char.charImage.f3Img,
+    //       },
+    //       charIntro: {
+    //         gachaIntroEn: char.charIntro.gachaIntroEn,
+    //         gachaIntroId: char.charIntro.gachaIntroId,
+    //         gachaTextEn: char.charIntro.gachaTextEn,
+    //         gachaTextId: char.charIntro.gachaTextId,
+    //         loginTextEn: char.charIntro.loginTextEn,
+    //         loginTextId: char.charIntro.loginTextId,
+    //         text1En: char.charIntro.text1En,
+    //         text1Id: char.charIntro.text1Id,
+    //         text2En: char.charIntro.text2En,
+    //         text2Id: char.charIntro.text2Id,
+    //         text3En: char.charIntro.text3En,
+    //         text3Id: char.charIntro.text3Id || "unsetting",
+    //         text4En: char.charIntro.text4En,
+    //         text4Id: char.charIntro.text4Id,
+    //       },
+    //       charStatus: {
+    //         charName: char.charStatus.charName,
+    //         charRank: char.charStatus.charRank,
+    //         charTeam: char.charStatus.charTeam || [],
+    //         charElement: char.charStatus.charElement,
+    //         charWeapon1: char.charStatus.charWeapon1,
+    //         charWeapon2: char.charStatus.charWeapon2,
+    //         charLeaderSkill: char.charStatus.charLeaderSkill,
+    //         charConjure: char.charStatus.charConjure,
+    //         isConjured: char.charStatus.isConjured || false,
+    //       },
+    //       charProfile: {
+    //         part1En: char.charProfile.part1En,
+    //         part1Id: char.charProfile.part1Id,
+    //         part2En: char.charProfile.part2En,
+    //         part2Id: char.charProfile.part2Id,
+    //         part3En: char.charProfile.part3En,
+    //         part3Id: char.charProfile.part3Id,
+    //       },
+    //       charActiveSkill: char.charActiveSkill.map((as: any) => ({
+    //         skillName: as.skillName,
+    //         typeSkill: as.typeSkill || [],
+    //         skillSpirit: as.skillSpirit,
+    //         skillTarget: as.skillTarget,
+    //         skillTu: as.skillTu,
+    //         skillDescEn: as.skillDescEn,
+    //         skillDescId: as.skillDescId,
+    //       })),
+    //       charPassiveSkill: char.charPassiveSkill.map((as: any) => ({
+    //         skillName: as.skillName,
+    //         typeSkill: as.typeSkill || [],
+    //         skillDescEn: as.skillDescEn,
+    //         skillDescId: as.skillDescId,
+    //       })),
+    //     };
+    //     await Chars.create(data);
+    //   }
+    // }
 
     return NextResponse.json({ msg: "Migrasi data sukses" });
   }

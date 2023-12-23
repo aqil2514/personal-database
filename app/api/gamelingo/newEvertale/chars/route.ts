@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Character from "@/models/Character";
-import { ObjectId } from "mongodb";
 import connectMongoDB from "@/lib/mongoose";
-import { validateCharStatus } from "@/functions/validation";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -11,9 +9,7 @@ export async function GET(req: NextRequest) {
   await connectMongoDB();
 
   if (id) {
-    const char = await Character.findOne({
-      charId: new ObjectId(id),
-    });
+    const char = await Character.findById(id);
 
     return NextResponse.json({ char }, { status: 200 });
   }
@@ -22,7 +18,7 @@ export async function GET(req: NextRequest) {
 
   const chars = res.map((char: any) => ({
     charName: char.charStatus.charName,
-    id: char.charId,
+    id: char._id,
   }));
 
   return NextResponse.json({ chars }, { status: 200 });
@@ -30,7 +26,7 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const { submitData, action } = await req.json();
-  const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill, charId } = submitData;
+  const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill, _id } = submitData;
 
   //CharStatus Validation Start
 
@@ -215,7 +211,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ submitData }, { status: 200 });
   }
   if (action === "update") {
-    const char = await Character.findOneAndUpdate({ charId: new ObjectId(charId) }, { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill }, { new: true });
+    const char = await Character.findByIdAndUpdate(_id, { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill }, { new: true });
 
     return NextResponse.json({ msg: "Update Character Sukses", char }, { status: 200 });
   }
