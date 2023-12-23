@@ -42,6 +42,32 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ category }, { status: 200 });
 }
 
+export async function PUT(req: NextRequest) {
+  const { data, type } = await req.json();
+
+  if (type === "passive-skill-type") {
+    await TypeSkill.findByIdAndUpdate("6585933980d28308cec13f2c", {
+      $push: { typePassiveSkill: data },
+    });
+
+    return NextResponse.json({ msg: `Type Skill dengan nama "${data}" berhasil ditambahkan` }, { status: 200 });
+  } else if (type === "active-skill-type") {
+    await TypeSkill.findByIdAndUpdate("6585933980d28308cec13f2c", {
+      $push: { typeActiveSkill: data },
+    });
+
+    return NextResponse.json({ msg: `Type Skill dengan nama "${data}" berhasil ditambahkan` }, { status: 200 });
+  } else if (type === "char-team-type") {
+    await TypeSkill.findByIdAndUpdate("6585933980d28308cec13f2c", {
+      $push: { typeCharTeam: data },
+    });
+
+    return NextResponse.json({ msg: `Char Team dengan nama "${data}" berhasil ditambahkan` }, { status: 200 });
+  }
+
+  return NextResponse.json({ data, type }, { status: 200 });
+}
+
 export async function OPTIONS(req: NextRequest) {
   const { category, activity } = await req.json();
 

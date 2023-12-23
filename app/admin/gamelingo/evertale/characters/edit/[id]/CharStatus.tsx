@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE, useCharacter } from "./form";
-import { charRank, charTeamType, charWeapon } from "../../../component/data";
+import { charRank, charWeapon } from "../../../component/data";
 import useSWR from "swr";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { PlusCircleFill, XCircleFill } from "react-bootstrap-icons";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
@@ -10,7 +13,8 @@ export default function CharStatus() {
 
   const { character, setCharacter } = useCharacter();
   const { data, isLoading, error } = useSWR(URL, fetcher);
-  console.log(data);
+  const [isAddMode, setIsAddMode] = useState<Boolean>(false);
+  const router = useRouter();
   return (
     <div id="character-status" className={SECTION_STYLE}>
       <h3 className={SECTION_TITLE_STYLE}>Character Status</h3>
@@ -84,30 +88,68 @@ export default function CharStatus() {
       </div>
       <div id="charTeam">
         CharTeam:
-        <div className="flex flex-row flex-wrap">
-          {charTeamType.map((type: string, i: number) => (
+        <div className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded-xl h-1/6 overflow-y-scroll">
+          {data?.rss?.typeCharTeam?.map((type: string, i: number) => (
             <label htmlFor={type} key={i++}>
               <input className="ml-4 mr-2" checked={character?.charStatus?.charTeam.find((team: string) => team === type)} type="checkbox" name={`char-team-${i++}`} value={type} id={type} />
               {type}
             </label>
           ))}
-          <button
-            className={ADD_BUTTON_STYLE + " block"}
-            type="button"
-            onClick={() => {
-              const els = document.querySelectorAll("#charTeam label input");
-              const value: string[] = [];
-              els.forEach((el: any) => {
-                if (el.checked) {
-                  value.push(el.value);
-                }
-              });
-              setCharacter({ ...character, charStatus: { ...character.charStatus, charTeam: value } });
-            }}
-          >
-            Fiksasi
-          </button>
         </div>
+        <div className="cursor-pointer" onClick={() => setIsAddMode(!isAddMode)}>
+          {isAddMode ? <XCircleFill className="inline-block" /> : <PlusCircleFill className="inline-block" />}
+          <p className="inline-block my-auto mx-2">{isAddMode ? "Batal (Tekan CTRL + Enter untuk menambah data)" : "Tambah Skill Type"}</p>
+        </div>
+        {isAddMode && (
+          <input
+            type="text"
+            name="input-new-skill-type"
+            placeholder="Nama skill type..."
+            className="mx-2 w-1/6"
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.key === "Enter") {
+                const isDuplicate = data?.rss?.typeCharTeam?.find((keyword: string) => keyword.toLowerCase() === e.currentTarget.value.toLocaleLowerCase());
+                if (isDuplicate) {
+                  alert("Char Team telah tersedia");
+                  return;
+                }
+                const sure = confirm(`Yakin ingin tambahkan Char Type baru dengan nama "${e.currentTarget.value}" ?`);
+                if (!sure) {
+                  return;
+                }
+                axios
+                  .put("/api/gamelingo/newEvertale", {
+                    data: e.currentTarget.value,
+                    type: "char-team-type",
+                  })
+                  .then((res) => {
+                    alert(res.data.msg);
+                    e.currentTarget.value = "";
+                    router.refresh();
+                  })
+                  .catch((error) => console.log(error));
+              } else if (e.key === "Escape") {
+                setIsAddMode(false);
+              }
+            }}
+          />
+        )}
+        <button
+          className={ADD_BUTTON_STYLE + " block"}
+          type="button"
+          onClick={() => {
+            const els = document.querySelectorAll("#charTeam label input");
+            const value: string[] = [];
+            els.forEach((el: any) => {
+              if (el.checked) {
+                value.push(el.value);
+              }
+            });
+            setCharacter({ ...character, charStatus: { ...character.charStatus, charTeam: value } });
+          }}
+        >
+          Fiksasi
+        </button>
       </div>
       <label htmlFor="charWeapon1">
         Unit Weapon 1 :

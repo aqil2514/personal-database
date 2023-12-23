@@ -1,8 +1,19 @@
-import { passiveSkillsType } from "../../../component/data";
+import useSWR from "swr";
 import { ADD_BUTTON_STYLE, INPUT_STYLE, SECTION_STYLE, SECTION_TITLE_STYLE, TEXTAREA_STYLE, useCharacter } from "./form";
+import { useState } from "react";
+import { PlusCircleFill, XCircleFill } from "react-bootstrap-icons";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
+const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 export default function PassiveSkill() {
+  const URL = "/api/gamelingo/newEvertale?category=statusResource";
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isAddMode, setIsAddMode] = useState<Boolean>(false);
+
+  const { data, isLoading, error } = useSWR(URL, fetcher);
   const { character, setCharacter } = useCharacter();
+  const router = useRouter();
 
   return (
     <div id="character-images" className={SECTION_STYLE}>
@@ -38,14 +49,55 @@ export default function PassiveSkill() {
           </label>
           <div id="skill-type">
             <h3>Skill Type</h3>
-            <div id="passive-skill-type-container" className="flex flex-nowrap flex-row justify-evenly">
-              {passiveSkillsType.map((type: string, index: number) => (
-                <label htmlFor={type + i + 1} key={`passive-skill-${i}-type-${index++}`}>
-                  <input className="mx-2" type="checkbox" checked={nps?.typeSkill.find((q: string) => q === type)} data-passive-skill={i + 1} name={`passive-skill-${i}-type-${index++}`} id={type + i + 1} value={type} />
-                  {type}
-                </label>
-              ))}
+            <div id="passive-skill-type-container" className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded h-[100px] overflow-y-scroll">
+              <input type="text" name="search" id="search" placeholder="Cari Skill Type..." className="block w-full px-2" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              {data?.rss?.typePassiveSkill
+                ?.filter((type: string) => type.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map((type: string, index: number) => (
+                  <label className="mx-2 my-2" htmlFor={type + i + 1} key={`passive-skill-${i}-type-${index++}`}>
+                    <input className="mx-2" type="checkbox" checked={nps?.typeSkill.find((q: string) => q === type)} data-passive-skill={i + 1} name={`passive-skill-${i}-type-${index++}`} id={type + i + 1} value={type} />
+                    {type}
+                  </label>
+                ))}
             </div>
+            <div className="cursor-pointer" onClick={() => setIsAddMode(!isAddMode)}>
+              {isAddMode ? <XCircleFill className="inline-block" /> : <PlusCircleFill className="inline-block" />}
+              <p className="inline-block my-auto mx-2">{isAddMode ? "Batal (Tekan CTRL + Enter untuk menambah data)" : "Tambah Skill Type"}</p>
+            </div>
+            {isAddMode && (
+              <input
+                type="text"
+                name="input-new-skill-type"
+                placeholder="Nama skill type..."
+                className="mx-2 w-1/6"
+                onKeyDown={(e) => {
+                  if (e.ctrlKey && e.key === "Enter") {
+                    const isDuplicate = data?.rss?.typePassiveSkill?.find((keyword: string) => keyword.toLowerCase() === e.currentTarget.value.toLocaleLowerCase());
+                    if (isDuplicate) {
+                      alert("Skill type telah tersedia");
+                      return;
+                    }
+                    const sure = confirm(`Yakin ingin tambahkan Skill Type baru dengan nama "${e.currentTarget.value}" ?`);
+                    if (!sure) {
+                      return;
+                    }
+                    axios
+                      .put("/api/gamelingo/newEvertale", {
+                        data: e.currentTarget.value,
+                        type: "passive-skill-type",
+                      })
+                      .then((res) => {
+                        alert(res.data.msg);
+                        e.currentTarget.value = "";
+                        router.refresh();
+                      })
+                      .catch((error) => console.log(error));
+                  } else if (e.key === "Escape") {
+                    setIsAddMode(false);
+                  }
+                }}
+              />
+            )}
             <button
               className={ADD_BUTTON_STYLE + " block"}
               type="button"
