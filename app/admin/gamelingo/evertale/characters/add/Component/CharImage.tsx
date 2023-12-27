@@ -1,5 +1,5 @@
 import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE } from "@/app/components/Styles";
-import { useData } from "./formbody";
+import { useData } from "../formbody";
 export default function CharImages() {
   const { data, setData } = useData();
   return (

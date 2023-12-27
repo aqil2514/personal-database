@@ -1,13 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useState } from "react";
-import CharProfile from "./profile";
-import CharImages from "./images";
-import CharIntro from "./intro";
-import CharStatus from "./status";
-import CharActiveSkills from "./CharActiveSkills";
+import CharProfile from "./Component/CharProfile";
+import CharIntro from "./Component/CharIntro";
+import CharStatus from "./Component/CharStatus";
+import CharImages from "./Component/CharImage";
+import CharActiveSkills from "./Component/CharActiveSkills";
 import { CharacterState } from "./interface";
-import CharPassiveSkills from "./CharPassiveSkills";
+import CharPassiveSkills from "./Component/CharPassiveSkills";
 import { ADD_BUTTON_STYLE } from "@/app/components/Styles";
 
 const FormContext = createContext<React.ComponentState>(null);

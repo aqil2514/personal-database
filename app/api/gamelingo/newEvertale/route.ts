@@ -42,6 +42,7 @@ export async function GET(req: NextRequest) {
       typeCharTeam: datarss[0].typeCharTeam.sort(),
       typeActiveSkill: datarss[0].typeActiveSkill.sort(),
       typePassiveSkill: datarss[0].typePassiveSkill.sort(),
+      typeLeaderSkill: datarss[0].typeLeaderSkill.sort(),
     };
 
     return NextResponse.json({ lsData, conjure, rss }, { status: 200 });

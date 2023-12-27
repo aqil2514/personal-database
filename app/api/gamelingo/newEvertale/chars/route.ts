@@ -188,6 +188,8 @@ export async function PUT(req: NextRequest) {
   }
   // CharActiveSkill Validation End
 
+  // TODO : Tambahin konfigurasi edit tambah skill aktif & pasif
+
   // CharPassiveSkill Validation Start
   if (charPassiveSkill) {
     for (let i = 0; i < charPassiveSkill.length; i++) {
