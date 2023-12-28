@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE, TEXTAREA_STYLE, ADD_BUTTON_STYLE, ICON_DELETE_STYLE, DELETE_BUTTON_STYLE } from "@/app/components/Styles";
+import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE, TEXTAREA_STYLE, ADD_BUTTON_STYLE, ICON_DELETE_STYLE, DELETE_BUTTON_STYLE, SELECT_STYLE } from "@/app/components/Styles";
 import { passiveSkillsType } from "../../../component/data";
 import { useData } from "../formbody";
 import useSWR from "swr";
@@ -29,7 +29,7 @@ const TypeSkill = ({ inputSkill, setInputSkill }: any) => {
   return (
     <div id="PassiveSkill">
       Passive Skill Type:
-      <div className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded-xl h-1/6 overflow-y-scroll">
+      <div id="passive-skill-type-container" className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded-xl h-1/6 overflow-y-scroll">
         {data.rss.typePassiveSkill.map((type: string, i: number) => (
           <label htmlFor={type} key={i++}>
             <input className="ml-4 mr-2" type="checkbox" name={`passive-skill-type-${i++}`} value={type} id={type} />
@@ -96,6 +96,65 @@ const TypeSkill = ({ inputSkill, setInputSkill }: any) => {
   );
 };
 
+const NonUniqueSkill = ({ inputSkill, setInputSkill, addHandler }: React.ComponentState) => {
+  const URL = "/api/gamelingo/newEvertale/passiveskill";
+  const { data, isLoading } = useSWR(URL, fetcher);
+
+  if (!data || isLoading) return <div>Loading...</div>;
+
+  console.log("Data Passive : ", data);
+  const skillName = data.passiveData.map((passive: any) => passive.skillName).sort();
+
+  return (
+    <div>
+      <div>
+        <p>Data Passive</p>
+        <select
+          name="data-passive-list"
+          onChange={(e) => {
+            const desc = data.passiveData.find((passive: any) => passive.skillName === e.target.value);
+
+            setInputSkill({ ...inputSkill, skillName: e.target.value, skillDescId: desc.skillDescId, skillDescEn: desc.skillDescEn });
+          }}
+          className={SELECT_STYLE}
+          id="data-passive-list"
+        >
+          <option value={undefined}>Data Passive</option>
+          {skillName.map((skill: string, i: number) => (
+            <option value={skill} key={`passive-skill-select-${i++}`}>
+              {skill}
+            </option>
+          ))}
+        </select>
+
+        <TypeSkill inputSkill={inputSkill} setInputSkill={setInputSkill} />
+
+        <label htmlFor="desc-en">
+          Description :
+          <textarea className={TEXTAREA_STYLE} value={inputSkill.skillDescEn} onChange={(e) => setInputSkill({ ...inputSkill, skillDescEn: e.target.value })} name="descEn" id="desc-en" />
+        </label>
+
+        <label htmlFor="desc-id">
+          Deskripsi :
+          <textarea
+            className={TEXTAREA_STYLE}
+            value={inputSkill.skillDescId}
+            onChange={(e) => setInputSkill({ ...inputSkill, skillDescId: e.target.value })}
+            name="descId"
+            id="desc-id"
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.key === "Enter") {
+                addHandler();
+              }
+            }}
+          />
+          <p className="block">(CTRL + Enter untuk menambah state)</p>
+        </label>
+      </div>
+    </div>
+  );
+};
+
 export default function CharPassiveSkills() {
   const { data, setData } = useData();
   const [inputSkill, setInputSkill] = useState<PassiveSkillState>({
@@ -106,6 +165,7 @@ export default function CharPassiveSkills() {
   });
 
   const [deleteMode, setDeleteMode] = useState<Boolean>(false);
+  const [uniqueSkill, setUniqueSkill] = React.useState(false);
 
   const addHandler = () => {
     if (inputSkill.typeSkill.length === 0) {
@@ -141,32 +201,58 @@ export default function CharPassiveSkills() {
       {/* Setting Skills  */}
       <div>
         <h3 className={SECTION_TITLE_STYLE}>Character Passive Skill</h3>
-        <label htmlFor="skill-name">
-          Skill Name :
-          <input className={INPUT_STYLE} value={inputSkill.skillName} onChange={(e) => setInputSkill({ ...inputSkill, skillName: e.target.value })} type="text" name="skillName" id="skill-name" />
-        </label>
-        <TypeSkill inputSkill={inputSkill} setInputSkill={setInputSkill} />
-
-        <label htmlFor="desc-en">
-          Description :
-          <textarea className={TEXTAREA_STYLE} value={inputSkill.skillDescEn} onChange={(e) => setInputSkill({ ...inputSkill, skillDescEn: e.target.value })} name="descEn" id="desc-en" />
-        </label>
-        <label htmlFor="desc-id">
-          Deskripsi :
-          <textarea
-            className={TEXTAREA_STYLE}
-            value={inputSkill.skillDescId}
-            onChange={(e) => setInputSkill({ ...inputSkill, skillDescId: e.target.value })}
-            name="descId"
-            id="desc-id"
-            onKeyDown={(e) => {
-              if (e.ctrlKey && e.key === "Enter") {
-                addHandler();
-              }
+        <label htmlFor="char-passive-checkbox" className="block">
+          <input
+            type="checkbox"
+            checked={uniqueSkill}
+            onChange={() => {
+              setUniqueSkill(!uniqueSkill);
+              setInputSkill({
+                skillName: "",
+                typeSkill: [],
+                skillDescEn: "",
+                skillDescId: "",
+              });
             }}
+            name="char-passive-checkbox"
+            id="char-passive-checkbox"
           />
-          <p className="block">(CTRL + Enter untuk menambah state)</p>
+          <span>Unique Skill / New Skill</span>
         </label>
+
+        {uniqueSkill && (
+          <div>
+            <label htmlFor="skill-name">
+              Skill Name :
+              <input className={INPUT_STYLE} value={inputSkill.skillName} onChange={(e) => setInputSkill({ ...inputSkill, skillName: e.target.value })} type="text" name="skillName" id="skill-name" />
+            </label>
+            <TypeSkill inputSkill={inputSkill} setInputSkill={setInputSkill} />
+
+            <label htmlFor="desc-en">
+              Description :
+              <textarea className={TEXTAREA_STYLE} value={inputSkill.skillDescEn} onChange={(e) => setInputSkill({ ...inputSkill, skillDescEn: e.target.value })} name="descEn" id="desc-en" />
+            </label>
+            <label htmlFor="desc-id">
+              Deskripsi :
+              <textarea
+                className={TEXTAREA_STYLE}
+                value={inputSkill.skillDescId}
+                onChange={(e) => setInputSkill({ ...inputSkill, skillDescId: e.target.value })}
+                name="descId"
+                id="desc-id"
+                onKeyDown={(e) => {
+                  if (e.ctrlKey && e.key === "Enter") {
+                    addHandler();
+                  }
+                }}
+              />
+              <p className="block">(CTRL + Enter untuk menambah state)</p>
+            </label>
+          </div>
+        )}
+
+        {!uniqueSkill && <NonUniqueSkill inputSkill={inputSkill} setInputSkill={setInputSkill} addHandler={addHandler} />}
+
         <button type="button" onClick={addHandler} className={ADD_BUTTON_STYLE}>
           Add
         </button>

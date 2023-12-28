@@ -32,7 +32,7 @@ const TypeSkill = ({ inputSkill, setInputSkill }: any) => {
   return (
     <div id="activeSkill">
       Active SKill Type:
-      <div className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded-xl h-1/6 overflow-y-scroll">
+      <div id="active-skill-type-container" className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded-xl h-1/6 overflow-y-scroll">
         {data.rss.typeActiveSkill.map((type: string, i: number) => (
           <label htmlFor={type} key={i++}>
             <input className="ml-4 mr-2" type="checkbox" name={`active-skill-type-${i++}`} value={type} id={type} />
