@@ -176,6 +176,7 @@ export async function POST(req: NextRequest) {
   if (action === "see") {
     return NextResponse.json({ msg: "Data berhasil diverifikasi", data, redirect: false }, { status: 200 });
   } else if (action === "add") {
+    await connectMongoDB();
     await Character.create(data);
     return NextResponse.json({ msg: "Data berhasil ditambah", redirect: true }, { status: 200 });
   }
