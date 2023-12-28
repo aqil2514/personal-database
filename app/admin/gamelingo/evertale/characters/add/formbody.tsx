@@ -9,6 +9,8 @@ import CharActiveSkills from "./Component/CharActiveSkills";
 import { CharacterState } from "./interface";
 import CharPassiveSkills from "./Component/CharPassiveSkills";
 import { ADD_BUTTON_STYLE } from "@/app/components/Styles";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const FormContext = createContext<React.ComponentState>(null);
 
@@ -57,6 +59,32 @@ export default function FormBody() {
     charActiveSkill: [],
     charPassiveSkill: [],
   });
+  const [loading, setLoading] = React.useState(false);
+
+  const router = useRouter();
+
+  const sendingHandler = async (type: string) => {
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/gamelingo/newEvertale/chars", {
+        data,
+        action: type,
+      });
+
+      if (res.data.redirect) {
+        alert(res.data.msg);
+        router.replace("/admin/gamelingo/evertale/characters");
+      }
+
+      alert(res.data.msg);
+      console.log(res.data.data);
+    } catch (error: any) {
+      alert(error.response.data.msg || "Terjadi kesalahan");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <FormContext.Provider value={{ data, setData }}>
@@ -66,8 +94,14 @@ export default function FormBody() {
       <CharProfile />
       <CharActiveSkills />
       <CharPassiveSkills />
-      <button className={ADD_BUTTON_STYLE + " block"} type="button" onClick={() => console.log(data)}>
-        Lihat Data
+      <button className={ADD_BUTTON_STYLE + " block"} type="button" disabled={loading} onClick={() => sendingHandler("see")}>
+        {loading ? "Sedang Verifikasi..." : "Verifikasi Data"}
+      </button>
+      <button className={ADD_BUTTON_STYLE + ""} type="button" disabled={loading} onClick={() => sendingHandler("add")}>
+        {loading ? "Mengirim Data..." : "Kirim Data"}
+      </button>
+      <button className={ADD_BUTTON_STYLE + ""} type="button" disabled={loading} onClick={() => console.log(data)}>
+        {loading ? "Mengirim Data..." : "Lihat Data"}
       </button>
     </FormContext.Provider>
   );

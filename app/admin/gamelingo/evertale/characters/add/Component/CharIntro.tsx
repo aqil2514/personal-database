@@ -79,8 +79,8 @@ export default function CharIntro() {
         Login Text ID:
         <textarea
           className={TEXTAREA_STYLE}
-          value={data?.charIntro?.login}
-          onChange={(e) => setData({ ...data, charIntro: { ...data.charIntro, login: e.target.value } })}
+          value={data?.charIntro?.loginTextId}
+          onChange={(e) => setData({ ...data, charIntro: { ...data.charIntro, loginTextId: e.target.value } })}
           placeholder="Login Text ID..."
           defaultValue=""
           name="loginTextId"
