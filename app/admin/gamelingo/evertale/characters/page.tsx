@@ -24,7 +24,7 @@ export default async function Characters() {
         <Link href="/admin/gamelingo/evertale/characters/add" className="mx-2 px-2 py-1 rounded-lg font-roboto font-bold bg-amber-500 hover:bg-amber-200 hover:text-amber-950 ">
           Tambah
         </Link>
-        <Link href="/admin/gamelingo/evertale/characters/delete" className="mx-2 px-2 py-1 rounded-lg font-roboto mx-2 font-roboto font-bold bg-amber-500 hover:bg-amber-200 hover:text-amber-950">
+        <Link href="/admin/gamelingo/evertale/characters/delete" className=" px-2 py-1 rounded-lg  mx-2 font-roboto font-bold bg-amber-500 hover:bg-amber-200 hover:text-amber-950">
           Hapus
         </Link>
       </div>

@@ -46,6 +46,12 @@ const dataEvertale = [
     path: "/gamelingo/evertale/conjures",
     pathAdmin: "/admin/gamelingo/evertale/conjures",
   },
+  {
+    id: "de-weapons",
+    name: "Weapon",
+    path: "/gamelingo/evertale/weapons",
+    pathAdmin: "/admin/gamelingo/evertale/weapons",
+  },
 ];
 
 export { dataGameLingo, dataEvertale };
