@@ -332,5 +332,7 @@ export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
 
+  await Weapon.findByIdAndDelete(id);
+
   return NextResponse.json({ msg: "Weapon berhasil dihapus" }, { status: 200 });
 }
