@@ -129,9 +129,9 @@ const Form = () => {
         Ascend 1
       </h1>
       <label htmlFor="a1WeapEnSkill">Weapon English Skill:</label>
-      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="a1WeapEnSkill" name="a1WeapEnSkill" required />
+      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="a1WeapEnSkill" name="a1WeapEnSkill" />
       <label htmlFor="a1WeapIdSkill">Weapon Indonesian Skill:</label>
-      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="a1WeapIdSkill" name="a1WeapIdSkill" required />
+      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="a1WeapIdSkill" name="a1WeapIdSkill" />
       <label htmlFor="a1Power">Weapon Power:</label>
       <input className={INPUT_STYLE} type="number" name="a1Power" id="a1Power" disabled={isLoading} />
       <label htmlFor="a1HP">Weapon HP:</label>
@@ -150,9 +150,9 @@ const Form = () => {
         Full Ascend
       </h1>
       <label htmlFor="faWeapEnSkill">Weapon English Skill:</label>
-      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="faWeapEnSkill" name="faWeapEnSkill" required />
+      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="faWeapEnSkill" name="faWeapEnSkill" />
       <label htmlFor="faWeapIdSkill">Weapon Indonesian Skill:</label>
-      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="faWeapIdSkill" name="faWeapIdSkill" required />
+      <textarea disabled={isLoading} className={TEXTAREA_STYLE} id="faWeapIdSkill" name="faWeapIdSkill" />
       <label htmlFor="faPower">Weapon Power:</label>
       <input className={INPUT_STYLE} type="number" name="faPower" id="faPower" disabled={isLoading} />
       <label htmlFor="faHP">Weapon HP:</label>

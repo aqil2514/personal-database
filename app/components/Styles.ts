@@ -7,3 +7,5 @@ export const SELECT_STYLE = "block border-slate-200 focus-visible:border-green-2
 export const ADD_BUTTON_STYLE = "bg-green-800 disabled:bg-green-300 text-white font-bold py-2 px-4 rounded m-1";
 export const DELETE_BUTTON_STYLE = "bg-rose-800 text-white font-bold py-2 px-4 rounded m-1";
 export const ICON_DELETE_STYLE = "text-rose-800 cursor-pointer";
+export const FIGURE_STYLE = "my-4 text-center";
+export const IMAGE_STYILE = "max-w-screen-sm rounded block mx-auto";
