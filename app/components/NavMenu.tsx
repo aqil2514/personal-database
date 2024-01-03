@@ -8,7 +8,7 @@ const LI_STYLES = "py-2 text-right";
 
 export default function NavMenu() {
   return (
-    <div className="sm:block hidden w-nav bg-cyan-900 px-4 pt-3 min-h-screen" id="database-navbar">
+    <div className="md:block hidden w-nav bg-cyan-900 px-4 pt-3 min-h-screen" id="database-navbar">
       <Menu />
     </div>
   );

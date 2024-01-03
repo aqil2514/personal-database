@@ -23,6 +23,14 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ data }, { status: 200 });
 }
 
+function cleanData(value: string) {
+  return value === "" ? undefined : value;
+}
+
+function cleanNumeric(value: string) {
+  return value === "" ? undefined : value === "0" ? 0 : Number(value);
+}
+
 export async function POST(req: NextRequest) {
   const form = await req.json();
   const {
@@ -41,6 +49,7 @@ export async function POST(req: NextRequest) {
     naLvl,
     naBoost,
     naPot,
+    naCost,
     a1WeapEnSkill,
     a1WeapIdSkill,
     a1Power,
@@ -49,6 +58,7 @@ export async function POST(req: NextRequest) {
     a1Lvl,
     a1Boost,
     a1Pot,
+    a1Cost,
     faWeapEnSkill,
     faWeapIdSkill,
     faPower,
@@ -57,6 +67,7 @@ export async function POST(req: NextRequest) {
     faLvl,
     faBoost,
     faPot,
+    faCost,
     maxPower,
     maxHP,
     maxATK,
@@ -83,7 +94,67 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ msg: iswpAscendValidator?.msg }, { status: 422 });
   }
 
-  const data = {
+  const faData = {
+    weapSkill: cleanData(faWeapEnSkill)
+      ? {
+          skillEn: cleanData(faWeapEnSkill),
+          skillId: cleanData(faWeapIdSkill),
+        }
+      : undefined,
+    status: Object.values({
+      power: cleanNumeric(faPower),
+      hp: cleanNumeric(faHP),
+      atk: cleanNumeric(faATK),
+      level: cleanNumeric(faLvl),
+      boost: cleanNumeric(faBoost),
+      potential: cleanNumeric(faPot),
+      cost: cleanNumeric(faCost),
+    }).every((value) => value === undefined)
+      ? undefined
+      : {
+          power: cleanNumeric(faPower),
+          hp: cleanNumeric(faHP),
+          atk: cleanNumeric(faATK),
+          level: cleanNumeric(faLvl),
+          boost: cleanNumeric(faBoost),
+          potential: cleanNumeric(faPot),
+          cost: cleanNumeric(faCost),
+        },
+  };
+
+  const a1Data = {
+    weapSkill: cleanData(a1WeapEnSkill)
+      ? {
+          skillEn: cleanData(a1WeapEnSkill),
+          skillId: cleanData(a1WeapIdSkill),
+        }
+      : undefined,
+    status:
+      cleanNumeric(a1Power) || cleanNumeric(a1HP) || cleanNumeric(a1ATK) || cleanNumeric(a1Lvl) || cleanNumeric(a1Boost) || cleanNumeric(a1Pot) || cleanNumeric(a1Cost)
+        ? {
+            power: cleanNumeric(a1Power),
+            hp: cleanNumeric(a1HP),
+            atk: cleanNumeric(a1ATK),
+            level: cleanNumeric(a1Lvl),
+            boost: cleanNumeric(a1Boost),
+            potential: cleanNumeric(a1Pot),
+            cost: cleanNumeric(a1Cost),
+          }
+        : undefined,
+  };
+
+  const maxData = {
+    status: {
+      power: cleanNumeric(maxPower),
+      hp: cleanNumeric(maxHP),
+      atk: cleanNumeric(maxATK),
+      level: cleanNumeric(maxLvl),
+      boost: cleanNumeric(maxBoost),
+      potential: cleanNumeric(maxPot),
+    },
+  };
+
+  const data: any = {
     weapName,
     weapImage: {
       png: weapImagePng,
@@ -102,53 +173,19 @@ export async function POST(req: NextRequest) {
           skillId: naWeapIdSkill,
         },
         status: {
-          power: Number(naPower),
-          hp: Number(naHP),
-          atk: Number(naATK),
-          level: Number(naLvl),
-          boost: Number(naBoost),
-          potential: Number(naPot),
+          power: cleanNumeric(naPower),
+          hp: cleanNumeric(naHP),
+          atk: cleanNumeric(naATK),
+          level: cleanNumeric(naLvl),
+          boost: cleanNumeric(naBoost),
+          potential: cleanNumeric(naPot),
+          cost: cleanNumeric(naCost),
         },
       },
-      ascend1: {
-        weapSkill: {
-          skillEn: a1WeapEnSkill,
-          skillId: a1WeapIdSkill,
-        },
-        status: {
-          power: Number(a1Power),
-          hp: Number(a1HP),
-          atk: Number(a1ATK),
-          level: Number(a1Lvl),
-          boost: Number(a1Boost),
-          potential: Number(a1Pot),
-        },
-      },
-      fullAscend: {
-        weapSkill: {
-          skillEn: faWeapEnSkill,
-          skillId: faWeapIdSkill,
-        },
-        status: {
-          power: Number(faPower),
-          hp: Number(faHP),
-          atk: Number(faATK),
-          level: Number(faLvl),
-          boost: Number(faBoost),
-          potential: Number(faPot),
-        },
-      },
+      ascend1: Object.values(a1Data).every((value) => value === undefined) ? undefined : a1Data,
+      fullAscend: Object.values(faData).every((value) => value === undefined) ? undefined : faData,
     },
-    weapMax: {
-      status: {
-        power: Number(maxPower),
-        hp: Number(maxHP),
-        atk: Number(maxATK),
-        level: Number(maxLvl),
-        boost: Number(maxBoost),
-        potential: Number(maxPot),
-      },
-    },
+    weapMax: Object.values(maxData).every((value) => value === undefined) ? undefined : maxData,
   };
 
   await connectMongoDB();
@@ -294,8 +331,6 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
-
-  const weapon = await Weapon.findByIdAndDelete(id);
 
   return NextResponse.json({ msg: "Weapon berhasil dihapus" }, { status: 200 });
 }
