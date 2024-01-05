@@ -1,6 +1,8 @@
 import { imageValidator, wpAscendValidator, wpIdentityValidator } from "@/app/components/ValidatorAPI";
 import connectMongoDB from "@/lib/mongoose";
-import { Weapon } from "@/models/Weapons";
+import { Weapon } from "@/models/Evertale/Weapons";
+import Post from "@/models/General/Post";
+import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -189,7 +191,16 @@ export async function POST(req: NextRequest) {
   };
 
   await connectMongoDB();
-  await Weapon.create(data);
+  const newWeap = await Weapon.create(data);
+  await Post.create({
+    title: newWeap.weapName,
+    game: {
+      name: "Evertale",
+      topic: "Weapon",
+    },
+    content: newWeap._id,
+    author: "Admin GameLingo",
+  });
 
   return NextResponse.json({ msg: "Tambah data weapon berhasil" }, { status: 200 });
 }
@@ -333,6 +344,7 @@ export async function DELETE(req: NextRequest) {
   const id = searchParams.get("id");
 
   await Weapon.findByIdAndDelete(id);
+  await Post.findOneAndDelete({ content: new ObjectId(id as string) });
 
   return NextResponse.json({ msg: "Weapon berhasil dihapus" }, { status: 200 });
 }

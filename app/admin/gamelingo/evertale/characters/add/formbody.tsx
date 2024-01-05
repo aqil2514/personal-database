@@ -77,7 +77,7 @@ export default function FormBody() {
       }
 
       alert(res.data.msg);
-      console.log(res.data.data);
+      console.log(res.data);
     } catch (error: any) {
       alert(error.response.data.msg || "Terjadi kesalahan");
       console.error(error);

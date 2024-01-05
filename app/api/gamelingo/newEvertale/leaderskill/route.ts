@@ -1,4 +1,4 @@
-import LeaderSkill from "@/models/LeaderSkill";
+import LeaderSkill from "@/models/Evertale/LeaderSkill";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
