@@ -1,5 +1,6 @@
 "use client";
 
+import { Body, Head, Heading, Row, Table } from "@/components/General/Table";
 import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -53,7 +54,34 @@ export default function Data() {
         </button>
       </div>
 
-      <table className="w-full">
+      <Table>
+        <Heading>
+          <Row>
+            <Head>#</Head>
+            <Head>Character's Name</Head>
+            <Head>Action</Head>
+          </Row>
+        </Heading>
+        <Body>
+          {data.chars.map((char: React.ComponentState, i: number) => (
+            <tr key={`char-${i++}`} id={`char-${i++}`}>
+              <td className={"text-center " + BORDER}>{i++}</td>
+              <td className={`px-2 ${BORDER}`}>{char.charName}</td>
+              <td className={"hover:bg-emerald-500 text-center " + BORDER}>
+                {isDeleteMode ? (
+                  <p className="cursor-pointer" data-id={char.id} onClick={(e) => deleteHandler(e)}>
+                    Hapus
+                  </p>
+                ) : (
+                  <Link href={`/admin/gamelingo/evertale/characters/${char.id}`}>Detail</Link>
+                )}
+              </td>
+            </tr>
+          ))}
+        </Body>
+      </Table>
+
+      {/* <table className="w-full">
         <thead>
           <tr className="bg-emerald-950 text-white font-roboto font-bold py-1 border-solid border-2 border-white">
             <th className={`${BORDER}`}>#</th>
@@ -78,7 +106,7 @@ export default function Data() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
     </>
   );
 }

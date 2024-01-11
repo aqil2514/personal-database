@@ -36,7 +36,8 @@ const Form = () => {
       });
 
       alert(res.data.msg);
-      router.push("/admin/gamelingo/evertale/weapons");
+      console.log(res.data);
+      router.replace("/admin/gamelingo/evertale/weapons");
     } catch (error) {
       console.error(error);
       if (axios.isAxiosError(error)) {

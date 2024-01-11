@@ -1,8 +1,6 @@
-import { imageValidator, wpAscendValidator, wpIdentityValidator } from "@/app/components/ValidatorAPI";
 import connectMongoDB from "@/lib/mongoose";
+import { document } from "@/lib/utils";
 import { Weapon } from "@/models/Evertale/Weapons";
-import Post from "@/models/General/Post";
-import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -79,19 +77,19 @@ export async function POST(req: NextRequest) {
   } = form.data;
 
   //   Image Validator
-  const isImgValidate = imageValidator(weapImagePng, weapImageWebp);
+  const isImgValidate = document.weapon.validator.image(weapImagePng, weapImageWebp);
   if (!isImgValidate?.status) {
     return NextResponse.json({ msg: isImgValidate?.msg }, { status: 422 });
   }
 
   //   wpIdentityValidator
-  const isIdentityValidate = wpIdentityValidator(weapRank, weapType, weapName, weapEnLore, weapIdLore);
+  const isIdentityValidate = document.weapon.validator.weaponIdentity(weapRank, weapType, weapName, weapEnLore, weapIdLore);
   if (!isIdentityValidate?.status) {
     return NextResponse.json({ msg: isIdentityValidate?.msg }, { status: 422 });
   }
 
   //   ascend Validator
-  const iswpAscendValidator = wpAscendValidator(naWeapEnSkill, naWeapIdSkill, Number(naPower), Number(naHP), Number(naATK), Number(naLvl), Number(naBoost), Number(naPot));
+  const iswpAscendValidator = document.weapon.validator.weaponAscend(naWeapEnSkill, naWeapIdSkill, Number(naPower), Number(naHP), Number(naATK), Number(naLvl), Number(naBoost), Number(naPot), Number(naCost));
   if (!iswpAscendValidator?.status) {
     return NextResponse.json({ msg: iswpAscendValidator?.msg }, { status: 422 });
   }
@@ -190,19 +188,9 @@ export async function POST(req: NextRequest) {
     weapMax: Object.values(maxData).every((value) => value === undefined) ? undefined : maxData,
   };
 
-  await connectMongoDB();
-  const newWeap = await Weapon.create(data);
-  await Post.create({
-    title: newWeap.weapName,
-    game: {
-      name: "Evertale",
-      topic: "Weapon",
-    },
-    content: newWeap._id,
-    author: "Admin GameLingo",
-  });
+  const create = await document.weapon.db.create(data);
 
-  return NextResponse.json({ msg: "Tambah data weapon berhasil" }, { status: 200 });
+  return NextResponse.json({ msg: create }, { status: 200 });
 }
 
 export async function PUT(req: NextRequest) {
@@ -223,6 +211,7 @@ export async function PUT(req: NextRequest) {
     naLvl,
     naBoost,
     naPot,
+    naCost,
     a1WeapEnSkill,
     a1WeapIdSkill,
     a1Power,
@@ -231,6 +220,7 @@ export async function PUT(req: NextRequest) {
     a1Lvl,
     a1Boost,
     a1Pot,
+    a1Cost,
     faWeapEnSkill,
     faWeapIdSkill,
     faPower,
@@ -239,6 +229,7 @@ export async function PUT(req: NextRequest) {
     faLvl,
     faBoost,
     faPot,
+    faCost,
     maxPower,
     maxHP,
     maxATK,
@@ -248,19 +239,19 @@ export async function PUT(req: NextRequest) {
   } = form.data;
 
   //   Image Validator
-  const isImgValidate = imageValidator(weapImagePng, weapImageWebp);
+  const isImgValidate = document.weapon.validator.image(weapImagePng, weapImageWebp);
   if (!isImgValidate?.status) {
     return NextResponse.json({ msg: isImgValidate?.msg }, { status: 422 });
   }
 
   //   wpIdentityValidator
-  const isIdentityValidate = wpIdentityValidator(weapRank, weapType, weapName, weapEnLore, weapIdLore);
+  const isIdentityValidate = document.weapon.validator.weaponIdentity(weapRank, weapType, weapName, weapEnLore, weapIdLore);
   if (!isIdentityValidate?.status) {
     return NextResponse.json({ msg: isIdentityValidate?.msg }, { status: 422 });
   }
 
   //   ascend Validator
-  const iswpAscendValidator = wpAscendValidator(naWeapEnSkill, naWeapIdSkill, Number(naPower), Number(naHP), Number(naATK), Number(naLvl), Number(naBoost), Number(naPot));
+  const iswpAscendValidator = document.weapon.validator.weaponAscend(naWeapEnSkill, naWeapIdSkill, Number(naPower), Number(naHP), Number(naATK), Number(naLvl), Number(naBoost), Number(naPot), Number(naCost));
   if (!iswpAscendValidator?.status) {
     return NextResponse.json({ msg: iswpAscendValidator?.msg }, { status: 422 });
   }
@@ -290,6 +281,7 @@ export async function PUT(req: NextRequest) {
           level: Number(naLvl),
           boost: Number(naBoost),
           potential: Number(naPot),
+          cost: Number(naCost),
         },
       },
       ascend1: {
@@ -304,6 +296,7 @@ export async function PUT(req: NextRequest) {
           level: Number(a1Lvl),
           boost: Number(a1Boost),
           potential: Number(a1Pot),
+          cost: Number(a1Cost),
         },
       },
       fullAscend: {
@@ -318,6 +311,7 @@ export async function PUT(req: NextRequest) {
           level: Number(faLvl),
           boost: Number(faBoost),
           potential: Number(faPot),
+          cost: Number(faCost),
         },
       },
     },
@@ -343,8 +337,7 @@ export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
 
-  await Weapon.findByIdAndDelete(id);
-  await Post.findOneAndDelete({ content: new ObjectId(id as string) });
+  const msg = await document.weapon.db.delete(id as string);
 
-  return NextResponse.json({ msg: "Weapon berhasil dihapus" }, { status: 200 });
+  return NextResponse.json({ msg }, { status: 200 });
 }
