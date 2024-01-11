@@ -1,9 +1,9 @@
 import { getChars, getPassiveSkills } from "@/lib/mongodb/evertale";
 import connectMongoDB from "@/lib/mongoose";
-import Character from "@/models/Character";
-import LeaderSkill from "@/models/LeaderSkill";
-import Passive from "@/models/PassiveSkills";
-import { TypeSkill } from "@/models/TypeSkills";
+import Character from "@/models/Evertale/Character";
+import LeaderSkill from "@/models/Evertale/LeaderSkill";
+import Passive from "@/models/Evertale/PassiveSkills";
+import { TypeSkill } from "@/models/Evertale/TypeSkills";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {

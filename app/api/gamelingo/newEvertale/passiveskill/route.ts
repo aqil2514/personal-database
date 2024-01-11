@@ -1,5 +1,5 @@
 import connectMongoDB from "@/lib/mongoose";
-import Passive from "@/models/PassiveSkills";
+import Passive from "@/models/Evertale/PassiveSkills";
 import { NextResponse } from "next/server";
 
 export async function GET() {

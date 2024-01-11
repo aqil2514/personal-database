@@ -102,7 +102,6 @@ const NonUniqueSkill = ({ inputSkill, setInputSkill, addHandler }: React.Compone
 
   if (!data || isLoading) return <div>Loading...</div>;
 
-  console.log("Data Passive : ", data);
   const skillName = data.passiveData.map((passive: any) => passive.skillName).sort();
 
   return (
@@ -129,27 +128,27 @@ const NonUniqueSkill = ({ inputSkill, setInputSkill, addHandler }: React.Compone
 
         <TypeSkill inputSkill={inputSkill} setInputSkill={setInputSkill} />
 
-        <label htmlFor="desc-en">
+        <label htmlFor="passive-desc-en">
           Description :
-          <textarea className={TEXTAREA_STYLE} value={inputSkill.skillDescEn} onChange={(e) => setInputSkill({ ...inputSkill, skillDescEn: e.target.value })} name="descEn" id="desc-en" />
+          <textarea className={TEXTAREA_STYLE} value={inputSkill.skillDescEn} onChange={(e) => setInputSkill({ ...inputSkill, skillDescEn: e.target.value })} name="descEn" id="passive-desc-en" />
         </label>
 
-        <label htmlFor="desc-id">
+        <label htmlFor="passive-desc-id">
           Deskripsi :
           <textarea
             className={TEXTAREA_STYLE}
             value={inputSkill.skillDescId}
             onChange={(e) => setInputSkill({ ...inputSkill, skillDescId: e.target.value })}
             name="descId"
-            id="desc-id"
+            id="passive-desc-id"
             onKeyDown={(e) => {
               if (e.ctrlKey && e.key === "Enter") {
                 addHandler();
               }
             }}
           />
-          <p className="block">(CTRL + Enter untuk menambah state)</p>
         </label>
+        <p className="block">(CTRL + Enter untuk menambah state)</p>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { dataEvertale } from "@/app/components/Data";
 import { Metadata } from "next";
+import { Button } from "@/components/General/Button";
 
 export const metadata: Metadata = {
   title: "Personal Database - Evertale",
@@ -21,7 +22,7 @@ export default async function AdminPage() {
       <div className="flex justify-center w-full mt-2">
         {dataEvertale.map((de) => (
           <Link key={de.id} href={de.pathAdmin} className="mx-5 h-0">
-            <button className="bg-orange-600 rounded px-2 py-1 font-merriweather text-white hover:bg-orange-500 hover:text-black">{de.name}</button>
+            <Button>{de.name}</Button>
           </Link>
         ))}
       </div>
