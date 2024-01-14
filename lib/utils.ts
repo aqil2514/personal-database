@@ -3,6 +3,7 @@ import connectMongoDB from "./mongoose";
 import Post from "@/models/General/Post";
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
+import { v2 as cloudinary } from "cloudinary";
 
 // DOCUMENT API
 
@@ -217,5 +218,41 @@ export const document = {
         }
       },
     },
+  },
+};
+
+// File API
+export const file = {
+  uploadImage: async (files: any, game: string, category: string) => {
+    const result: any = [];
+
+    for (const file of files) {
+      const bytes = await (file as File).arrayBuffer();
+      const format = (file as File).name.split(".");
+      const buffer = new Uint8Array(bytes);
+      const uploadResult: any = await new Promise((resolve, reject) => {
+        cloudinary.uploader
+          .upload_stream(
+            {
+              folder: `${game}/${category}/${format[1]}`,
+              public_id: `${format[0]}`,
+              discard_original_filename: true,
+            },
+            (error, result) => {
+              if (error) {
+                reject(error);
+                return { msg: "Error", error };
+              }
+
+              return resolve(result);
+            }
+          )
+          .end(buffer);
+      });
+
+      result.push(uploadResult);
+    }
+
+    return result;
   },
 };
