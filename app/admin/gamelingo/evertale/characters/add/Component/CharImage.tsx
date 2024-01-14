@@ -1,6 +1,8 @@
 import { SECTION_STYLE, SECTION_TITLE_STYLE, INPUT_STYLE } from "@/app/components/Styles";
 import { useData } from "../formbody";
 import React from "react";
+import { Button } from "@/components/General/Button";
+import { Input } from "@/components/General/Input";
 export default function CharImages() {
   const { data, setData } = useData();
   const fileRef = React.useRef<any>(null);
@@ -18,8 +20,6 @@ export default function CharImages() {
       formData.append("files", file as File);
     }
 
-    // console.log(files);
-
     try {
       setLoading(true);
       const res = await fetch("/api/file?game=evertale&category=characters", {
@@ -32,7 +32,6 @@ export default function CharImages() {
       const f3Img = dataAPI.result.find((d: Record<string, string>) => d.public_id.includes("03")).url;
 
       setData({ ...data, charImage: { f1Img, f2Img, f3Img } });
-      console.log(dataAPI);
     } catch (error) {
       console.error(error);
     } finally {
@@ -47,19 +46,13 @@ export default function CharImages() {
           Upload File :{" "}
         </label>
         <input type="file" ref={fileRef} name="files" id="files" multiple />
-        <button type="button" disabled={loading} className="bg-green-700 disabled:bg-green-200 font-bold rounded-lg px-4 py-2 text-white" onClick={uploadHandler}>
+        <Button variant="upload" type="button" disabled={loading} onClick={uploadHandler}>
           {loading ? "Uploading..." : "Upload"}
-        </button>
+        </Button>
       </div>
-      <label htmlFor="f1Img">
-        Form 1 Image : <input className={INPUT_STYLE} value={data?.charImage?.f1Img} disabled type="text" name="f1Img" id="f1Img" required />
-      </label>
-      <label htmlFor="f2Img">
-        Form 2 Image : <input className={INPUT_STYLE} value={data?.charImage?.f2Img} disabled type="text" name="f2Img" id="f2Img" />
-      </label>
-      <label htmlFor="f3Img">
-        Form 3 Image : <input className={INPUT_STYLE} value={data?.charImage?.f3Img} disabled type="text" name="f3Img" id="f3Img" />
-      </label>
+      <Input forId="f1Img" variant="default" label="Form 1 Image" value={data?.charImage?.f1Img} disabled required />
+      <Input forId="f2Img" variant="default" label="Form 2 Image" value={data?.charImage?.f2Img} disabled />
+      <Input forId="f3Img" variant="default" label="Form 3 Image" value={data?.charImage?.f3Img} disabled />
     </div>
   );
 }

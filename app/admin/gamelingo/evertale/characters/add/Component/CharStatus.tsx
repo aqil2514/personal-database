@@ -1,175 +1,143 @@
 // import { useState } from "react";
-import React from "react";
+import React, { useState } from "react";
 import { charElement, charRank, charWeapon } from "../../../component/data";
 import { useData } from "../formbody";
-import { SECTION_STYLE, INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE } from "@/app/components/Styles";
+import { INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE } from "@/app/components/Styles";
 import useSWR from "swr";
 import { PlusCircleFill, XCircleFill } from "react-bootstrap-icons";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Input, InputRadio } from "@/components/General/Input";
+import { Option, OptionString, Select } from "@/components/General/Select";
+import { SectionWrapper } from "@/components/General/Wrapper";
 
 const Data = ({ info }: { info: any }) => {
   const { data, setData } = useData();
   const [isAddMode, setIsAddMode] = React.useState(false);
   const router = useRouter();
+
+  function changeHandler(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, stateData: string) {
+    setData({ ...data, charStatus: { ...data?.charStatus, [stateData]: e.target.value } });
+  }
   return (
-    <div id="character-status" className={SECTION_STYLE}>
-      <label htmlFor="unit-name">
-        {" "}
-        Unit Name : <input value={data?.charStatus?.charName} onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charName: e.target.value } })} className={INPUT_STYLE} type="text" name="charName" id="unit-name" />
-      </label>
-      <label htmlFor="charRank">
-        Unit Rank :
-        <select className={SELECT_STYLE} value={data?.charStatus?.charRank} onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charRank: e.target.value } })} name="charRank" id="charRank" defaultValue={undefined}>
-          <option value={undefined}>Rank Character</option>
-          {charRank?.map((r: any, i: number) => (
-            <option value={r.rank} key={`rank-${i++}`}>
-              {r.rank}
-            </option>
-          ))}
-        </select>
-      </label>
+    <SectionWrapper>
+      <Input variant="default" forId="charName" label="Unit Name" value={data?.charStatus?.charName} onChange={(e) => changeHandler(e, "charName")} />
+      <Select variant="default" forId="charRank" onChange={(e) => changeHandler(e, "charRank")} label="Unit Rank">
+        <Option isFirst>Character Rank</Option>
+        <Option isFirst={false} dataMap={charRank} valueMap="rank" />
+      </Select>
       <div id="isConjured">
         Conjure / Non-Conjure :
-        <label htmlFor="conjure" className="mx-8">
-          <input type="radio" name="isConjured" id="conjure" value="Conjure" onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, isConjured: e.target.value } })} /> Conjure
-        </label>
-        <label htmlFor="non-conjure" className="mx-8">
-          <input type="radio" name="isConjured" id="non-conjure" value="Non-Conjured" onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, isConjured: e.target.value } })} /> Non-Conjure
-        </label>
+        <InputRadio forId="conjure" name="isConjured" label="Conjure" value="Conjure" onChange={(e) => changeHandler(e, "isConjured")} />
+        <InputRadio forId="non-conjure" name="isConjured" label="Non Conjure" value="Non-Conjured" onChange={(e) => changeHandler(e, "isConjured")} />
       </div>
-      <div id="charTeam">
-        CharTeam:
-        <div className="flex flex-wrap flex-row border-2 border-black border-solid justify-start w-full rounded-xl h-1/6 overflow-y-scroll">
-          {info?.rss?.typeCharTeam?.map((type: string, i: number) => (
-            <label htmlFor={type} key={i++}>
-              <input className="ml-4 mr-2" type="checkbox" name={`char-team-${i++}`} value={type} id={type} />
-              {type}
-            </label>
-          ))}
-        </div>
-        <div className="cursor-pointer" onClick={() => setIsAddMode(!isAddMode)}>
-          {isAddMode ? <XCircleFill className="inline-block" /> : <PlusCircleFill className="inline-block" />}
-          <p className="inline-block my-auto mx-2">{isAddMode ? "Batal (Tekan CTRL + Enter untuk menambah data)" : "Tambah Skill Type"}</p>
-        </div>
-        {isAddMode && (
-          <input
-            type="text"
-            name="input-new-skill-type"
-            placeholder="Nama skill type..."
-            className="mx-2 w-1/6"
-            onKeyDown={(e) => {
-              if (e.ctrlKey && e.key === "Enter") {
-                const isDuplicate = data?.rss?.typeCharTeam?.find((keyword: string) => keyword.toLowerCase() === e.currentTarget.value.toLocaleLowerCase());
-                if (isDuplicate) {
-                  alert("Char Team telah tersedia");
-                  return;
-                }
-                const sure = confirm(`Yakin ingin tambahkan Char Type baru dengan nama "${e.currentTarget.value}" ?`);
-                if (!sure) {
-                  return;
-                }
-                axios
-                  .put("/api/gamelingo/newEvertale", {
-                    data: e.currentTarget.value,
-                    type: "char-team-type",
-                  })
-                  .then((res) => {
-                    alert(res.data.msg);
-                    e.currentTarget.value = "";
-                    router.refresh();
-                  })
-                  .catch((error) => console.log(error));
-              } else if (e.key === "Escape") {
-                setIsAddMode(false);
-              }
-            }}
-          />
-        )}
-        <button
-          className={ADD_BUTTON_STYLE + " block"}
-          type="button"
-          onClick={() => {
-            const els = document.querySelectorAll("#charTeam label input");
-            const value: string[] = [];
-            els.forEach((el: any) => {
-              if (el.checked) {
-                value.push(el.value);
-              }
-            });
-            alert(`${value.length} buah CharTeam telah dipilih : "${value.join(", ")}"`);
-            setData({ ...data, charStatus: { ...data.charStatus, charTeam: value } });
-          }}
-        >
-          Fiksasi
-        </button>
-      </div>
-      <label htmlFor="charElement">
-        Unit Rank :
-        <select
-          className={SELECT_STYLE}
-          value={data?.charStatus?.charElement}
-          onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charElement: e.target.value } })}
-          name="charElement"
-          id="charElement"
-          defaultValue={undefined}
-        >
-          <option value={undefined}>Element Character</option>
-          {charElement?.map((e: any, i: number) => (
-            <option value={e.element} key={`element-${i++}`}>
-              {e.element}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label htmlFor="charWeapon1">
-        Unit Weapon 1 :
-        <select
-          className={SELECT_STYLE}
-          value={data?.charStatus?.charWeapon1}
-          onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charWeapon1: e.target.value } })}
-          name="charWeapon1"
-          id="charWeapon1"
-          defaultValue={undefined}
-        >
-          <option value={undefined}>Select Weapon</option>
-          {charWeapon?.map((e: any, i: number) => (
-            <option value={e.name} key={`weapon-I-${i++}`}>
-              {e.name}
-            </option>
-          ))}
-        </select>
-      </label>
-      <label htmlFor="charWeapon2">
-        Unit Weapon 2 :
-        <select
-          className={SELECT_STYLE}
-          value={data?.charStatus?.charWeapon2}
-          onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charWeapon2: e.target.value } })}
-          name="charWeapon2"
-          id="charWeapon2"
-          defaultValue={undefined}
-        >
-          <option value={undefined}>Select Weapon</option>
-          {charWeapon?.map((e: any, i: number) => (
-            <option value={e.name} key={`weapon-II-${i++}`}>
-              {e.name}
-            </option>
-          ))}
-        </select>
-      </label>
+      <CharTeam info={info} />
+      <Select variant="default" forId="charElement" onChange={(e) => changeHandler(e, "charElement")} label="Character Element">
+        <Option isFirst>Element Character</Option>
+        <Option isFirst={false} dataMap={charElement} valueMap="element" />
+      </Select>
+      <Select variant="default" forId="charWeapon1" onChange={(e) => changeHandler(e, "charWeapon1")} label="Character Weapon 1">
+        <Option isFirst>Select Weapon</Option>
+        <Option isFirst={false} dataMap={charWeapon} valueMap="name" />
+      </Select>
+      <Select variant="default" forId="charWeapon2" onChange={(e) => changeHandler(e, "charWeapon2")} label="Character Weapon 2">
+        <Option isFirst>Select Weapon</Option>
+        <Option isFirst={false} dataMap={charWeapon} valueMap="name" />
+      </Select>
       <LeaderSkill data={data} setData={setData} info={info} />
-      <label htmlFor="conjure">
-        Conjure :
-        <select className={SELECT_STYLE} value={data?.charStatus?.charConjure} onChange={(e) => setData({ ...data, charStatus: { ...data.charStatus, charConjure: e.target.value } })} name="conjure" id="conjure" defaultValue={undefined}>
-          <option value={undefined}>Select Conjure</option>
-          {info?.conjure?.map((conjure: string, i: number) => (
-            <option value={conjure} key={`conjure-${i++}`}>
-              {conjure}
-            </option>
-          ))}
-        </select>
-      </label>
+
+      <Select variant="default" forId="charConjure" onChange={(e) => changeHandler(e, "charConjure")} label="Character Conjure">
+        <Option isFirst>Select Conjure</Option>
+        <OptionString dataMap={info} childMap="conjure" valueMap="conjure" />
+      </Select>
+    </SectionWrapper>
+  );
+};
+
+const CharTeam = ({ info }: any) => {
+  const { data, setData } = useData();
+  const router = useRouter();
+  const [teams, setTeams] = useState<string[]>([]);
+  const [team, setTeam] = useState<string>("");
+
+  async function enterHandler(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      if (!team) {
+        alert("Team Setting masih kosong");
+        return;
+      }
+      const isThere = info?.rss?.typeCharTeam.find((t: string) => t === team);
+      if (isThere) {
+        const dupplicate = teams.includes(team);
+        if (dupplicate) {
+          alert(`${team} sudah ditambahkan`);
+          setTeam("");
+          return;
+        }
+        setTeams((prevTeams: string[]) => [...prevTeams, team]);
+        setTeam("");
+        return;
+      }
+
+      const allow = confirm(`${team} belum ditambahkan di Database, tambahkan sekarang?`);
+      if (!allow) {
+        return;
+      }
+
+      const res = await axios.put("/api/gamelingo/newEvertale", {
+        data: team,
+        type: "char-team-type",
+      });
+
+      alert(res.data.msg);
+      router.refresh();
+    }
+  }
+
+  function deleteHandler(e: React.MouseEvent<HTMLSpanElement>) {
+    const target = e.target as HTMLSpanElement;
+    const teamSelected = target.getAttribute("data-team");
+
+    const filtered = teams.filter((team: string) => team !== teamSelected);
+    setTeams(filtered);
+  }
+  return (
+    <div id="charTeam">
+      Character Team:
+      <div className="flex flex-wrap gap-4 flex-row border-2 border-black border-solid p-4 justify-start w-full rounded-lg">
+        {teams.length === 0 ? (
+          <p className="mx-auto font-bold">Character Team belum dipilih</p>
+        ) : (
+          teams.map((team: string, i: number) => (
+            <p className="border-2 border-black rounded-lg relative p-2" key={`${team}-team-${i++}`}>
+              <span data-team={team} className="font-bold absolute -top-1 right-1 text-red-700 cursor-pointer" onClick={deleteHandler}>
+                X
+              </span>
+              {team}
+            </p>
+          ))
+        )}
+      </div>
+      <Input forId="char-team-input" label="Team Setting" list="option-char-team" value={team} onChange={(e) => setTeam(e.target.value)} onKeyDown={(e) => enterHandler(e)} />
+      <datalist id="option-char-team">{info?.rss?.typeCharTeam.map((team: string) => <option value={team} key={`opt-char-team-${team}`} />)}</datalist>
+      {/* TODO : THIS BELOW BUTTON,  */}
+      <button
+        className={ADD_BUTTON_STYLE + " block"}
+        type="button"
+        onClick={() => {
+          const els = document.querySelectorAll("#charTeam label input");
+          const value: string[] = [];
+          els.forEach((el: any) => {
+            if (el.checked) {
+              value.push(el.value);
+            }
+          });
+          alert(`${value.length} buah CharTeam telah dipilih : "${value.join(", ")}"`);
+          setData({ ...data, charStatus: { ...data.charStatus, charTeam: value } });
+        }}
+      >
+        Fiksasi
+      </button>
     </div>
   );
 };
