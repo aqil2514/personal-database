@@ -1,20 +1,18 @@
 // import { useState } from "react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { charElement, charRank, charWeapon } from "../../../component/data";
 import { useData } from "../formbody";
-import { INPUT_STYLE, SELECT_STYLE, ADD_BUTTON_STYLE } from "@/app/components/Styles";
 import useSWR from "swr";
-import { PlusCircleFill, XCircleFill } from "react-bootstrap-icons";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { Input, InputRadio } from "@/components/General/Input";
 import { Option, OptionString, Select } from "@/components/General/Select";
 import { SectionWrapper } from "@/components/General/Wrapper";
+import { Button } from "@/components/General/Button";
+import { notif } from "@/components/Utils";
 
 const Data = ({ info }: { info: any }) => {
   const { data, setData } = useData();
-  const [isAddMode, setIsAddMode] = React.useState(false);
-  const router = useRouter();
 
   function changeHandler(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, stateData: string) {
     setData({ ...data, charStatus: { ...data?.charStatus, [stateData]: e.target.value } });
@@ -59,21 +57,29 @@ const CharTeam = ({ info }: any) => {
   const router = useRouter();
   const [teams, setTeams] = useState<string[]>([]);
   const [team, setTeam] = useState<string>("");
+  const [notifCharTeam, setNotifCharTeam] = useState<string>("");
+  const [fixNotif, setFixNotif] = useState<string>("");
+  const notifRef = useRef<null | HTMLParagraphElement>(null);
+  const fixNotifRef = useRef<null | HTMLParagraphElement>(null);
 
-  async function enterHandler(e: React.KeyboardEvent<HTMLInputElement>) {
+  async function keyDownHandler(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.ctrlKey && e.key === "Enter") {
+      fixationHandler();
+      return;
+    }
     if (e.key === "Enter") {
       if (!team) {
-        alert("Team Setting masih kosong");
+        notif(notifRef, "red", "Team Setting masih kosong", setNotifCharTeam);
         return;
       }
       const isThere = info?.rss?.typeCharTeam.find((t: string) => t === team);
       if (isThere) {
         const dupplicate = teams.includes(team);
         if (dupplicate) {
-          alert(`${team} sudah ditambahkan`);
-          setTeam("");
+          notif(notifRef, "red", `${team} sudah ditambahkan`, setNotifCharTeam);
           return;
         }
+        notif(notifRef, "green", `${team} berhasil ditambahkan`, setNotifCharTeam);
         setTeams((prevTeams: string[]) => [...prevTeams, team]);
         setTeam("");
         return;
@@ -81,6 +87,7 @@ const CharTeam = ({ info }: any) => {
 
       const allow = confirm(`${team} belum ditambahkan di Database, tambahkan sekarang?`);
       if (!allow) {
+        notif(notifRef, "green", `Aksi dibatalkan`, setNotifCharTeam);
         return;
       }
 
@@ -89,7 +96,7 @@ const CharTeam = ({ info }: any) => {
         type: "char-team-type",
       });
 
-      alert(res.data.msg);
+      notif(notifRef, "green", res.data.msg, setNotifCharTeam);
       router.refresh();
     }
   }
@@ -98,8 +105,19 @@ const CharTeam = ({ info }: any) => {
     const target = e.target as HTMLSpanElement;
     const teamSelected = target.getAttribute("data-team");
 
+    notif(notifRef, "green", `${teamSelected} berhasil dihapus`, setNotifCharTeam);
+
     const filtered = teams.filter((team: string) => team !== teamSelected);
     setTeams(filtered);
+  }
+
+  function fixationHandler() {
+    if (teams.length === 0) {
+      notif(fixNotifRef, "red", `Belum ada tim yang dipilih`, setFixNotif);
+      return;
+    }
+    notif(fixNotifRef, "orange", `${teams.length} buah CharTeam telah dipilih : "${teams.join(", ")}"`, setFixNotif);
+    setData({ ...data, charStatus: { ...data.charStatus, charTeam: teams } });
   }
   return (
     <div id="charTeam">
@@ -118,120 +136,175 @@ const CharTeam = ({ info }: any) => {
           ))
         )}
       </div>
-      <Input forId="char-team-input" label="Team Setting" list="option-char-team" value={team} onChange={(e) => setTeam(e.target.value)} onKeyDown={(e) => enterHandler(e)} />
+      <p ref={notifRef} className="font-semibold">
+        {notifCharTeam}
+      </p>
+      <Input forId="char-team-input" label="Team Setting" list="option-char-team" value={team} onChange={(e) => setTeam(e.target.value)} onKeyDown={(e) => keyDownHandler(e)} />
       <datalist id="option-char-team">{info?.rss?.typeCharTeam.map((team: string) => <option value={team} key={`opt-char-team-${team}`} />)}</datalist>
-      {/* TODO : THIS BELOW BUTTON,  */}
-      <button
-        className={ADD_BUTTON_STYLE + " block"}
-        type="button"
-        onClick={() => {
-          const els = document.querySelectorAll("#charTeam label input");
-          const value: string[] = [];
-          els.forEach((el: any) => {
-            if (el.checked) {
-              value.push(el.value);
-            }
-          });
-          alert(`${value.length} buah CharTeam telah dipilih : "${value.join(", ")}"`);
-          setData({ ...data, charStatus: { ...data.charStatus, charTeam: value } });
-        }}
-      >
+      <p ref={fixNotifRef} className="font-semibold">
+        {fixNotif}
+      </p>
+      <Button variant="fixation" type="button" onClick={fixationHandler}>
         Fiksasi
-      </button>
+      </Button>
     </div>
   );
 };
 
 const LeaderSkill = ({ data, info, setData }: { data: React.ComponentState; info: React.ComponentState; setData: React.ComponentState }) => {
-  const [isAddMode, setIsAddMode] = React.useState(false);
-  const [isSending, setIsSending] = React.useState(false);
-  const [lsData, setLsData] = React.useState({ lsName: "", descEn: "", descId: "", lsType: "" });
   const router = useRouter();
+  const [notifNew, setNotifNew] = useState<string>("");
+  const notifRef = useRef<null | HTMLParagraphElement>(null);
 
-  const sendHandler = async () => {
-    try {
-      setIsSending(true);
-      axios
-        .put("/api/gamelingo/newEvertale/leaderskill", {
-          lsData,
-        })
-        .then((res) => {
-          alert(res.data.msg);
-          router.refresh();
-        })
-        .catch((err) => {
-          if (err.response.status === 422) {
-            alert(err.response.data.msg);
-            return;
-          }
-        });
-    } catch (error) {
-      alert("Terjadi kesalahan");
-      console.log(error);
+  const questions = (inputValue: string) => {
+    const categoryMap: { [key: string]: string } = {
+      "1": "Attack Buff",
+      "2": "HP Buff",
+      "3": "Hybrid Buff",
+      "4": "Other Buff",
+    };
+
+    const category = prompt("Apa kategorinya? \n 1. Attack Buff \n 2. HP Buff \n 3. Hybird Buff \n 4. Other Buff");
+
+    if (!category) {
       return;
-    } finally {
-      setIsSending(false);
     }
+    const message = categoryMap[category];
+
+    if (!message) {
+      alert("Tidak ada pilihan tersebut");
+      return;
+    }
+
+    const descEn = prompt("Apa Deskripsi bahasa Inggrisnya?");
+    const descId = prompt("Apa Terjemahannya?");
+
+    return {
+      lsName: inputValue,
+      lsType: categoryMap[category],
+      descEn,
+      descId,
+    };
   };
+
+  async function keyDownHandler(e: React.KeyboardEvent<HTMLInputElement>) {
+    const element = e.target as HTMLInputElement;
+    const inputValue = element.value;
+    const isThere = info?.lsData?.includes(inputValue);
+    if (e.key === "Enter" && !isThere) {
+      const allow = confirm(`Ingin menambahkan ${inputValue}?`);
+      if (!allow) {
+        notif(notifRef, "red", "Aksi dibatalkan", setNotifNew);
+        return;
+      }
+
+      const lsData = questions(inputValue);
+      if (!lsData) {
+        notif(notifRef, "red", "Aksi dibatalkan...", setNotifNew);
+        return;
+      }
+
+      try {
+        notif(notifRef, "cyan", "Mengirim Data...", setNotifNew, 0);
+        element.disabled = true;
+
+        const res = await axios.put("/api/gamelingo/newEvertale/leaderskill", {
+          lsData,
+        });
+
+        notif(notifRef, "green", res.data.msg, setNotifNew);
+        router.refresh();
+      } catch (err: AxiosError | any) {
+        const error = err as AxiosError;
+        notif(notifRef, "red", (error.response?.data as any).msg, setNotifNew);
+        console.error(error.response?.data);
+        return;
+      } finally {
+        element.disabled = false;
+      }
+    }
+  }
+
+  function changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    const inputValue = (document.getElementById("charLeaderSkill") as HTMLInputElement).value;
+    setData({ ...data, charStatus: { ...data?.charStatus, charLeaderSkill: e.target.value } });
+
+    const isThere = info?.lsData?.includes(inputValue);
+    if (!inputValue) {
+      setNotifNew("");
+      return;
+    }
+    if (!isThere) {
+      notif(notifRef, "orange", "Data baru terdeteksi. Tekan Enter untuk menyimpan di database", setNotifNew, 0);
+      return;
+    }
+  }
 
   return (
     <div>
-      <div>
-        <label htmlFor="new-ls">
-          Leader Skill Baru <input type="checkbox" name="new-ls" id="new-ls" checked={isAddMode} onChange={() => setIsAddMode(!isAddMode)} />
-        </label>
-      </div>
-      {!isAddMode && (
-        <label htmlFor="leaderSkill">
-          Leader Skill :
-          <select
-            className={SELECT_STYLE}
-            value={data?.charStatus?.charLeaderSkill}
-            onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charLeaderSkill: e.target.value } })}
-            name="leaderSkill"
-            id="leaderSkill"
-            defaultValue={undefined}
-          >
-            <option value={undefined}>Select Leader Skill</option>
-            {info?.lsData?.map((e: any, i: number) => (
-              <option value={e} key={`weapon-II-${i++}`}>
-                {e}
-              </option>
-            ))}
-          </select>
-        </label>
-      )}
-      {isAddMode && (
-        <>
-          <label htmlFor="new-ls-name">
-            New Leader Skill Name :
-            <input type="text" name="new-ls-name" id="new-ls-name" value={lsData.lsName} onChange={(e) => setLsData({ ...lsData, lsName: e.target.value })} className={INPUT_STYLE} />
-          </label>
-          <label htmlFor="new-ls-desc-en">
-            English Description :
-            <input type="text" disabled={isSending} name="new-ls-desc-en" id="new-ls-desc-en" value={lsData.descEn} onChange={(e) => setLsData({ ...lsData, descEn: e.target.value })} className={INPUT_STYLE} />
-          </label>
-          <label htmlFor="new-ls-desc-id">
-            Deskripsi Idonesia :
-            <input type="text" disabled={isSending} name="new-ls-desc-id" id="new-ls-desc-id" value={lsData.descId} onChange={(e) => setLsData({ ...lsData, descId: e.target.value })} className={INPUT_STYLE} />
-          </label>
-          <div id="new-ls-radio">
-            Leader Skill Type :
-            <div className="flex justify-center gap-4">
-              {info?.rss?.typeLeaderSkill?.map((type: string, i: number) => (
-                <label htmlFor={type} key={i++} className="mx-2">
-                  <input type="radio" className="mr-2" value={type} onChange={(e) => setLsData({ ...lsData, lsType: e.target.value })} name="leader-skill-type" id={type} />
-                  <span>{type}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-          <button type="button" disabled={isSending} onClick={sendHandler} className={ADD_BUTTON_STYLE}>
-            {isSending ? "Mengirim data..." : "Tambahkan!"}
-          </button>
-        </>
-      )}
+      <Input forId="charLeaderSkill" label="Leader Skill Unit" value={data?.charStatus?.charLeaderSkill} list="char-leader-skill-list" onChange={changeHandler} onKeyDown={keyDownHandler} />
+      <datalist id="char-leader-skill-list">{info?.lsData?.map((ls: string) => <option key={`char-leader-skill-${ls}`} value={ls} />)}</datalist>
+      <p ref={notifRef} className="font-semibold">
+        {notifNew}
+      </p>
     </div>
+    // <div>
+    //   <div>
+    //     <label htmlFor="new-ls">
+    //       Leader Skill Baru <input type="checkbox" name="new-ls" id="new-ls" checked={isAddMode} onChange={() => setIsAddMode(!isAddMode)} />
+    //     </label>
+    //   </div>
+    //   {!isAddMode && (
+    //     <label htmlFor="leaderSkill">
+    //       Leader Skill :
+    //       <select
+    //         className={SELECT_STYLE}
+    //         value={data?.charStatus?.charLeaderSkill}
+    //         onChange={(e) => setData({ ...data, charStatus: { ...data?.charStatus, charLeaderSkill: e.target.value } })}
+    //         name="leaderSkill"
+    //         id="leaderSkill"
+    //         defaultValue={undefined}
+    //       >
+    //         <option value={undefined}>Select Leader Skill</option>
+    //         {info?.lsData?.map((e: any, i: number) => (
+    //           <option value={e} key={`weapon-II-${i++}`}>
+    //             {e}
+    //           </option>
+    //         ))}
+    //       </select>
+    //     </label>
+    //   )}
+    //   {isAddMode && (
+    //     <>
+    //       <label htmlFor="new-ls-name">
+    //         New Leader Skill Name :
+    //         <input type="text" name="new-ls-name" id="new-ls-name" value={lsData.lsName} onChange={(e) => setLsData({ ...lsData, lsName: e.target.value })} className={INPUT_STYLE} />
+    //       </label>
+    //       <label htmlFor="new-ls-desc-en">
+    //         English Description :
+    //         <input type="text" disabled={isSending} name="new-ls-desc-en" id="new-ls-desc-en" value={lsData.descEn} onChange={(e) => setLsData({ ...lsData, descEn: e.target.value })} className={INPUT_STYLE} />
+    //       </label>
+    //       <label htmlFor="new-ls-desc-id">
+    //         Deskripsi Idonesia :
+    //         <input type="text" disabled={isSending} name="new-ls-desc-id" id="new-ls-desc-id" value={lsData.descId} onChange={(e) => setLsData({ ...lsData, descId: e.target.value })} className={INPUT_STYLE} />
+    //       </label>
+    //       <div id="new-ls-radio">
+    //         Leader Skill Type :
+    //         <div className="flex justify-center gap-4">
+    //           {info?.rss?.typeLeaderSkill?.map((type: string, i: number) => (
+    //             <label htmlFor={type} key={i++} className="mx-2">
+    //               <input type="radio" className="mr-2" value={type} onChange={(e) => setLsData({ ...lsData, lsType: e.target.value })} name="leader-skill-type" id={type} />
+    //               <span>{type}</span>
+    //             </label>
+    //           ))}
+    //         </div>
+    //       </div>
+    //       <button type="button" disabled={isSending} onClick={sendHandler} className={ADD_BUTTON_STYLE}>
+    //         {isSending ? "Mengirim data..." : "Tambahkan!"}
+    //       </button>
+    //     </>
+    //   )}
+    // </div>
   );
 };
 
