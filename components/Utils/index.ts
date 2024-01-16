@@ -2,6 +2,13 @@ export function notif(ref: React.RefObject<HTMLParagraphElement>, textColor: str
   ref.current!.style.color = textColor;
   setState(msg);
 
+  if (textColor === "red") {
+    window.scrollTo({
+      top: ref.current?.offsetTop,
+      behavior: "smooth",
+    });
+  }
+
   if (time) {
     setTimeout(() => {
       setState("");
