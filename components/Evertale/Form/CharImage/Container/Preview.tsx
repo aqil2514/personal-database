@@ -10,7 +10,7 @@ export default function Preview({ isSelected, setIsSelected }: { isSelected: str
           <CldImage src={`evertale/characters/webp/${isSelected}.webp`} alt={isSelected} fill sizes="auto" className="rounded-xl object-contain" />
         </figure>
       ) : (
-        <div className="flex rounded-xl h-[350px] border-4 border-dashed border-black flex-wrap content-center justify-center">
+        <div className="flex rounded-xl h-[350px] border-4 border-dashed border-black content-center justify-center">
           <p className="font-bold font-playfair text-xl text-black">No Preview</p>
         </div>
       )}

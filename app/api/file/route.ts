@@ -19,10 +19,11 @@ export async function GET(req: NextRequest) {
   const game = searchParams.get("game") as string;
   const category = searchParams.get("category") as string;
   const format = searchParams.get("format") as string;
+  const q = searchParams.get("q") as string;
 
   const result = await cloudinary.api.resources({
     type: "upload",
-    prefix: `${game}/${category}/${format}`,
+    prefix: `${game}/${category}/${format}/${q}`,
   });
   return NextResponse.json({ msg: "Sukses", result }, { status: 200 });
 }
