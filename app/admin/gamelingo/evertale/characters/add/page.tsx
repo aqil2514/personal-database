@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import FormBody from "./formbody";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import Form from "@/components/Evertale/Form";
