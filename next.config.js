@@ -4,6 +4,7 @@ const nextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "blogger.googleusercontent.com", port: "" },
       { protocol: "https", hostname: "i.imgur.com", port: "" },
+      { protocol: "https", hostname: "res.cloudinary.com", port: "" },
     ],
   },
 };

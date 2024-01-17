@@ -3,11 +3,15 @@ import React from "react";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
+import axios from "axios";
+import GalleryWidget from "./Widget";
 
 export default function CharImages() {
   const { data, setData } = useData();
   const fileRef = React.useRef<any>(null);
-  const [loading, setLoading] = React.useState(false);
+  const widgetRef = React.useRef<null | HTMLDivElement>(null);
+  const [uploadLoading, setUploadLoading] = React.useState(false);
+  const [fetchLoading, setFetchLoading] = React.useState<boolean>(false);
 
   async function uploadHandler() {
     if (!fileRef.current.files || fileRef.current.files.length === 0) {
@@ -22,7 +26,7 @@ export default function CharImages() {
     }
 
     try {
-      setLoading(true);
+      setUploadLoading(true);
       const res = await fetch("/api/file?game=evertale&category=characters", {
         method: "POST",
         body: formData,
@@ -36,9 +40,29 @@ export default function CharImages() {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setUploadLoading(false);
     }
   }
+
+  // async function getHandler() {
+  //   try {
+  //     setFetchLoading(true);
+  //     const res = await axios.get("/api/file?game=evertale&category=characters");
+
+  //     console.log(res);
+  //   } catch (err) {
+  //     console.error(err);
+  //   } finally {
+  //     setFetchLoading(false);
+  //   }
+  // }
+
+  function clickHandler() {
+    const widget = document.getElementById("container-image") as HTMLDivElement;
+    widget.classList.replace("invisible", "visible");
+    widget.classList.replace("opacity-0", "opacity-1");
+  }
+
   return (
     <SectionWrapper>
       <TitleSection>Character Images</TitleSection>
@@ -48,9 +72,13 @@ export default function CharImages() {
           Upload File :{" "}
         </label>
         <input type="file" ref={fileRef} name="files" id="files" multiple />
-        <Button variant="upload" type="button" disabled={loading} onClick={uploadHandler}>
-          {loading ? "Uploading..." : "Upload"}
+        <Button variant="upload" type="button" disabled={uploadLoading || fetchLoading} onClick={uploadHandler}>
+          {uploadLoading ? "Uploading..." : "Upload"}
         </Button>
+        <Button variant="default" type="button" disabled={uploadLoading || fetchLoading} onClick={clickHandler}>
+          {fetchLoading ? "Mengambil Data..." : "Lihat Data"}
+        </Button>
+        <GalleryWidget ref={widgetRef} />
       </div>
       <Input forId="f1Img" variant="default" label="Form 1 Image" value={data?.charImage?.f1Img} disabled required />
       <Input forId="f2Img" variant="default" label="Form 2 Image" value={data?.charImage?.f2Img} disabled />
