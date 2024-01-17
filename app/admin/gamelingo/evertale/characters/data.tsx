@@ -58,7 +58,7 @@ export default function Data() {
         <Heading>
           <Row>
             <Head>#</Head>
-            <Head>Character's Name</Head>
+            <Head>Character&apos;s Name</Head>
             <Head>Action</Head>
           </Row>
         </Heading>

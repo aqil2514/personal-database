@@ -9,7 +9,6 @@ export default function Images({ isSelected, setIsSelected, res }: { isSelected:
     url: image.secure_url,
     name: (image.public_id as string).split("/")[3],
   }));
-  console.log(res.data);
 
   function clickHandler(e: React.MouseEvent<HTMLImageElement>) {
     const target = e.target as HTMLImageElement;

@@ -59,7 +59,7 @@ export default function CharActiveSkills() {
   }
 
   return (
-    <SectionWrapper>
+    <SectionWrapper id="active-skill-section">
       <TitleSection>Character Active Skill</TitleSection>
 
       <Input forId="active-skill-name" label="Skill Name" data-field="name" value={inputSkill?.name} onChange={changeHandler} />

@@ -6,8 +6,8 @@ export default function CharProfile() {
   const { data, setData } = useData();
 
   function changeHandler(e: React.ChangeEvent<HTMLTextAreaElement>) {
-    const field = e.target.getAttribute("data-field");
-    setData({ ...data, charIntro: { ...data.charIntro, [field as string]: e.target.value } });
+    const field = e.target.getAttribute("data-field") as string;
+    setData({ ...data, charProfile: { ...data.charProfile, [field]: e.target.value } });
     console.log(field);
   }
   return (

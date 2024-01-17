@@ -11,6 +11,7 @@ import CharIntro from "./CharIntro";
 import CharProfile from "./CharProfile";
 import CharActiveSkills from "./CharActiveSkill";
 import CharPassiveSkills from "./CharPassiveSkill";
+import { Button } from "@/components/General/Button";
 
 const FormContext = createContext<StateType>({} as StateType);
 
@@ -27,7 +28,7 @@ export default function Form() {
       charConjure: "",
       charElement: undefined,
       charLeaderSkill: "",
-      charTeam: [""],
+      charTeam: [],
       charWeapon1: undefined,
       charWeapon2: undefined,
       isConjured: false,
@@ -64,11 +65,14 @@ export default function Form() {
     charActiveSkill: [],
     charPassiveSkill: [],
   });
-  const [loading, setLoading] = React.useState(false);
+  const notifRef = React.useRef<null | HTMLParagraphElement>(null);
+
+  const [sendLoading, setSendLoading] = React.useState<boolean>(false);
+  const [verifLoading, setVerifLoading] = React.useState<boolean>(false);
 
   const router = useRouter();
 
-  const sendingHandler = async (type: string) => {
+  const sendingHandler = async (type: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
     try {
       setLoading(true);
       const res = await axios.post("/api/gamelingo/newEvertale/chars", {
@@ -81,11 +85,28 @@ export default function Form() {
         router.replace("/admin/gamelingo/evertale/characters");
       }
 
-      alert(res.data.msg);
+      const msg: string = res.data.msg;
+
+      alert(msg);
       console.log(res.data);
     } catch (error: any) {
-      alert(error.response.data.msg || "Terjadi kesalahan");
       console.error(error);
+      const msg: string = error.response.data.msg;
+      const ref: string = error.response.data.ref;
+      const element = document.getElementById(ref) as HTMLInputElement;
+      const notif = document.createElement("p") as HTMLParagraphElement;
+      notif.setAttribute("class", "font-bold text-red-600 my-2");
+      notif.innerHTML = msg || "Terjadi Kesalahan";
+      element.after(notif);
+
+      setTimeout(() => {
+        notif.remove();
+      }, 3000);
+
+      window.scrollTo({
+        top: element.offsetTop,
+        behavior: "smooth",
+      });
     } finally {
       setLoading(false);
     }
@@ -99,15 +120,18 @@ export default function Form() {
       <CharProfile />
       <CharActiveSkills />
       <CharPassiveSkills />
-      <button className={ADD_BUTTON_STYLE + " block"} type="button" disabled={loading} onClick={() => sendingHandler("see")}>
-        {loading ? "Sedang Verifikasi..." : "Verifikasi Data"}
-      </button>
-      <button className={ADD_BUTTON_STYLE + ""} type="button" disabled={loading} onClick={() => sendingHandler("add")}>
-        {loading ? "Mengirim Data..." : "Kirim Data"}
-      </button>
-      <button className={ADD_BUTTON_STYLE + ""} type="button" disabled={loading} onClick={() => console.log(data)}>
-        {loading ? "Mengirim Data..." : "Lihat Data"}
-      </button>
+
+      <div className="flex flex-row gap-4 m-2">
+        <Button variant="upload" disabled={verifLoading || sendLoading} onClick={() => sendingHandler("see", setVerifLoading)}>
+          {verifLoading ? "Sedang Verifikasi..." : "Verifikasi Data"}
+        </Button>
+        <Button variant="upload" disabled={verifLoading || sendLoading} onClick={() => sendingHandler("see", setSendLoading)}>
+          {sendLoading ? "Mengirim Data..." : "Kirim Data"}
+        </Button>
+        <Button variant="fixation" disabled={verifLoading || sendLoading} onClick={() => sendingHandler("see", setSendLoading || setVerifLoading)}>
+          Lihat Data
+        </Button>
+      </div>
     </FormContext.Provider>
   );
 }

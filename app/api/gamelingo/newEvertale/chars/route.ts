@@ -4,6 +4,7 @@ import connectMongoDB from "@/lib/mongoose";
 import { charActiveSkillValidator, charImageValidator, charIntroValidator, charPassiveSkillValidator, charProfileValidator, charStatusValidator } from "@/app/components/ValidatorAPI";
 import Post from "@/models/General/Post";
 import { ObjectId } from "mongodb";
+import { validator } from "@/lib/utils";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -31,34 +32,34 @@ export async function POST(req: NextRequest) {
   const { data, action } = await req.json();
   const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill } = data;
 
-  const status = charStatusValidator(charStatus);
+  const status = validator.character.status(charStatus);
   if (!status.success) {
-    return NextResponse.json({ msg: status.msg }, { status: 422 });
+    return NextResponse.json({ msg: status.msg, ref: status.ref }, { status: 422 });
   }
 
-  const image = charImageValidator(charImage);
+  const image = validator.character.images(charImage);
   if (!image.success) {
-    return NextResponse.json({ msg: image.msg }, { status: 422 });
+    return NextResponse.json({ msg: image.msg, ref: image.ref }, { status: 422 });
   }
 
-  const intro = charIntroValidator(charIntro);
+  const intro = validator.character.intro(charIntro);
   if (!intro.success) {
-    return NextResponse.json({ msg: intro.msg }, { status: 422 });
+    return NextResponse.json({ msg: intro.msg, ref: intro.ref }, { status: 422 });
   }
 
-  const profile = charProfileValidator(charProfile);
+  const profile = validator.character.profile(charProfile);
   if (!profile.success) {
-    return NextResponse.json({ msg: profile.msg }, { status: 422 });
+    return NextResponse.json({ msg: profile.msg, ref: profile.ref }, { status: 422 });
   }
 
-  const activeSkill = charActiveSkillValidator(charActiveSkill);
+  const activeSkill = validator.character.activeSkill(charActiveSkill);
   if (!activeSkill.success) {
-    return NextResponse.json({ msg: activeSkill.success }, { status: 422 });
+    return NextResponse.json({ msg: activeSkill.success, ref: activeSkill.ref }, { status: 422 });
   }
 
   const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
   if (!passiveSkill.success) {
-    return NextResponse.json({ msg: passiveSkill.success }, { status: 422 });
+    return NextResponse.json({ msg: passiveSkill.success, ref: passiveSkill.ref }, { status: 422 });
   }
 
   const charData = {

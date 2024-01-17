@@ -11,7 +11,6 @@ export default function CharImages() {
   const fileRef = React.useRef<any>(null);
   const widgetRef = React.useRef<null | HTMLDivElement>(null);
   const [uploadLoading, setUploadLoading] = React.useState(false);
-  const [fetchLoading, setFetchLoading] = React.useState<boolean>(false);
 
   async function uploadHandler() {
     if (!fileRef.current.files || fileRef.current.files.length === 0) {
@@ -44,19 +43,6 @@ export default function CharImages() {
     }
   }
 
-  // async function getHandler() {
-  //   try {
-  //     setFetchLoading(true);
-  //     const res = await axios.get("/api/file?game=evertale&category=characters");
-
-  //     console.log(res);
-  //   } catch (err) {
-  //     console.error(err);
-  //   } finally {
-  //     setFetchLoading(false);
-  //   }
-  // }
-
   function clickHandler() {
     const widget = document.getElementById("container-image") as HTMLDivElement;
     widget.classList.replace("invisible", "visible");
@@ -72,12 +58,14 @@ export default function CharImages() {
           Upload File :{" "}
         </label>
         <input type="file" ref={fileRef} name="files" id="files" multiple />
-        <Button variant="upload" type="button" disabled={uploadLoading || fetchLoading} onClick={uploadHandler}>
-          {uploadLoading ? "Uploading..." : "Upload"}
-        </Button>
-        <Button variant="default" type="button" disabled={uploadLoading || fetchLoading} onClick={clickHandler}>
-          {fetchLoading ? "Mengambil Data..." : "Lihat Data"}
-        </Button>
+        <div className="flex flex-wrap gap-4 my-2">
+          <Button variant="upload" type="button" disabled={uploadLoading} onClick={uploadHandler}>
+            {uploadLoading ? "Uploading..." : "Upload"}
+          </Button>
+          <Button variant="default" type="button" disabled={uploadLoading} onClick={clickHandler}>
+            Lihat Galeri
+          </Button>
+        </div>
         <GalleryWidget ref={widgetRef} />
       </div>
       <Input forId="f1Img" variant="default" label="Form 1 Image" value={data?.charImage?.f1Img} disabled required />
