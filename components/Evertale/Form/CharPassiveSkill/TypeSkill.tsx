@@ -5,11 +5,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { SetStateAction, useRef } from "react";
 import useSWR from "swr";
-import { CharacterPassiveSkill } from "../../Interface";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
-export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.Dispatch<SetStateAction<any>>; inputSkill: CharacterPassiveSkill }) => {
+export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.Dispatch<SetStateAction<Evertale.Character.PassiveSkill>>; inputSkill: Evertale.Character.PassiveSkill }) => {
   const URL = "/api/gamelingo/newEvertale?category=statusResource";
   const { data, isLoading, error } = useSWR(URL, fetcher);
   const router = useRouter();
@@ -24,6 +23,8 @@ export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.
   if (!data || isLoading) return <p>Mengambil data...</p>;
   if (error) return <p>Error...</p>;
 
+  const passiveSkillTypes: string[] = data.data.rss.typePassiveSkill;
+
   async function keyDownHandler(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.ctrlKey && e.key === "Enter") {
       fixationHandler();
@@ -34,7 +35,7 @@ export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.
         notif(notifRef, "red", "Tipe Skill Setting masih kosong", setTypeNotif);
         return;
       }
-      const isThere = data.rss.typePassiveSkill.find((t: string) => t === type);
+      const isThere = passiveSkillTypes.find((t: string) => t === type);
       if (isThere) {
         const dupplicate = types.includes(type);
         if (dupplicate) {
@@ -104,7 +105,11 @@ export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.
         {typeNotif}
       </p>
       <Input forId="passive-skill-type-input" label="Skill Type Setting" list="option-passive-skill-type" value={type} onChange={(e) => setType(e.target.value)} onKeyDown={(e) => keyDownHandler(e)} />
-      <datalist id="option-passive-skill-type">{data?.rss?.typePassiveSkill?.map((t: string) => <option value={t} key={`opt-skill-type-${t}`} />)}</datalist>
+      <datalist id="option-passive-skill-type">
+        {passiveSkillTypes.map((t: string) => (
+          <option value={t} key={`opt-skill-type-${t}`} />
+        ))}
+      </datalist>
       <p ref={fixNotifRef} className="font-semibold">
         {fixNotif}
       </p>

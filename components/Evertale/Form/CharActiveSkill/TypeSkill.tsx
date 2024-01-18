@@ -22,6 +22,7 @@ export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.
 
   if (!data || isLoading) return <p>Mengambil data...</p>;
   if (error) return <p>Error...</p>;
+  const activeSkillTypes: string[] = data.data.rss.typeActiveSkill;
 
   async function keyDownHandler(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.ctrlKey && e.key === "Enter") {
@@ -33,7 +34,7 @@ export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.
         notif(notifRef, "red", "Tipe Skill Setting masih kosong", setTypeNotif);
         return;
       }
-      const isThere = data.rss.typeActiveSkill.find((t: string) => t === type);
+      const isThere = activeSkillTypes.find((t: string) => t === type);
       if (isThere) {
         const dupplicate = types.includes(type);
         if (dupplicate) {
@@ -103,7 +104,11 @@ export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.
         {typeNotif}
       </p>
       <Input forId="active-skill-type-input" label="Skill Type Setting" list="option-skill-type" value={type} onChange={(e) => setType(e.target.value)} onKeyDown={(e) => keyDownHandler(e)} />
-      <datalist id="option-skill-type">{data?.rss?.typeActiveSkill?.map((t: string) => <option value={t} key={`opt-skill-type-${t}`} />)}</datalist>
+      <datalist id="option-skill-type">
+        {activeSkillTypes.map((t: string) => (
+          <option value={t} key={`opt-skill-type-${t}`} />
+        ))}
+      </datalist>
       <p ref={fixNotifRef} className="font-semibold">
         {fixNotif}
       </p>

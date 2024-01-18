@@ -123,7 +123,7 @@ export default function Form() {
         <Button variant="upload" disabled={verifLoading || sendLoading} onClick={() => sendingHandler("see", setVerifLoading)}>
           {verifLoading ? "Sedang Verifikasi..." : "Verifikasi Data"}
         </Button>
-        <Button variant="upload" disabled={verifLoading || sendLoading} onClick={() => sendingHandler("see", setSendLoading)}>
+        <Button variant="upload" disabled={verifLoading || sendLoading} onClick={() => sendingHandler("add", setSendLoading)}>
           {sendLoading ? "Mengirim Data..." : "Kirim Data"}
         </Button>
         <Button variant="fixation" disabled={verifLoading || sendLoading} onClick={() => sendingHandler("see", setSendLoading || setVerifLoading)}>

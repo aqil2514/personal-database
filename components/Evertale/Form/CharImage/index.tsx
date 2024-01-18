@@ -8,7 +8,6 @@ import GalleryWidget from "./Widget";
 export default function CharImages() {
   const { data, setData } = useData();
   const fileRef = React.useRef<any>(null);
-  const widgetRef = React.useRef<null | HTMLDivElement>(null);
   const [uploadLoading, setUploadLoading] = React.useState(false);
 
   async function uploadHandler() {
@@ -65,7 +64,7 @@ export default function CharImages() {
             Lihat Galeri
           </Button>
         </div>
-        <GalleryWidget ref={widgetRef} />
+        <GalleryWidget />
       </div>
       <Input forId="f1Img" variant="default" label="Form 1 Image" value={data?.charImage?.f1Img} disabled required />
       <Input forId="f2Img" variant="default" label="Form 2 Image" value={data?.charImage?.f2Img} disabled />
