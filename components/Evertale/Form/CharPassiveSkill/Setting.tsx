@@ -1,27 +1,35 @@
 import { Input } from "@/components/General/Input";
 import { TitleSection } from "@/components/General/Wrapper";
-import { CharacterPassiveSkill, CharacterState } from "../../Interface";
-import React from "react";
+import React, { RefObject } from "react";
 import { Textarea } from "@/components/General/Textarea";
 import { Button } from "@/components/General/Button";
 import { TypeSkill } from "./TypeSkill";
 import { notif } from "@/components/Utils";
 
-export const Setting = ({ deleteMode, setDeleteMode, data, setData }: { deleteMode: boolean; setDeleteMode: React.Dispatch<React.SetStateAction<boolean>>; data: CharacterState; setData: React.Dispatch<React.SetStateAction<any>> }) => {
-  const [inputSkill, setInputSkill] = React.useState<CharacterPassiveSkill>({} as CharacterPassiveSkill);
+export const Setting = ({
+  deleteMode,
+  setDeleteMode,
+  data,
+  setData,
+}: {
+  deleteMode: boolean;
+  setDeleteMode: React.Dispatch<React.SetStateAction<boolean>>;
+  data: Evertale.Character.State;
+  setData: React.Dispatch<React.SetStateAction<Evertale.Character.State>>;
+}) => {
+  const [inputSkill, setInputSkill] = React.useState<Evertale.Character.PassiveSkill>({} as Evertale.Character.PassiveSkill);
   const [notifName, setNotifName] = React.useState<string>("");
 
-  const nameRef = React.useRef<HTMLParagraphElement | null>(null);
-  const typeRef = React.useRef<HTMLParagraphElement | null>(null);
+  const nameRef: React.MutableRefObject<HTMLParagraphElement | null> = React.useRef<HTMLParagraphElement | null>(null);
 
-  function changeHandler(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  function changeHandler(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void {
     const element = e.target as HTMLInputElement | HTMLTextAreaElement;
     const field = element.getAttribute("data-passive") as string;
 
     setInputSkill({ ...inputSkill, [field]: element.value });
   }
 
-  function addHandler() {
+  function addHandler(): void {
     if (!inputSkill.name) {
       notif(nameRef, "red", "Nama Passive belum diisi", setNotifName);
       return;

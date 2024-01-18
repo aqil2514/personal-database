@@ -5,11 +5,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { SetStateAction, useRef } from "react";
 import useSWR from "swr";
-import { CharacterActiveSkill } from "../../Interface";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
-export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.Dispatch<SetStateAction<any>>; inputSkill: CharacterActiveSkill }) => {
+export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.Dispatch<SetStateAction<Evertale.Character.ActiveSkill>>; inputSkill: Evertale.Character.ActiveSkill }) => {
   const URL = "/api/gamelingo/newEvertale?category=statusResource";
   const { data, isLoading, error } = useSWR(URL, fetcher);
   const router = useRouter();

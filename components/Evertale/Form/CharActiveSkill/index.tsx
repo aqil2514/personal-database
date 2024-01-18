@@ -9,11 +9,10 @@ import { Button } from "@/components/General/Button";
 import { TypeSkill } from "./TypeSkill";
 import { PreviewSkill } from "./Preview";
 import { notif } from "@/components/Utils";
-import { CharacterActiveSkill } from "../../Interface";
 
 export default function CharActiveSkills() {
   const { data, setData }: StateType = useData();
-  const [inputSkill, setInputSkill] = useState<CharacterActiveSkill>({ name: "", typeSkill: [], target: "", TU: 0, spirit: 0, descEn: "", descId: "" });
+  const [inputSkill, setInputSkill] = useState<Evertale.Character.ActiveSkill>({ name: "", typeSkill: [], target: "", TU: 0, spirit: 0, descEn: "", descId: "" });
   const [typeNotif, setTypeNotif] = useState<string>("");
   const [nameNotif, setNameNotif] = useState<string>("");
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
@@ -54,8 +53,11 @@ export default function CharActiveSkills() {
   }
 
   function changeHandler(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const field = e.target.getAttribute("data-field");
-    setInputSkill({ ...inputSkill, [field as string]: e.target.value });
+    const field: string | null = e.target.getAttribute("data-field");
+    if (typeof field !== "string") {
+      return;
+    }
+    setInputSkill({ ...inputSkill, [field]: e.target.value });
   }
 
   return (

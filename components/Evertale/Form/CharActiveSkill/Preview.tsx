@@ -1,11 +1,20 @@
 import { SetStateAction } from "react";
-import { CharacterActiveSkill, CharacterState } from "../../Interface";
 
-export const PreviewSkill = ({ deleteMode, setDeleteMode, data, setData }: { deleteMode: boolean; setDeleteMode: React.Dispatch<SetStateAction<boolean>>; data: CharacterState; setData: React.Dispatch<SetStateAction<any>> }) => {
+export const PreviewSkill = ({
+  deleteMode,
+  setDeleteMode,
+  data,
+  setData,
+}: {
+  deleteMode: boolean;
+  setDeleteMode: React.Dispatch<SetStateAction<boolean>>;
+  data: Evertale.Character.State;
+  setData: React.Dispatch<SetStateAction<Evertale.Character.State>>;
+}) => {
   function deleteHandler(e: React.MouseEvent<HTMLSpanElement>) {
     const skillName = (e.target as HTMLSpanElement).getAttribute("data-skillName");
 
-    const filtered = data.charActiveSkill.filter((skill: CharacterActiveSkill) => skill.name !== skillName);
+    const filtered = data.charActiveSkill.filter((skill: Evertale.Character.ActiveSkill) => skill.name !== skillName);
 
     if (data.charActiveSkill.length === 1) {
       setDeleteMode(false);
@@ -20,7 +29,7 @@ export const PreviewSkill = ({ deleteMode, setDeleteMode, data, setData }: { del
         <p>Belum ada data yang ditambahkan</p>
       ) : (
         <>
-          {data.charActiveSkill.map((as: CharacterActiveSkill, i: number) => (
+          {data.charActiveSkill.map((as: Evertale.Character.ActiveSkill, i: number) => (
             <div key={`as-${i++}`} className="my-4">
               <p>
                 <strong>Active Skill {i + 1}.</strong>{" "}
