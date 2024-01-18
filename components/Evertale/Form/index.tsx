@@ -1,11 +1,9 @@
 "use client";
 
 import React, { SetStateAction, createContext, useContext, useState } from "react";
-import { ADD_BUTTON_STYLE } from "@/app/components/Styles";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import CharStatus from "./CharStatus";
-import { CharacterState } from "../Interface";
 import CharImages from "./CharImage";
 import CharIntro from "./CharIntro";
 import CharProfile from "./CharProfile";
@@ -16,12 +14,12 @@ import { Button } from "@/components/General/Button";
 const FormContext = createContext<StateType>({} as StateType);
 
 export type StateType = {
-  data: CharacterState;
-  setData: React.Dispatch<SetStateAction<any>>;
+  data: Evertale.Character.State;
+  setData: React.Dispatch<SetStateAction<Evertale.Character.State>>;
 };
 
 export default function Form() {
-  const [data, setData] = useState<CharacterState>({
+  const [data, setData] = useState<Evertale.Character.State>({
     charStatus: {
       charName: "",
       charRank: undefined,

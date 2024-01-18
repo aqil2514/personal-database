@@ -3,7 +3,6 @@ import React from "react";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
-import axios from "axios";
 import GalleryWidget from "./Widget";
 
 export default function CharImages() {

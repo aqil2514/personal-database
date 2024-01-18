@@ -5,8 +5,9 @@ import { notif } from "@/components/Utils";
 import axios from "axios";
 import { Input } from "@/components/General/Input";
 import { Button } from "@/components/General/Button";
+import { DataResponse } from ".";
 
-export const CharTeam = ({ info }: any) => {
+export const CharTeam = ({ info }: { info: DataResponse }) => {
   const { data, setData } = useData();
   const router = useRouter();
   const [teams, setTeams] = useState<string[]>([]);
@@ -15,6 +16,8 @@ export const CharTeam = ({ info }: any) => {
   const [fixNotif, setFixNotif] = useState<string>("");
   const notifRef = useRef<null | HTMLParagraphElement>(null);
   const fixNotifRef = useRef<null | HTMLParagraphElement>(null);
+
+  const charTeam: Evertale.Misc.TypeSkill = info.rss;
 
   async function keyDownHandler(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.ctrlKey && e.key === "Enter") {
@@ -26,7 +29,7 @@ export const CharTeam = ({ info }: any) => {
         notif(notifRef, "red", "Team Setting masih kosong", setNotifCharTeam);
         return;
       }
-      const isThere = info?.rss?.typeCharTeam.find((t: string) => t === team);
+      const isThere = charTeam.typeCharTeam.find((t: string) => t === team);
       if (isThere) {
         const dupplicate = teams.includes(team);
         if (dupplicate) {
@@ -94,7 +97,11 @@ export const CharTeam = ({ info }: any) => {
         {notifCharTeam}
       </p>
       <Input forId="char-team-input" label="Team Setting" list="option-char-team" value={team} onChange={(e) => setTeam(e.target.value)} onKeyDown={(e) => keyDownHandler(e)} />
-      <datalist id="option-char-team">{info?.rss?.typeCharTeam.map((team: string) => <option value={team} key={`opt-char-team-${team}`} />)}</datalist>
+      <datalist id="option-char-team">
+        {charTeam.typeCharTeam.map((team: string) => (
+          <option value={team} key={`opt-char-team-${team}`} />
+        ))}
+      </datalist>
       <p ref={fixNotifRef} className="font-semibold">
         {fixNotif}
       </p>

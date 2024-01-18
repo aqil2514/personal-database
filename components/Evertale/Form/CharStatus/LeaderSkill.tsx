@@ -3,11 +3,13 @@ import { notif } from "@/components/Utils";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
+import { DataResponse } from ".";
 
-export const LeaderSkill = ({ data, info, setData }: { data: React.ComponentState; info: React.ComponentState; setData: React.ComponentState }) => {
+export const LeaderSkill = ({ data, info, setData }: { data: Evertale.Character.State; info: DataResponse; setData: React.Dispatch<React.SetStateAction<Evertale.Character.State>> }) => {
   const router = useRouter();
   const [notifNew, setNotifNew] = useState<string>("");
   const notifRef = useRef<null | HTMLParagraphElement>(null);
+  const lsData: string[] = info.lsData;
 
   const questions = (inputValue: string) => {
     const categoryMap: { [key: string]: string } = {
@@ -96,7 +98,11 @@ export const LeaderSkill = ({ data, info, setData }: { data: React.ComponentStat
   return (
     <div>
       <Input forId="charLeaderSkill" label="Leader Skill Unit" value={data?.charStatus?.charLeaderSkill} list="char-leader-skill-list" onChange={changeHandler} onKeyDown={keyDownHandler} />
-      <datalist id="char-leader-skill-list">{info?.lsData?.map((ls: string) => <option key={`char-leader-skill-${ls}`} value={ls} />)}</datalist>
+      <datalist id="char-leader-skill-list">
+        {lsData.map((ls: string) => (
+          <option key={`char-leader-skill-${ls}`} value={ls} />
+        ))}
+      </datalist>
       <p ref={notifRef} className="font-semibold">
         {notifNew}
       </p>

@@ -1,4 +1,4 @@
-import { getChars, getPassiveSkills } from "@/lib/mongodb/evertale";
+import { getPassiveSkills } from "@/lib/mongodb/evertale";
 import connectMongoDB from "@/lib/mongoose";
 import Character from "@/models/Evertale/Character";
 import LeaderSkill from "@/models/Evertale/LeaderSkill";
@@ -31,21 +31,33 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ chars }, { status: 200 });
   } else if (category === "statusResource") {
     const ls = await LeaderSkill.find();
-    const lsData = ls
-      .filter((l: any) => l.name !== "Leader Skill")
-      .map((l: any) => l.name)
+    const lsData: string[] = ls
+      .filter((l: Evertale.Misc.LeaderSkill) => l.name !== "Leader Skill")
+      .map((l: Evertale.Misc.LeaderSkill) => l.name)
       .sort();
     const con = await Character.find({ "charStatus.isConjured": true });
-    const conjure = con.map((c: any) => c.charStatus.charName).sort();
+    const conjure: string[] = con.map((c: Evertale.Character.State) => c.charStatus.charName).sort();
     const datarss = await TypeSkill.find();
-    const rss = {
+    const rss: Evertale.Misc.TypeSkill = {
       typeCharTeam: datarss[0].typeCharTeam.sort(),
       typeActiveSkill: datarss[0].typeActiveSkill.sort(),
       typePassiveSkill: datarss[0].typePassiveSkill.sort(),
       typeLeaderSkill: datarss[0].typeLeaderSkill.sort(),
     };
 
-    return NextResponse.json({ lsData, conjure, rss }, { status: 200 });
+    type Data = {
+      lsData: string[];
+      conjure: string[];
+      rss: Evertale.Misc.TypeSkill;
+    };
+
+    const data: Data = {
+      lsData,
+      conjure,
+      rss,
+    };
+
+    return NextResponse.json({ data }, { status: 200 });
   }
 
   return NextResponse.json({ category }, { status: 200 });
@@ -74,7 +86,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ msg: `Char Team dengan nama "${data}" berhasil ditambahkan` }, { status: 200 });
   }
 
-  return NextResponse.json({ data, type }, { status: 200 });
+  return NextResponse.json({ data }, { status: 200 });
 }
 
 export async function OPTIONS(req: NextRequest) {

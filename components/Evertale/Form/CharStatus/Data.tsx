@@ -5,8 +5,9 @@ import { Option, OptionString, Select } from "@/components/General/Select";
 import { CharTeam } from "./CharTeam";
 import { LeaderSkill } from "./LeaderSkill";
 import { charElement, charRank, charWeapon } from "../../Data";
+import { DataResponse } from ".";
 
-export const Data = ({ info }: { info: any }) => {
+export const Data = ({ info }: { info: DataResponse }) => {
   const { data, setData } = useData();
 
   function changeHandler(e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>, stateData: string) {

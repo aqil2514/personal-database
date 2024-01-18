@@ -25,5 +25,11 @@ export async function GET(req: NextRequest) {
     type: "upload",
     prefix: `${game}/${category}/${format}/${q}`,
   });
+
+  const data = result.resources.map((image: any) => ({
+    url: image.secure_url,
+    name: (image.public_id as string).split("/")[3],
+  }));
+
   return NextResponse.json({ msg: "Sukses", result }, { status: 200 });
 }
