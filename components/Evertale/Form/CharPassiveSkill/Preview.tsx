@@ -14,7 +14,7 @@ export const PreviewSkill = ({
   function deleteHandler(e: React.MouseEvent<HTMLSpanElement>) {
     const skillName = (e.target as HTMLSpanElement).getAttribute("data-skillName");
 
-    const filtered = data.charPassiveSkill.filter((skill: Evertale.Character.PassiveSkill) => skill.name !== skillName);
+    const filtered = data.charPassiveSkill.filter((skill: Evertale.Character.PassiveSkill) => skill.skillName !== skillName);
 
     if (data.charPassiveSkill.length === 1) {
       setDeleteMode(false);
@@ -34,14 +34,14 @@ export const PreviewSkill = ({
               <p>
                 <strong>Passive Skill {i + 1}.</strong>{" "}
                 {deleteMode && (
-                  <span onClick={deleteHandler} data-skillName={as.name} className={"text-rose-800 cursor-pointer font-extrabold"}>
+                  <span onClick={deleteHandler} data-skillName={as.skillName} className={"text-rose-800 cursor-pointer font-extrabold"}>
                     X
                   </span>
                 )}
               </p>
               <p>
                 <strong>Skill Name : </strong>
-                {as.name}
+                {as.skillName}
               </p>
               <p>
                 <strong>Skill Type : </strong>
@@ -49,11 +49,11 @@ export const PreviewSkill = ({
               </p>
               <p>
                 <strong>Description : </strong>
-                {as.descEn}
+                {as.skillDescEn}
               </p>
               <p>
                 <strong>Deskripsi : </strong>
-                {as.descId}
+                {as.skillDescId}
               </p>
             </div>
           ))}

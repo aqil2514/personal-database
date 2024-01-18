@@ -30,12 +30,12 @@ export const Setting = ({
   }
 
   function addHandler(): void {
-    if (!inputSkill.name) {
+    if (!inputSkill.skillName) {
       notif(nameRef, "red", "Nama Passive belum diisi", setNotifName);
       return;
     }
     setData({ ...data, charPassiveSkill: [...data.charPassiveSkill, inputSkill] });
-    setInputSkill({ name: "", typeSkill: [], descEn: "", descId: "" });
+    setInputSkill({ skillName: "", typeSkill: [], skillDescEn: "", skillDescId: "" });
     console.log(data);
   }
 
@@ -44,19 +44,17 @@ export const Setting = ({
       <TitleSection>Character Passive Skill</TitleSection>
 
       <div>
-        <Input forId="passive-skill-name" label="Passive Name" data-passive="name" value={inputSkill.name} onChange={changeHandler} />
+        <Input forId="passive-skill-name" label="Passive Name" data-passive="skillName" value={inputSkill.skillName} onChange={changeHandler} />
         <p ref={nameRef} className="font-semibold">
           {notifName}
         </p>
 
         <TypeSkill inputSkill={inputSkill} setInputSkill={setInputSkill} />
 
-        <Textarea forId="passive-desc-en" label="Description" data-passive="descEn" value={inputSkill.descEn} onChange={changeHandler} />
+        <Textarea forId="passive-desc-en" label="Description" data-passive="skillDescEn" value={inputSkill.skillDescEn} onChange={changeHandler} />
 
-        <Textarea forId="passive-desc-id" label="Deskripsi" data-passive="descId" value={inputSkill.descId} onChange={changeHandler} />
+        <Textarea forId="passive-desc-id" label="Deskripsi" data-passive="skillDescId" value={inputSkill.skillDescId} onChange={changeHandler} />
       </div>
-
-      {/* {!uniqueSkill && <NonUniqueSkill inputSkill={inputSkill} setInputSkill={setInputSkill} addHandler={addHandler} />} */}
 
       <Button variant="upload" onClick={addHandler}>
         Add

@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ msg: passiveSkill.success, ref: passiveSkill.ref }, { status: 422 });
   }
 
-  const charData = {
+  const charData: Evertale.Character.State = {
     charStatus: status.charStatus,
     charImage: image.charImage,
     charIntro: Object.values(intro.charIntro).every((val) => val === undefined) ? undefined : intro.charIntro,

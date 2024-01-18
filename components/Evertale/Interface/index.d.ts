@@ -50,19 +50,19 @@ namespace Evertale {
       part3Id: string;
     }
     export interface ActiveSkill {
-      name: string;
+      skillName: string;
       typeSkill: string[];
-      spirit: number;
-      target: string | number;
-      TU: number;
-      descEn: string;
-      descId: string;
+      skillSpirit: number;
+      skillTarget: string | number;
+      skillTu: number;
+      skillDescEn: string;
+      skillDescId: string;
     }
     export interface PassiveSkill {
-      name: string;
+      skillName: string;
       typeSkill: string[];
-      descEn: string;
-      descId: string;
+      skillDescEn: string;
+      skillDescId: string;
     }
   }
   namespace Misc {

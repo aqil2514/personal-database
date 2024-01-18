@@ -12,7 +12,7 @@ import { notif } from "@/components/Utils";
 
 export default function CharActiveSkills() {
   const { data, setData }: StateType = useData();
-  const [inputSkill, setInputSkill] = useState<Evertale.Character.ActiveSkill>({ name: "", typeSkill: [], target: "", TU: 0, spirit: 0, descEn: "", descId: "" });
+  const [inputSkill, setInputSkill] = useState<Evertale.Character.ActiveSkill>({ skillName: "", typeSkill: [], skillTarget: "", skillTu: 0, skillSpirit: 0, skillDescEn: "", skillDescId: "" });
   const [typeNotif, setTypeNotif] = useState<string>("");
   const [nameNotif, setNameNotif] = useState<string>("");
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
@@ -21,7 +21,7 @@ export default function CharActiveSkills() {
   const nameRef = useRef<HTMLParagraphElement | null>(null);
 
   function addHandler() {
-    if (!inputSkill.name) {
+    if (!inputSkill.skillName) {
       window.scrollTo({
         top: nameRef.current?.offsetTop,
         behavior: "smooth",
@@ -49,7 +49,7 @@ export default function CharActiveSkills() {
       });
     }
 
-    setInputSkill({ name: "", typeSkill: [], target: "", TU: 0, spirit: 0, descEn: "", descId: "" });
+    setInputSkill({ skillName: "", typeSkill: [], skillTarget: "", skillTu: 0, skillSpirit: 0, skillDescEn: "", skillDescId: "" });
   }
 
   function changeHandler(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -64,7 +64,7 @@ export default function CharActiveSkills() {
     <SectionWrapper id="active-skill-section">
       <TitleSection>Character Active Skill</TitleSection>
 
-      <Input forId="active-skill-name" label="Skill Name" data-field="name" value={inputSkill?.name} onChange={changeHandler} />
+      <Input forId="active-skill-name" label="Skill Name" data-field="skillName" value={inputSkill?.skillName} onChange={changeHandler} />
       <p ref={nameRef} className="font-semibold">
         {nameNotif}
       </p>
@@ -74,15 +74,15 @@ export default function CharActiveSkills() {
         {typeNotif}
       </p>
 
-      <Input forId="active-skill-spirit" label="Skill Spirit" type="number" data-field="spirit" value={inputSkill?.spirit} onChange={changeHandler} />
+      <Input forId="active-skill-spirit" label="Skill Spirit" type="number" data-field="skillSpirit" value={inputSkill?.skillSpirit} onChange={changeHandler} />
 
-      <Input forId="active-skill-target" label="Skill Target" data-field="target" value={inputSkill?.target} onChange={changeHandler} />
+      <Input forId="active-skill-target" label="Skill Target" data-field="skillTarget" value={inputSkill?.skillTarget} onChange={changeHandler} />
 
-      <Input forId="active-skill-tu" label="Skill TU" type="number" data-field="TU" value={inputSkill?.TU} onChange={changeHandler} />
+      <Input forId="active-skill-tu" label="Skill TU" type="number" data-field="skillTu" value={inputSkill?.skillTu} onChange={changeHandler} />
 
-      <Textarea forId="active-skill-desc-en" label="Skill Description" data-field="descEn" value={inputSkill?.descEn} onChange={changeHandler} />
+      <Textarea forId="active-skill-desc-en" label="Skill Description" data-field="skillDescEn" value={inputSkill?.skillDescEn} onChange={changeHandler} />
 
-      <Textarea forId="active-skill-desc-id" label="Deskripsi Skill" data-field="descId" value={inputSkill?.descId} onChange={changeHandler} />
+      <Textarea forId="active-skill-desc-id" label="Deskripsi Skill" data-field="skillDescId" value={inputSkill?.skillDescId} onChange={changeHandler} />
 
       <Button type="button" onClick={addHandler} variant="upload">
         Add
