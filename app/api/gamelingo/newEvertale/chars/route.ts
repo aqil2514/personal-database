@@ -13,7 +13,10 @@ export async function GET(req: NextRequest) {
   await connectMongoDB();
 
   if (id) {
-    const char = await Character.findById(id);
+    const char: Evertale.Character.State | null = await Character.findById(id);
+    if (!char) {
+      return NextResponse.json({ msg: "No Data" }, { status: 422 });
+    }
 
     return NextResponse.json({ char }, { status: 200 });
   }

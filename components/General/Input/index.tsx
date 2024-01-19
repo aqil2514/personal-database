@@ -19,10 +19,10 @@ export const Input = ({ forId, label, variant = "default", ...props }: InputProp
   );
 };
 
-export const InputRadio = ({ forId, name, label }: InputProps) => {
+export const InputRadio = ({ forId, name, label, ...props }: InputProps) => {
   return (
     <label htmlFor={forId} className="mx-8">
-      <input type="radio" name={name} id={forId} /> {label}
+      <input type="radio" name={name} id={forId} {...props} /> {label}
     </label>
   );
 };

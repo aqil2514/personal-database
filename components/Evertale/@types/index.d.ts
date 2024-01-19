@@ -38,7 +38,7 @@ namespace Evertale {
       charWeapon1: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana" | undefined;
       charWeapon2: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana" | undefined;
       charLeaderSkill: string | null;
-      isConjured: Boolean;
+      isConjured: boolean;
       charConjure: string | null;
     }
     export interface Profile {
@@ -77,6 +77,15 @@ namespace Evertale {
       descEn: string;
       descId: string;
       typeSkill: string;
+    }
+  }
+  namespace Utils {
+    export interface ComparingDataProps<T> {
+      subfield: keyof T | null;
+      oldCS: T;
+      newCS: T;
+      dataFor: "new" | "old";
+      title: string;
     }
   }
 }
