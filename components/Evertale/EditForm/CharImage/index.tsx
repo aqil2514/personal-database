@@ -53,27 +53,30 @@ export default function CharImages() {
 
   return (
     <SectionWrapper>
-      <TitleSection>Character Images</TitleSection>
+      <details className="my-4">
+        <summary>Character Images</summary>
+        <TitleSection>Character Images</TitleSection>
 
-      <div>
-        <label htmlFor="files" className="block">
-          Upload File :{" "}
-        </label>
-        <input type="file" ref={fileRef} name="files" id="files" multiple />
-        <div className="flex flex-wrap gap-4 my-2">
-          <Button variant="upload" type="button" disabled={uploadLoading} onClick={uploadHandler}>
-            {uploadLoading ? "Uploading..." : "Upload"}
-          </Button>
-          <Button variant="default" type="button" disabled={uploadLoading} onClick={clickHandler}>
-            Lihat Galeri
-          </Button>
+        <div>
+          <label htmlFor="files" className="block">
+            Upload File :{" "}
+          </label>
+          <input type="file" ref={fileRef} name="files" id="files" multiple />
+          <div className="flex flex-wrap gap-4 my-2">
+            <Button variant="upload" type="button" disabled={uploadLoading} onClick={uploadHandler}>
+              {uploadLoading ? "Uploading..." : "Upload"}
+            </Button>
+            <Button variant="default" type="button" disabled={uploadLoading} onClick={clickHandler}>
+              Lihat Galeri
+            </Button>
+          </div>
+          <GalleryWidget data={char} setData={setChar} />
         </div>
-        <GalleryWidget data={char} setData={setChar} />
-      </div>
-      <Input forId="f1Img" variant="default" label="Form 1 Image" value={charImage.f1Img} disabled required />
-      <Input forId="f2Img" variant="default" label="Form 2 Image" value={charImage.f2Img} disabled />
-      <Input forId="f3Img" variant="default" label="Form 3 Image" value={charImage.f3Img} disabled />
-      <Verifying char={char} />
+        <Input forId="f1Img" variant="default" label="Form 1 Image" value={charImage.f1Img} disabled required />
+        <Input forId="f2Img" variant="default" label="Form 2 Image" value={charImage.f2Img} disabled />
+        <Input forId="f3Img" variant="default" label="Form 3 Image" value={charImage.f3Img} disabled />
+        <Verifying char={char} />
+      </details>
     </SectionWrapper>
   );
 }

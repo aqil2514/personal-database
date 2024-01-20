@@ -31,66 +31,66 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ chars }, { status: 200 });
 }
 
-export async function POST(req: NextRequest) {
-  const { data, action } = await req.json();
-  const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill } = data;
+// export async function POST(req: NextRequest) {
+//   const { data, action } = await req.json();
+//   const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill } = data;
 
-  const status = validator.character.status(charStatus);
-  if (!status.success) {
-    return NextResponse.json({ msg: status.msg, ref: status.ref }, { status: 422 });
-  }
+//   const status = validator.character.status(charStatus);
+//   if (!status.success) {
+//     return NextResponse.json({ msg: status.msg, ref: status.ref }, { status: 422 });
+//   }
 
-  const image = validator.character.images(charImage);
-  if (!image.success) {
-    return NextResponse.json({ msg: image.msg, ref: image.ref }, { status: 422 });
-  }
+//   const image = validator.character.images(charImage);
+//   if (!image.success) {
+//     return NextResponse.json({ msg: image.msg, ref: image.ref }, { status: 422 });
+//   }
 
-  const intro = validator.character.intro(charIntro);
-  if (!intro.success) {
-    return NextResponse.json({ msg: intro.msg, ref: intro.ref }, { status: 422 });
-  }
+//   const intro = validator.character.intro(charIntro);
+//   if (!intro.success) {
+//     return NextResponse.json({ msg: intro.msg, ref: intro.ref }, { status: 422 });
+//   }
 
-  const profile = validator.character.profile(charProfile);
-  if (!profile.success) {
-    return NextResponse.json({ msg: profile.msg, ref: profile.ref }, { status: 422 });
-  }
+//   const profile = validator.character.profile(charProfile);
+//   if (!profile.success) {
+//     return NextResponse.json({ msg: profile.msg, ref: profile.ref }, { status: 422 });
+//   }
 
-  const activeSkill = validator.character.activeSkill(charActiveSkill);
-  if (!activeSkill.success) {
-    return NextResponse.json({ msg: activeSkill.success, ref: activeSkill.ref }, { status: 422 });
-  }
+//   const activeSkill = validator.character.activeSkill(charActiveSkill);
+//   if (!activeSkill.success) {
+//     return NextResponse.json({ msg: activeSkill.success, ref: activeSkill.ref }, { status: 422 });
+//   }
 
-  const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
-  if (!passiveSkill.success) {
-    return NextResponse.json({ msg: passiveSkill.success, ref: passiveSkill.ref }, { status: 422 });
-  }
+//   const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
+//   if (!passiveSkill.success) {
+//     return NextResponse.json({ msg: passiveSkill.success, ref: passiveSkill.ref }, { status: 422 });
+//   }
 
-  const charData: Evertale.Character.State = {
-    charStatus: status.charStatus,
-    charImage: image.charImage,
-    charIntro: Object.values(intro.charIntro).every((val) => val === undefined) ? undefined : intro.charIntro,
-    charProfile: profile.charProfile,
-    charActiveSkill: activeSkill.charActiveSkill,
-    charPassiveSkill: passiveSkill.charPassiveSkill,
-  };
+//   const charData: Evertale.Character.State = {
+//     charStatus: status.charStatus,
+//     charImage: image.charImage,
+//     charIntro: Object.values(intro.charIntro).every((val) => val === undefined) ? undefined : intro.charIntro,
+//     charProfile: profile.charProfile,
+//     charActiveSkill: activeSkill.charActiveSkill,
+//     charPassiveSkill: passiveSkill.charPassiveSkill,
+//   };
 
-  if (action === "see") {
-    return NextResponse.json({ msg: "Data berhasil diverifikasi", charData, redirect: false }, { status: 200 });
-  } else if (action === "add") {
-    await connectMongoDB();
-    const newChar = await Character.create(charData);
-    await Post.create({
-      title: newChar.charStatus.charName,
-      game: {
-        name: "Evertale",
-        topic: "Character",
-      },
-      content: newChar._id,
-      author: "Admin GameLingo",
-    });
-    return NextResponse.json({ msg: "Data berhasil ditambah", redirect: true }, { status: 200 });
-  }
-}
+//   if (action === "see") {
+//     return NextResponse.json({ msg: "Data berhasil diverifikasi", charData, redirect: false }, { status: 200 });
+//   } else if (action === "add") {
+//     await connectMongoDB();
+//     const newChar = await Character.create(charData);
+//     await Post.create({
+//       title: newChar.charStatus.charName,
+//       game: {
+//         name: "Evertale",
+//         topic: "Character",
+//       },
+//       content: newChar._id,
+//       author: "Admin GameLingo",
+//     });
+//     return NextResponse.json({ msg: "Data berhasil ditambah", redirect: true }, { status: 200 });
+//   }
+// }
 
 // export async function PUT(req: NextRequest) {
 //   const { submitData, action } = await req.json();
@@ -166,6 +166,26 @@ export async function PUT(req: NextRequest) {
     }
 
     await Character.findByIdAndUpdate(UID, { $set: { charImage: charImage.charImage } }, { runValidators: true });
+    return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
+  }
+  if (section === "charIntro") {
+    const data: Evertale.Character.Intro = char.charIntro;
+    const charIntro = validator.character.intro(data);
+    if (!charIntro.success) {
+      return NextResponse.json({ msg: charIntro.msg }, { status: 422 });
+    }
+
+    await Character.findByIdAndUpdate(UID, { $set: { charIntro: charIntro.charIntro } }, { runValidators: true });
+    return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
+  }
+  if (section === "charProfile") {
+    const data: Evertale.Character.Profile = char.charProfile;
+    const charProfile = validator.character.profile(data);
+    if (!charProfile.success) {
+      return NextResponse.json({ msg: charProfile.msg }, { status: 422 });
+    }
+
+    await Character.findByIdAndUpdate(UID, { $set: { charProfile: charProfile.charProfile } }, { runValidators: true });
     return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
   }
 }

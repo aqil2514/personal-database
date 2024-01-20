@@ -6,6 +6,8 @@ import axios from "axios";
 import useSWR from "swr";
 import CharStatus from "./CharStatus";
 import CharImages from "./CharImage";
+import CharIntro from "./CharIntro";
+import CharProfile from "./CharProfile";
 
 export const SECTION_TITLE_STYLE = "font-merriweather text-center font-bold mt-5";
 export const SECTION_STYLE = "w-full px-4";
@@ -48,11 +50,11 @@ export default function EditForm() {
 
         <CharImages />
 
-        {/* <CharIntro />
+        <CharIntro />
 
         <CharProfile />
 
-        <ActiveSkill />
+        {/* <ActiveSkill />
 
         <PassiveSkill /> */}
         {/* <button className={ADD_BUTTON_STYLE + " m-4"}>Kirim Data</button>

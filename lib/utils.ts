@@ -359,10 +359,10 @@ export const validator = {
         charImage,
       };
     },
-    intro: (intro: any) => {
+    intro: (intro: Evertale.Character.Intro) => {
       const charIntro = intro;
 
-      if (charIntro.gachaIntroEn && charIntro.gachaIntroId.length === 0) {
+      if (charIntro.gachaIntroEn && !charIntro.gachaIntroId) {
         return { msg: "Gacha Intro belum diterjemahkan", ref: "gacha-intro-id", success: false };
       }
 
@@ -370,42 +370,42 @@ export const validator = {
         charIntro.gachaIntroEn = undefined;
         charIntro.gachaIntroId = undefined;
       }
-      if (charIntro.gachaTextEn && charIntro.gachaTextId.length === 0) {
+      if (charIntro.gachaTextEn && !charIntro.gachaTextId) {
         return { msg: "Gacha Text belum diterjemahkan", ref: "gacha-text-id", success: false };
       }
       if (!charIntro.gachaTextEn) {
         charIntro.gachaTextEn = undefined;
         charIntro.gachaTextId = undefined;
       }
-      if (charIntro.loginTextEn && charIntro.loginTextId.length === 0) {
+      if (charIntro.loginTextEn && !charIntro.loginTextId) {
         return { msg: "Login Text belum diterjemahkan", ref: "login-text-id", success: false };
       }
       if (!charIntro.loginTextEn) {
         charIntro.loginTextEn = undefined;
         charIntro.loginTextId = undefined;
       }
-      if (charIntro.text1En && charIntro.text1Id.length === 0) {
+      if (charIntro.text1En && !charIntro.text1Id) {
         return { msg: "Text 1 belum diterjemahkan", ref: "text-1-id", success: false };
       }
       if (!charIntro.text1En) {
         charIntro.text1En = undefined;
         charIntro.text1Id = undefined;
       }
-      if (charIntro.text2En && charIntro.text2Id.length === 0) {
+      if (charIntro.text2En && !charIntro.text2Id) {
         return { msg: "Text 2 belum diterjemahkan", ref: "text-2-id", success: false };
       }
       if (!charIntro.text2En) {
         charIntro.text2En = undefined;
         charIntro.text2Id = undefined;
       }
-      if (charIntro.text3En && charIntro.text3Id.length === 0) {
+      if (charIntro.text3En && !charIntro.text3Id) {
         return { msg: "Text 3 belum diterjemahkan", ref: "text-3-id", success: false };
       }
       if (!charIntro.text3En) {
         charIntro.text3En = undefined;
         charIntro.text3Id = undefined;
       }
-      if (charIntro.text4En && charIntro.text4Id.length === 0) {
+      if (charIntro.text4En && !charIntro.text4Id) {
         return { msg: "Text 4 belum diterjemahkan", ref: "text-4-id", success: false };
       }
       if (!charIntro.text4En) {
@@ -415,7 +415,7 @@ export const validator = {
 
       return { charIntro, success: true };
     },
-    profile: (profile: any) => {
+    profile: (profile: Evertale.Character.Profile) => {
       const charProfile = profile;
 
       if (!charProfile.part1En) {
