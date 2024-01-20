@@ -5,6 +5,7 @@ import React, { useContext, createContext } from "react";
 import axios from "axios";
 import useSWR from "swr";
 import CharStatus from "./CharStatus";
+import CharImages from "./CharImage";
 
 export const SECTION_TITLE_STYLE = "font-merriweather text-center font-bold mt-5";
 export const SECTION_STYLE = "w-full px-4";
@@ -35,32 +36,6 @@ export default function EditForm() {
 
   async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const sure = confirm("Yakin dengan perubahannya?");
-    if (!sure) {
-      return;
-    }
-
-    axios
-      .put("/api/gamelingo/newEvertale/chars", {
-        submitData: character,
-        action: "update",
-      })
-      .then((res) => {
-        const data = res.data;
-        alert(data.msg);
-        router.back();
-      })
-      .catch((err) => {
-        if (err.response.status === 422) {
-          alert(err.response.data.msg);
-          return;
-        }
-        if (err.response.status === 500) {
-          alert("Ada kesalahan pada server");
-          return;
-        }
-        console.error(err);
-      });
   }
 
   return (
@@ -71,9 +46,9 @@ export default function EditForm() {
       <form onSubmit={(e) => submitHandler(e)}>
         <CharStatus />
 
-        {/* <CharImages />
+        <CharImages />
 
-        <CharIntro />
+        {/* <CharIntro />
 
         <CharProfile />
 

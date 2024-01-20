@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import Images from "./Images";
 import Preview from "./Preview";
 import { Button } from "@/components/General/Button";
@@ -8,8 +8,7 @@ import { StateType, useData } from "../..";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
-export default function Container() {
-  const { data, setData }: StateType = useData();
+export default function Container({ data, setData }: { data: Evertale.Character.State; setData: React.Dispatch<SetStateAction<Evertale.Character.State>> }) {
   const [query, setQuery] = React.useState<string>("");
   const URL = `/api/file?game=evertale&category=characters&format=webp&q=${query}`;
   const [imgSelected, setImgSelected] = React.useState<string[]>([]);

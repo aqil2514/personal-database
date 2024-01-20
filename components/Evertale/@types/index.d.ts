@@ -2,8 +2,8 @@ namespace Evertale {
   namespace Character {
     export interface Image {
       f1Img: string;
-      f2Img: string;
-      f3Img: string;
+      f2Img?: string;
+      f3Img?: string;
     }
     export interface State {
       charStatus: CharacterStatus;

@@ -1,14 +1,18 @@
-import { useData } from "@/components/Evertale/Form";
 import React from "react";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
-import GalleryWidget from "./Widget";
+import GalleryWidget from "@/components/Evertale/Form/CharImage/Widget";
+import { useCharacter } from "..";
+import Verifying from "./Verifying";
 
 export default function CharImages() {
-  const { data, setData } = useData();
+  const init = useCharacter();
   const fileRef = React.useRef<any>(null);
+  const [char, setChar] = React.useState<Evertale.Character.State>(init);
   const [uploadLoading, setUploadLoading] = React.useState(false);
+
+  const charImage: Evertale.Character.Image = char.charImage;
 
   async function uploadHandler() {
     if (!fileRef.current.files || fileRef.current.files.length === 0) {
@@ -33,7 +37,7 @@ export default function CharImages() {
       const f2Img = dataAPI.result.find((d: Record<string, string>) => d.public_id.includes("02")).url;
       const f3Img = dataAPI.result.find((d: Record<string, string>) => d.public_id.includes("03")).url;
 
-      setData({ ...data, charImage: { f1Img, f2Img, f3Img } });
+      setChar({ ...char, charImage: { f1Img, f2Img, f3Img } });
     } catch (error) {
       console.error(error);
     } finally {
@@ -64,11 +68,12 @@ export default function CharImages() {
             Lihat Galeri
           </Button>
         </div>
-        <GalleryWidget data={data} setData={setData} />
+        <GalleryWidget data={char} setData={setChar} />
       </div>
-      <Input forId="f1Img" variant="default" label="Form 1 Image" value={data?.charImage?.f1Img} disabled required />
-      <Input forId="f2Img" variant="default" label="Form 2 Image" value={data?.charImage?.f2Img} disabled />
-      <Input forId="f3Img" variant="default" label="Form 3 Image" value={data?.charImage?.f3Img} disabled />
+      <Input forId="f1Img" variant="default" label="Form 1 Image" value={charImage.f1Img} disabled required />
+      <Input forId="f2Img" variant="default" label="Form 2 Image" value={charImage.f2Img} disabled />
+      <Input forId="f3Img" variant="default" label="Form 3 Image" value={charImage.f3Img} disabled />
+      <Verifying char={char} />
     </SectionWrapper>
   );
 }

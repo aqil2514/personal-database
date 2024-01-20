@@ -18,7 +18,7 @@ export default function Verifying({ char }: { char: Evertale.Character.State }) 
   const [isSending, setIsSending] = React.useState<boolean>(false);
   const router = useRouter();
 
-  const elements: NodeListOf<HTMLParagraphElement> = document.querySelectorAll("details p");
+  const elements: NodeListOf<HTMLParagraphElement> = document.querySelectorAll("#char-status-result p");
   const newData = useMemo(() => {
     const result: HTMLParagraphElement[] = [];
 
@@ -89,7 +89,7 @@ export default function Verifying({ char }: { char: Evertale.Character.State }) 
   return (
     <div className="bg-slate-100 my-4 rounded-xl">
       <h2 className="text-center font-bold text-yellow-600">Verifying Area</h2>
-      <details>
+      <details id="char-status-result">
         <summary>Lihat Data</summary>
         <div className="grid grid-cols-2 gap-4">
           <div>

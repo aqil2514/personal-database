@@ -151,11 +151,21 @@ export async function PUT(req: NextRequest) {
     const data: Evertale.Character.Status = char.charStatus;
     const charStatus = validator.character.status(data);
     if (!charStatus.success) {
-      return NextResponse.json({ msg: charStatus.msg }, { status: 200 });
+      return NextResponse.json({ msg: charStatus.msg }, { status: 422 });
     }
 
     const character = await Character.findByIdAndUpdate(UID, { $set: { charStatus: charStatus.charStatus } }, { runValidators: true });
     await Post.findOneAndUpdate({ content: new ObjectId(UID) }, { $set: { title: character.charStatus.charName } }, { runValidators: true });
+    return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
+  }
+  if (section === "charImage") {
+    const data: Evertale.Character.Image = char.charImage;
+    const charImage = validator.character.images(data);
+    if (!charImage.success) {
+      return NextResponse.json({ msg: charImage.msg }, { status: 422 });
+    }
+
+    await Character.findByIdAndUpdate(UID, { $set: { charImage: charImage.charImage } }, { runValidators: true });
     return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
   }
 }

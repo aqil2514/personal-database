@@ -341,7 +341,7 @@ export const validator = {
 
       return { charStatus, success: true };
     },
-    images: (image: Record<string, string | undefined>) => {
+    images: (image: Evertale.Character.Image) => {
       const charImage = image;
 
       if (!charImage.f1Img) {
