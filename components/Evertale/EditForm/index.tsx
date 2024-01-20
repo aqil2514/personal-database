@@ -63,36 +63,13 @@ export default function EditForm() {
       });
   }
 
-  async function seeHandler() {
-    axios
-      .put("/api/gamelingo/newEvertale/chars", {
-        submitData: character,
-        action: "see",
-      })
-      .then((res) => {
-        alert("Lihat data lebih lanjut di Console Log (CTRL + SHIFT + I)");
-        console.log(res.data);
-      })
-      .catch((err) => {
-        if (err.response.status === 422) {
-          alert(err.response.data.msg);
-          return;
-        }
-        if (err.response.status === 500) {
-          alert("Ada kesalahan pada server");
-          return;
-        }
-        console.error(err);
-      });
-  }
-
   return (
     <FormContext.Provider value={init}>
       <span onClick={router.back} className="bg-emerald-600 cursor-pointer px-4 py-2 mx-2 rounded font-bold text-white">
         &lt;
       </span>
       <form onSubmit={(e) => submitHandler(e)}>
-        <CharStatus isVerified={isVerified} setIsVerified={setIsVerified} />
+        <CharStatus />
 
         {/* <CharImages />
 

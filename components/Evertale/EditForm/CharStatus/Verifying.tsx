@@ -6,7 +6,7 @@ import { notif } from "@/components/Utils";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 
-export default function Verifying({ isVerified, setIsVerified, char }: { isVerified: boolean; setIsVerified: React.Dispatch<React.SetStateAction<boolean>>; char: Evertale.Character.State }) {
+export default function Verifying({ char }: { char: Evertale.Character.State }) {
   const { id } = useParams();
   const init = useCharacter();
   const oldCS = init.charStatus as Evertale.Character.Status;
@@ -54,16 +54,14 @@ export default function Verifying({ isVerified, setIsVerified, char }: { isVerif
     const compare = JSON.stringify(initValue) === JSON.stringify(changeValue);
     if (compare) {
       setNotifVerif("");
-      setIsVerified(true);
       setIsChanged(false);
       return;
     } else {
       notif(notifRef, "blue", "Ada perubahan, silahkan periksa dan verifikasi!", setNotifVerif, 0);
-      setIsVerified(false);
       setIsChanged(true);
       return;
     }
-  }, [newData, oldData, setIsVerified, isActiveUE]);
+  }, [newData, oldData, isActiveUE]);
 
   async function fixHandler() {
     try {
@@ -78,6 +76,7 @@ export default function Verifying({ isVerified, setIsVerified, char }: { isVerif
       });
 
       alert(res.data.msg);
+      console.log(res.data);
       router.refresh();
     } catch (error) {
       console.log(error);

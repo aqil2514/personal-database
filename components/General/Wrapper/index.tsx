@@ -6,6 +6,14 @@ export const SectionWrapper = ({ children, id }: { children: React.ReactNode; id
   );
 };
 
-export const TitleSection = ({ children }: { children: React.ReactNode }) => {
-  return <h3 className={"font-merriweather text-center font-bold mt-5 text-xl"}>{children}</h3>;
+interface TitleSectionProps extends React.HTMLProps<HTMLHeadingElement> {
+  children: React.ReactNode;
+}
+
+export const TitleSection = ({ children, ...props }: TitleSectionProps) => {
+  return (
+    <h2 className={"font-merriweather text-center font-bold mt-5 text-xl"} {...props}>
+      {children}
+    </h2>
+  );
 };

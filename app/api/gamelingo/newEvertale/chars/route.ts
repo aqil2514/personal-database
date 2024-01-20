@@ -156,9 +156,11 @@ export async function PUT(req: NextRequest) {
 
     const character = await Character.findByIdAndUpdate(UID, { $set: { charStatus: charStatus.charStatus } }, { runValidators: true });
     await Post.findOneAndUpdate({ content: new ObjectId(UID) }, { $set: { title: character.charStatus.charName } }, { runValidators: true });
-    return NextResponse.json({ msg: "Data berhasil diubah", character }, { status: 200 });
+    return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
   }
 }
+// const character = await Character.findById(UID);
+// const post = await Post.findOne({ content: new ObjectId(UID) });
 
 export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;

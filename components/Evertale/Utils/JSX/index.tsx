@@ -4,7 +4,7 @@ export function ComparingData<T>({ subfield, oldCS, newCS, dataFor, title }: Eve
   }
 
   const renderContent = (value: T[keyof T]) => (
-    <p id={`${dataFor}-${subfield as string}`} className={oldCS[subfield] === newCS[subfield] ? "" : "bg-cyan-500"}>
+    <p id={`${dataFor}-${subfield as string}`} className={JSON.stringify(oldCS[subfield]) === JSON.stringify(newCS[subfield]) ? "" : "bg-cyan-500"}>
       <strong>{title} : </strong>
       {Array.isArray(value) ? value.join(", ") : String(value)}
     </p>
