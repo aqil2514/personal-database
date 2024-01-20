@@ -17,6 +17,8 @@ interface OptionStringProps extends OptionHTMLAttributes<HTMLOptionElement> {
   dataMap: any;
   childMap: string;
   valueMap: string;
+  "data-field"?: string;
+  "data-sub-field"?: string;
 }
 
 const variantClass = {

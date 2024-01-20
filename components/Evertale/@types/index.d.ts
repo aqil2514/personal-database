@@ -32,14 +32,14 @@ namespace Evertale {
 
     export interface Status {
       charName: string;
-      charRank: "SSR" | "SR" | "R" | "N" | undefined;
-      charElement: "Dark" | "Light" | "Earth" | "Fire" | "Storm" | "Water" | undefined;
+      charRank: "SSR" | "SR" | "R" | "N";
+      charElement: "Dark" | "Light" | "Earth" | "Fire" | "Storm" | "Water";
       charTeam: string[];
-      charWeapon1: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana" | undefined;
-      charWeapon2: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana" | undefined;
-      charLeaderSkill: string | null;
+      charWeapon1: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana";
+      charWeapon2?: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana";
+      charLeaderSkill?: string;
       isConjured: boolean;
-      charConjure: string | null;
+      charConjure?: string;
     }
     export interface Profile {
       part1En: string;

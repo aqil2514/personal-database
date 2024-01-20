@@ -82,7 +82,15 @@ export default function CharStatus({ isVerified, setIsVerified }: { isVerified: 
       {!data || isLoading ? (
         <p>Memuat Resources Conjures...</p>
       ) : (
-        <Select variant="default" forId="charConjure" value={charStatus.charConjure ? charStatus.charConjure : undefined} label="Character Conjure">
+        <Select
+          variant="default"
+          data-field="charStatus"
+          data-sub-field="charConjure"
+          forId="charConjure"
+          value={charStatus.charConjure ? charStatus.charConjure : undefined}
+          label="Character Conjure"
+          onChange={(e) => editChangeHandler(e, char, setChar)}
+        >
           <Option isFirst>Select Conjure</Option>
           <OptionString dataMap={data.data} childMap="conjure" valueMap="conjure" />
         </Select>

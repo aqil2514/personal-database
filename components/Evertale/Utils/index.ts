@@ -1,4 +1,4 @@
-export function editChangeHandler(e: React.ChangeEvent<HTMLInputElement>, char: Evertale.Character.State, setChar: React.Dispatch<React.SetStateAction<Evertale.Character.State>>) {
+export function editChangeHandler(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, char: Evertale.Character.State, setChar: React.Dispatch<React.SetStateAction<Evertale.Character.State>>) {
   const element = e.target;
   const subField = element.getAttribute("data-sub-field");
   const field = element.getAttribute("data-field");
@@ -16,5 +16,5 @@ export function editChangeHandler(e: React.ChangeEvent<HTMLInputElement>, char: 
     throw new Error(`SubField '${subField}' tidak valid dalam tipe ${field}`);
   }
 
-  setChar({ ...char, [field]: { ...char[field as keyof Evertale.Character.State], [subField]: element.value } });
+  setChar({ ...char, [field]: { ...char[field as keyof Evertale.Character.State], [subField]: element.value.trim() } });
 }

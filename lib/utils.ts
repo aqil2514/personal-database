@@ -260,8 +260,11 @@ export const file = {
 //Validator Api
 export const validator = {
   character: {
-    status: (status: Record<string, any>) => {
+    status: (status: Evertale.Character.Status) => {
       const charStatus = status;
+      const validRank = ["SSR", "SR", "R", "N"];
+      const validElement = ["Dark", "Light", "Earth", "Fire", "Storm", "Water"];
+      const validWeapons = ["Sword", "Axe", "Staff", "Mace", "GreatSword", "GreatAxe", "Spear", "Hammer", "Katana"];
 
       if (!charStatus.charName) {
         return {
@@ -270,24 +273,33 @@ export const validator = {
           success: false,
         };
       }
-      if (charStatus.charRank === "Character Rank" || !charStatus.charRank) {
+      if (!charStatus.charRank) {
         return {
-          msg: `Rank Character belum dipilih`,
+          msg: `Rank Character belum diisi`,
           ref: "charRank",
           success: false,
         };
       }
-      if (charStatus.charElement === "Element Character" || !charStatus.charElement) {
+      if (!validRank.includes(charStatus.charRank)) {
         return {
-          msg: `Status Element belum dipilih`,
+          msg: `Rank Character tidak tersedia`,
+          ref: "charRank",
+          success: false,
+        };
+      }
+      if (!charStatus.charElement) {
+        return {
+          msg: `Element belum diisi`,
           ref: "charElement",
           success: false,
         };
       }
-      if (charStatus.isConjured === "Conjure") {
-        charStatus.isConjured = true;
-      } else if (charStatus.isConjured === "Non-Conjured") {
-        charStatus.isConjured = false;
+      if (!validElement.includes(charStatus.charElement)) {
+        return {
+          msg: `Element tidak tersedia`,
+          ref: "charElement",
+          success: false,
+        };
       }
       if (charStatus.charTeam.length === 0) {
         return {
@@ -296,9 +308,16 @@ export const validator = {
           success: false,
         };
       }
-      if (!charStatus.charWeapon1 || charStatus.charWeapon1 === "Select Weapon") {
+      if (!charStatus.charWeapon1) {
         return {
-          msg: `Weapon 1 belum dipilih`,
+          msg: `Weapon 1 belum diisi`,
+          ref: "charWeapon1",
+          success: false,
+        };
+      }
+      if (!validWeapons.includes(charStatus.charWeapon1)) {
+        return {
+          msg: `Weapon tidak tersedia`,
           ref: "charWeapon1",
           success: false,
         };
@@ -310,13 +329,13 @@ export const validator = {
           success: false,
         };
       }
-      if (!charStatus.charLeaderSkill || charStatus.charLeaderSkill === "Select Leader Skill") {
-        charStatus.charLeaderSkill = undefined;
-      }
-      if (!charStatus.charWeapon2 || charStatus.charWeapon2 === "Select Weapon") {
+      if (!charStatus.charWeapon2) {
         charStatus.charWeapon2 = undefined;
       }
-      if (!charStatus.charConjure || charStatus.charConjure === "Select Conjure") {
+      if (!charStatus.charLeaderSkill) {
+        charStatus.charLeaderSkill = undefined;
+      }
+      if (charStatus.charConjure === "Select Conjure") {
         charStatus.charConjure = undefined;
       }
 

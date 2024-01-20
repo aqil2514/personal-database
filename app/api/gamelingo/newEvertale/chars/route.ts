@@ -92,56 +92,71 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// export async function PUT(req: NextRequest) {
+//   const { submitData, action } = await req.json();
+//   const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill, _id } = submitData;
+
+//   const status = charStatusValidator(charStatus);
+//   if (!status.success) {
+//     return NextResponse.json({ msg: status.msg }, { status: 422 });
+//   }
+
+//   const image = charImageValidator(charImage);
+//   if (!image.success) {
+//     return NextResponse.json({ msg: image.msg }, { status: 422 });
+//   }
+
+//   const intro = charIntroValidator(charIntro);
+//   if (!intro.success) {
+//     return NextResponse.json({ msg: intro.msg }, { status: 422 });
+//   }
+
+//   const profile = charProfileValidator(charProfile);
+//   if (!profile.success) {
+//     return NextResponse.json({ msg: profile.msg }, { status: 422 });
+//   }
+
+//   const activeSkill = charActiveSkillValidator(charActiveSkill);
+//   if (!activeSkill.success) {
+//     return NextResponse.json({ msg: activeSkill.success }, { status: 422 });
+//   }
+
+//   const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
+//   if (!passiveSkill.success) {
+//     return NextResponse.json({ msg: passiveSkill.success }, { status: 422 });
+//   }
+
+//   const charData = {
+//     charStatus: status.charStatus,
+//     charImage: image.charImage,
+//     charIntro: Object.values(intro.charIntro).every((val) => val === undefined) ? undefined : intro.charIntro,
+//     charProfile: profile.charProfile,
+//     charActiveSkill: activeSkill.charActiveSkill,
+//     charPassiveSkill: passiveSkill.charPassiveSkill,
+//   };
+
+//   if (action === "see") {
+//     return NextResponse.json({ submitData }, { status: 200 });
+//   }
+//   if (action === "update") {
+//     const char = await Character.findByIdAndUpdate(_id, charData, { new: true });
+
+//     return NextResponse.json({ msg: "Update Character Sukses", char }, { status: 200 });
+//   }
+// }
+
 export async function PUT(req: NextRequest) {
-  const { submitData, action } = await req.json();
-  const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill, _id } = submitData;
+  const { section, char, UID }: { section: keyof Evertale.Character.State; char: Evertale.Character.State; UID: string } = await req.json();
+  if (section === "charStatus") {
+    const data: Evertale.Character.Status = char.charStatus;
+    const charStatus = validator.character.status(data);
+    if (!charStatus.success) {
+      return NextResponse.json({ msg: charStatus.msg }, { status: 200 });
+    }
 
-  const status = charStatusValidator(charStatus);
-  if (!status.success) {
-    return NextResponse.json({ msg: status.msg }, { status: 422 });
-  }
-
-  const image = charImageValidator(charImage);
-  if (!image.success) {
-    return NextResponse.json({ msg: image.msg }, { status: 422 });
-  }
-
-  const intro = charIntroValidator(charIntro);
-  if (!intro.success) {
-    return NextResponse.json({ msg: intro.msg }, { status: 422 });
-  }
-
-  const profile = charProfileValidator(charProfile);
-  if (!profile.success) {
-    return NextResponse.json({ msg: profile.msg }, { status: 422 });
-  }
-
-  const activeSkill = charActiveSkillValidator(charActiveSkill);
-  if (!activeSkill.success) {
-    return NextResponse.json({ msg: activeSkill.success }, { status: 422 });
-  }
-
-  const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
-  if (!passiveSkill.success) {
-    return NextResponse.json({ msg: passiveSkill.success }, { status: 422 });
-  }
-
-  const charData = {
-    charStatus: status.charStatus,
-    charImage: image.charImage,
-    charIntro: Object.values(intro.charIntro).every((val) => val === undefined) ? undefined : intro.charIntro,
-    charProfile: profile.charProfile,
-    charActiveSkill: activeSkill.charActiveSkill,
-    charPassiveSkill: passiveSkill.charPassiveSkill,
-  };
-
-  if (action === "see") {
-    return NextResponse.json({ submitData }, { status: 200 });
-  }
-  if (action === "update") {
-    const char = await Character.findByIdAndUpdate(_id, charData, { new: true });
-
-    return NextResponse.json({ msg: "Update Character Sukses", char }, { status: 200 });
+    const character = await Character.findByIdAndUpdate(UID, { $set: { charStatus: charStatus.charStatus } }, { runValidators: true });
+    await Post.findOneAndUpdate({ content: new ObjectId(UID) }, { $set: { title: character.charStatus.charName } }, { runValidators: true });
+    return NextResponse.json({ msg: "Data berhasil diubah", character }, { status: 200 });
   }
 }
 
