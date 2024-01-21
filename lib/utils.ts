@@ -273,6 +273,11 @@ export const validator = {
           success: false,
         };
       }
+      if (charStatus.isConjured === "Non-Conjured") {
+        charStatus.isConjured = false;
+      } else {
+        charStatus.isConjured = true;
+      }
       if (!charStatus.charRank) {
         return {
           msg: `Rank Character belum diisi`,
@@ -335,7 +340,7 @@ export const validator = {
       if (!charStatus.charLeaderSkill) {
         charStatus.charLeaderSkill = undefined;
       }
-      if (charStatus.charConjure === "Select Conjure") {
+      if (!charStatus.charConjure || charStatus.charConjure === "Select Conjure") {
         charStatus.charConjure = undefined;
       }
 

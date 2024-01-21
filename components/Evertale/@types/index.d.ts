@@ -38,7 +38,7 @@ namespace Evertale {
       charWeapon1: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana";
       charWeapon2?: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana";
       charLeaderSkill?: string;
-      isConjured: boolean;
+      isConjured: boolean | string;
       charConjure?: string;
     }
     export interface Profile {

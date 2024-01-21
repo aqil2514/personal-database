@@ -31,119 +31,80 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({ chars }, { status: 200 });
 }
 
-// export async function POST(req: NextRequest) {
-//   const { data, action } = await req.json();
-//   const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill } = data;
+export async function POST(req: NextRequest) {
+  const { data, action } = await req.json();
+  const {
+    charStatus,
+    charImage,
+    charIntro,
+    charProfile,
+    charActiveSkill,
+    charPassiveSkill,
+  }: {
+    charStatus: Evertale.Character.Status;
+    charImage: Evertale.Character.Image;
+    charIntro: Evertale.Character.Intro;
+    charProfile: Evertale.Character.Profile;
+    charActiveSkill: Evertale.Character.ActiveSkill[];
+    charPassiveSkill: Evertale.Character.PassiveSkill[];
+  } = data;
 
-//   const status = validator.character.status(charStatus);
-//   if (!status.success) {
-//     return NextResponse.json({ msg: status.msg, ref: status.ref }, { status: 422 });
-//   }
+  const status = validator.character.status(charStatus);
+  if (!status.success) {
+    return NextResponse.json({ msg: status.msg, ref: status.ref }, { status: 422 });
+  }
 
-//   const image = validator.character.images(charImage);
-//   if (!image.success) {
-//     return NextResponse.json({ msg: image.msg, ref: image.ref }, { status: 422 });
-//   }
+  const image = validator.character.images(charImage);
+  if (!image.success) {
+    return NextResponse.json({ msg: image.msg, ref: image.ref }, { status: 422 });
+  }
 
-//   const intro = validator.character.intro(charIntro);
-//   if (!intro.success) {
-//     return NextResponse.json({ msg: intro.msg, ref: intro.ref }, { status: 422 });
-//   }
+  const intro = validator.character.intro(charIntro);
+  if (!intro.success) {
+    return NextResponse.json({ msg: intro.msg, ref: intro.ref }, { status: 422 });
+  }
 
-//   const profile = validator.character.profile(charProfile);
-//   if (!profile.success) {
-//     return NextResponse.json({ msg: profile.msg, ref: profile.ref }, { status: 422 });
-//   }
+  const profile = validator.character.profile(charProfile);
+  if (!profile.success) {
+    return NextResponse.json({ msg: profile.msg, ref: profile.ref }, { status: 422 });
+  }
 
-//   const activeSkill = validator.character.activeSkill(charActiveSkill);
-//   if (!activeSkill.success) {
-//     return NextResponse.json({ msg: activeSkill.success, ref: activeSkill.ref }, { status: 422 });
-//   }
+  const activeSkill = validator.character.activeSkill(charActiveSkill);
+  if (!activeSkill.success) {
+    return NextResponse.json({ msg: activeSkill.success, ref: activeSkill.ref }, { status: 422 });
+  }
 
-//   const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
-//   if (!passiveSkill.success) {
-//     return NextResponse.json({ msg: passiveSkill.success, ref: passiveSkill.ref }, { status: 422 });
-//   }
+  const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
+  if (!passiveSkill.success) {
+    return NextResponse.json({ msg: passiveSkill.success, ref: passiveSkill.ref }, { status: 422 });
+  }
 
-//   const charData: Evertale.Character.State = {
-//     charStatus: status.charStatus,
-//     charImage: image.charImage,
-//     charIntro: Object.values(intro.charIntro).every((val) => val === undefined) ? undefined : intro.charIntro,
-//     charProfile: profile.charProfile,
-//     charActiveSkill: activeSkill.charActiveSkill,
-//     charPassiveSkill: passiveSkill.charPassiveSkill,
-//   };
+  const charData: Evertale.Character.State = {
+    charStatus: status.charStatus,
+    charImage: image.charImage,
+    charIntro: Object.values(intro.charIntro as Record<string, Evertale.Character.Intro>).every((val) => val === undefined) ? undefined : intro.charIntro,
+    charProfile: profile.charProfile,
+    charActiveSkill: activeSkill.charActiveSkill as Evertale.Character.ActiveSkill[],
+    charPassiveSkill: passiveSkill.charPassiveSkill,
+  };
 
-//   if (action === "see") {
-//     return NextResponse.json({ msg: "Data berhasil diverifikasi", charData, redirect: false }, { status: 200 });
-//   } else if (action === "add") {
-//     await connectMongoDB();
-//     const newChar = await Character.create(charData);
-//     await Post.create({
-//       title: newChar.charStatus.charName,
-//       game: {
-//         name: "Evertale",
-//         topic: "Character",
-//       },
-//       content: newChar._id,
-//       author: "Admin GameLingo",
-//     });
-//     return NextResponse.json({ msg: "Data berhasil ditambah", redirect: true }, { status: 200 });
-//   }
-// }
-
-// export async function PUT(req: NextRequest) {
-//   const { submitData, action } = await req.json();
-//   const { charStatus, charImage, charIntro, charProfile, charActiveSkill, charPassiveSkill, _id } = submitData;
-
-//   const status = charStatusValidator(charStatus);
-//   if (!status.success) {
-//     return NextResponse.json({ msg: status.msg }, { status: 422 });
-//   }
-
-//   const image = charImageValidator(charImage);
-//   if (!image.success) {
-//     return NextResponse.json({ msg: image.msg }, { status: 422 });
-//   }
-
-//   const intro = charIntroValidator(charIntro);
-//   if (!intro.success) {
-//     return NextResponse.json({ msg: intro.msg }, { status: 422 });
-//   }
-
-//   const profile = charProfileValidator(charProfile);
-//   if (!profile.success) {
-//     return NextResponse.json({ msg: profile.msg }, { status: 422 });
-//   }
-
-//   const activeSkill = charActiveSkillValidator(charActiveSkill);
-//   if (!activeSkill.success) {
-//     return NextResponse.json({ msg: activeSkill.success }, { status: 422 });
-//   }
-
-//   const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
-//   if (!passiveSkill.success) {
-//     return NextResponse.json({ msg: passiveSkill.success }, { status: 422 });
-//   }
-
-//   const charData = {
-//     charStatus: status.charStatus,
-//     charImage: image.charImage,
-//     charIntro: Object.values(intro.charIntro).every((val) => val === undefined) ? undefined : intro.charIntro,
-//     charProfile: profile.charProfile,
-//     charActiveSkill: activeSkill.charActiveSkill,
-//     charPassiveSkill: passiveSkill.charPassiveSkill,
-//   };
-
-//   if (action === "see") {
-//     return NextResponse.json({ submitData }, { status: 200 });
-//   }
-//   if (action === "update") {
-//     const char = await Character.findByIdAndUpdate(_id, charData, { new: true });
-
-//     return NextResponse.json({ msg: "Update Character Sukses", char }, { status: 200 });
-//   }
-// }
+  if (action === "see") {
+    return NextResponse.json({ msg: "Data berhasil diverifikasi", charData, redirect: false }, { status: 200 });
+  } else if (action === "add") {
+    await connectMongoDB();
+    const newChar = await Character.create(charData);
+    await Post.create({
+      title: newChar.charStatus.charName,
+      game: {
+        name: "Evertale",
+        topic: "Character",
+      },
+      content: newChar._id,
+      author: "Admin GameLingo",
+    });
+    return NextResponse.json({ msg: "Data berhasil ditambah", redirect: true }, { status: 200 });
+  }
+}
 
 export async function PUT(req: NextRequest) {
   const { section, char, UID }: { section: keyof Evertale.Character.State; char: Evertale.Character.State; UID: string } = await req.json();
