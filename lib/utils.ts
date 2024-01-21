@@ -440,8 +440,17 @@ export const validator = {
       }
       return { charProfile, success: true };
     },
-    activeSkill: (activeSkill: any) => {
+    activeSkill: (activeSkill: Evertale.Character.ActiveSkill[]) => {
       const charActiveSkill = activeSkill;
+
+      for (const activeSkill of charActiveSkill) {
+        if (!activeSkill.skillName) {
+          return { msg: "Skill Name ada yang belum diisi", ref: "active-skill-section", success: false };
+        }
+        if (activeSkill.typeSkill.length === 0) {
+          return { msg: "Tipe skill masih belum diisi", ref: "active-skill-section", success: false };
+        }
+      }
 
       if (charActiveSkill.length === 0) {
         return { msg: "Character Active Skill belum diisi", ref: "active-skill-section", success: false };

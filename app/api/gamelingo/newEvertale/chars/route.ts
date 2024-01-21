@@ -188,6 +188,16 @@ export async function PUT(req: NextRequest) {
     await Character.findByIdAndUpdate(UID, { $set: { charProfile: charProfile.charProfile } }, { runValidators: true });
     return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
   }
+  if (section === "charActiveSkill") {
+    const data: Evertale.Character.ActiveSkill[] = char.charActiveSkill;
+    const charActiveSkill = validator.character.activeSkill(data);
+    if (!charActiveSkill.success) {
+      return NextResponse.json({ msg: charActiveSkill.msg }, { status: 422 });
+    }
+
+    await Character.findByIdAndUpdate(UID, { $set: { charActiveSkill: charActiveSkill.charActiveSkill } }, { runValidators: true });
+    return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
+  }
 }
 // const character = await Character.findById(UID);
 // const post = await Post.findOne({ content: new ObjectId(UID) });
