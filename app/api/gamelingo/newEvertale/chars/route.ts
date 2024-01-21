@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Character from "@/models/Evertale/Character";
 import connectMongoDB from "@/lib/mongoose";
-import { charActiveSkillValidator, charImageValidator, charIntroValidator, charPassiveSkillValidator, charProfileValidator, charStatusValidator } from "@/app/components/ValidatorAPI";
 import Post from "@/models/General/Post";
 import { ObjectId } from "mongodb";
 import { validator } from "@/lib/utils";
@@ -74,7 +73,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ msg: activeSkill.success, ref: activeSkill.ref }, { status: 422 });
   }
 
-  const passiveSkill = charPassiveSkillValidator(charPassiveSkill);
+  const passiveSkill = validator.character.passiveSkill(charPassiveSkill);
   if (!passiveSkill.success) {
     return NextResponse.json({ msg: passiveSkill.success, ref: passiveSkill.ref }, { status: 422 });
   }
@@ -85,7 +84,7 @@ export async function POST(req: NextRequest) {
     charIntro: Object.values(intro.charIntro as Record<string, Evertale.Character.Intro>).every((val) => val === undefined) ? undefined : intro.charIntro,
     charProfile: profile.charProfile,
     charActiveSkill: activeSkill.charActiveSkill as Evertale.Character.ActiveSkill[],
-    charPassiveSkill: passiveSkill.charPassiveSkill,
+    charPassiveSkill: passiveSkill.charPassiveSkill as Evertale.Character.PassiveSkill[],
   };
 
   if (action === "see") {
@@ -166,7 +165,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ msg: charPassiveSkill.msg }, { status: 422 });
     }
 
-    await Character.findByIdAndUpdate(UID, { $set: { charPassiveSkill: charPassiveSkill.charPassive } }, { runValidators: true });
+    await Character.findByIdAndUpdate(UID, { $set: { charPassiveSkill: charPassiveSkill.charPassiveSkill } }, { runValidators: true });
     return NextResponse.json({ msg: "Data berhasil diubah" }, { status: 200 });
   }
 }

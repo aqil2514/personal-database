@@ -463,9 +463,9 @@ export const validator = {
       return { charActiveSkill, success: true };
     },
     passiveSkill: (passiveSkill: Evertale.Character.PassiveSkill[]) => {
-      const charPassive = passiveSkill;
+      const charPassiveSkill = passiveSkill;
 
-      for (const passiveSkill of charPassive) {
+      for (const passiveSkill of charPassiveSkill) {
         if (!passiveSkill.skillName) {
           return { msg: "Skill Name ada yang belum diisi", ref: "passive-skill-section", success: false };
         }
@@ -474,10 +474,10 @@ export const validator = {
         }
       }
 
-      if (charPassive.length === 0) {
+      if (charPassiveSkill.length === 0) {
         return { msg: "Character Passive Skill belum diisi", ref: "active-skill-section", success: false };
       }
-      return { charPassive, success: true };
+      return { charPassiveSkill, success: true };
     },
   },
 };
