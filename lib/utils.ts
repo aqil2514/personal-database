@@ -457,5 +457,22 @@ export const validator = {
       }
       return { charActiveSkill, success: true };
     },
+    passiveSkill: (passiveSkill: Evertale.Character.PassiveSkill[]) => {
+      const charPassive = passiveSkill;
+
+      for (const passiveSkill of charPassive) {
+        if (!passiveSkill.skillName) {
+          return { msg: "Skill Name ada yang belum diisi", ref: "passive-skill-section", success: false };
+        }
+        if (passiveSkill.typeSkill.length === 0) {
+          return { msg: "Tipe skill masih belum diisi", ref: "passive-skill-section", success: false };
+        }
+      }
+
+      if (charPassive.length === 0) {
+        return { msg: "Character Passive Skill belum diisi", ref: "active-skill-section", success: false };
+      }
+      return { charPassive, success: true };
+    },
   },
 };

@@ -9,6 +9,7 @@ import CharImages from "./CharImage";
 import CharIntro from "./CharIntro";
 import CharProfile from "./CharProfile";
 import CharActiveSkill from "./CharActiveSkill";
+import CharPassiveSkill from "./CharPassiveSkill";
 
 export const SECTION_TITLE_STYLE = "font-merriweather text-center font-bold mt-5";
 export const SECTION_STYLE = "w-full px-4";
@@ -57,7 +58,7 @@ export default function EditForm() {
 
         <CharActiveSkill />
 
-        {/* <PassiveSkill /> */}
+        <CharPassiveSkill />
         {/* <button className={ADD_BUTTON_STYLE + " m-4"}>Kirim Data</button>
         <button type="button" className={ADD_BUTTON_STYLE + " m-4"} onClick={seeHandler}>
           Lihat Data
