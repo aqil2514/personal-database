@@ -8,7 +8,8 @@ import { Textarea } from "@/components/General/Textarea";
 import { Button } from "@/components/General/Button";
 import { TypeSkill } from "./TypeSkill";
 import { PreviewSkill } from "./Preview";
-import { notif, translateHandler } from "@/components/Utils";
+import { notif } from "@/components/Utils";
+import axios from "axios";
 
 export default function CharActiveSkills() {
   const { data, setData }: StateType = useData();
@@ -60,6 +61,23 @@ export default function CharActiveSkills() {
     setInputSkill({ ...inputSkill, [field]: e.target.value });
   }
 
+  async function translateHandler(e: React.KeyboardEvent<HTMLTextAreaElement>): Promise<void> {
+    if (e.ctrlKey && e.key === "Enter") {
+      const text = inputSkill.skillDescEn;
+
+      try {
+        const res = await axios.post("/api/translate", {
+          text,
+        });
+
+        const translated: string = res.data.translatedText;
+        setInputSkill({ ...inputSkill, skillDescId: translated });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
   return (
     <SectionWrapper id="active-skill-section">
       <TitleSection>Character Active Skill</TitleSection>
@@ -80,7 +98,7 @@ export default function CharActiveSkills() {
 
       <Input forId="active-skill-tu" label="Skill TU" type="number" data-field="skillTu" value={inputSkill?.skillTu} onChange={changeHandler} />
 
-      <Textarea forId="active-skill-desc-en" label="Skill Description" data-field="skillDescEn" value={inputSkill?.skillDescEn} onChange={changeHandler} onKeyDown={(e) => translateHandler(e, data, setData)} />
+      <Textarea forId="active-skill-desc-en" label="Skill Description" data-field="skillDescEn" value={inputSkill?.skillDescEn} onChange={changeHandler} onKeyDown={translateHandler} />
 
       <Textarea forId="active-skill-desc-id" label="Deskripsi Skill" data-field="skillDescId" value={inputSkill?.skillDescId} onChange={changeHandler} />
 

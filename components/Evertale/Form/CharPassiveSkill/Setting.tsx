@@ -80,6 +80,23 @@ export const Setting = ({
     setInputSkill({ skillName: "", typeSkill: [], skillDescEn: "", skillDescId: "" });
   }
 
+  async function translateHandler(e: React.KeyboardEvent<HTMLTextAreaElement>): Promise<void> {
+    if (e.ctrlKey && e.key === "Enter") {
+      const text = inputSkill.skillDescEn;
+
+      try {
+        const res = await axios.post("/api/translate", {
+          text,
+        });
+
+        const translated: string = res.data.translatedText;
+        setInputSkill({ ...inputSkill, skillDescId: translated });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+
   return (
     <div>
       <TitleSection>Character Passive Skill</TitleSection>
@@ -102,7 +119,7 @@ export const Setting = ({
 
         <TypeSkill inputSkill={inputSkill} setInputSkill={setInputSkill} />
 
-        <Textarea forId="passive-desc-en" label="Description" data-passive="skillDescEn" value={inputSkill.skillDescEn} onChange={changeHandler} onKeyDown={(e) => translateHandler(e, data, setData)} />
+        <Textarea forId="passive-desc-en" label="Description" data-passive="skillDescEn" value={inputSkill.skillDescEn} onChange={changeHandler} onKeyDown={translateHandler} />
 
         <Textarea forId="passive-desc-id" label="Deskripsi" data-passive="skillDescId" value={inputSkill.skillDescId} onChange={changeHandler} />
       </div>

@@ -25,8 +25,8 @@ export default function Container({ data, setData }: { data: Evertale.Character.
     const url = [];
 
     for (const img of imgSelected) {
-      const array = res.data.result.resources.find((data: any) => data.public_id.includes(img));
-      url.push(array.secure_url);
+      const array = res.data.data.find((data: any) => data.name.includes(img));
+      url.push(array.url);
     }
 
     const f1Img = url.filter((u: string) => u.includes("01.webp")).toString();

@@ -34,16 +34,25 @@ export function notif(ref: React.RefObject<HTMLParagraphElement>, textColor: str
  *
  * @param {React.KeyboardEvent<HTMLTextAreaElement>} e - Elemen HTML TextArea yang menjadi sasaran
  * @param {Evertale.Character.State} data - UseState yang sesuai dengan interface EvertaleCharacterState
+ * @param {keyof Evertale.Character.State} section - Mengikuti interface Evertale Character State
  * @param {React.Dispatch<React.SetStateAction<Evertale.Character.State>>} setData - Pasangan useState data
  * @returns {Promise<void>}
  */
 
-export async function translateHandler(e: React.KeyboardEvent<HTMLTextAreaElement>, data: Evertale.Character.State, setData: React.Dispatch<React.SetStateAction<Evertale.Character.State>>): Promise<void> {
+export async function translateHandler(
+  e: React.KeyboardEvent<HTMLTextAreaElement>,
+  section: keyof Evertale.Character.State,
+  data: Evertale.Character.State,
+  setData: React.Dispatch<React.SetStateAction<Evertale.Character.State>>
+): Promise<void> {
   if (e.ctrlKey && e.key === "Enter") {
     const element = e.target as HTMLTextAreaElement;
     const field = element.getAttribute("data-field");
     const target = field?.replace("En", "Id") as string;
-    const text = data.charIntro[field];
+    if (!field) {
+      throw new Error("data-field tidak ada");
+    }
+    const text = data[section][field];
 
     try {
       const res = await axios.post("/api/translate", {
@@ -51,7 +60,7 @@ export async function translateHandler(e: React.KeyboardEvent<HTMLTextAreaElemen
       });
 
       const translated: string = res.data.translatedText;
-      setData({ ...data, charIntro: { ...data.charIntro, [target]: translated } });
+      setData({ ...data, [section]: { ...data[section], [target]: translated } });
     } catch (error) {
       console.error(error);
     }

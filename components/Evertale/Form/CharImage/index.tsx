@@ -29,9 +29,9 @@ export default function CharImages() {
         body: formData,
       });
       const dataAPI = await res.json();
-      const f1Img = dataAPI.result.find((d: Record<string, string>) => d.public_id.includes("01")).url;
-      const f2Img = dataAPI.result.find((d: Record<string, string>) => d.public_id.includes("02")).url;
-      const f3Img = dataAPI.result.find((d: Record<string, string>) => d.public_id.includes("03")).url;
+      const f1Img = dataAPI.data.find((d: Record<string, string>) => d.name.includes("01")).url;
+      const f2Img = dataAPI.data.find((d: Record<string, string>) => d.name.includes("02")).url;
+      const f3Img = dataAPI.data.find((d: Record<string, string>) => d.name.includes("03")).url;
 
       setData({ ...data, charImage: { f1Img, f2Img, f3Img } });
     } catch (error) {
