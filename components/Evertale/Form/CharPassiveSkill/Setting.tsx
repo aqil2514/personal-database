@@ -4,7 +4,7 @@ import React, { RefObject } from "react";
 import { Textarea } from "@/components/General/Textarea";
 import { Button } from "@/components/General/Button";
 import { TypeSkill } from "./TypeSkill";
-import { notif } from "@/components/Utils";
+import { notif, translateHandler } from "@/components/Utils";
 
 export const Setting = ({
   deleteMode,
@@ -51,7 +51,7 @@ export const Setting = ({
 
         <TypeSkill inputSkill={inputSkill} setInputSkill={setInputSkill} />
 
-        <Textarea forId="passive-desc-en" label="Description" data-passive="skillDescEn" value={inputSkill.skillDescEn} onChange={changeHandler} />
+        <Textarea forId="passive-desc-en" label="Description" data-passive="skillDescEn" value={inputSkill.skillDescEn} onChange={changeHandler} onKeyDown={(e) => translateHandler(e, data, setData)} />
 
         <Textarea forId="passive-desc-id" label="Deskripsi" data-passive="skillDescId" value={inputSkill.skillDescId} onChange={changeHandler} />
       </div>

@@ -5,10 +5,7 @@ export default function Images({ isSelected, setIsSelected, res }: { isSelected:
   if (!res.data || res.isLoading) return <p className="font-bold font-playfair text-xl">Loading...</p>;
   if (res.error) return <p className="font-bold font-playfair text-red-600 text-xl">Failed</p>;
 
-  const images = res.data.result.resources.map((image: any) => ({
-    url: image.secure_url,
-    name: (image.public_id as string).split("/")[3],
-  }));
+  const images = res.data.data;
 
   function clickHandler(e: React.MouseEvent<HTMLImageElement>) {
     const target = e.target as HTMLImageElement;

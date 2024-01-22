@@ -8,7 +8,7 @@ import { Textarea } from "@/components/General/Textarea";
 import { Button } from "@/components/General/Button";
 import { TypeSkill } from "./TypeSkill";
 import { PreviewSkill } from "./Preview";
-import { notif } from "@/components/Utils";
+import { notif, translateHandler } from "@/components/Utils";
 
 export default function CharActiveSkills() {
   const { data, setData }: StateType = useData();
@@ -80,7 +80,7 @@ export default function CharActiveSkills() {
 
       <Input forId="active-skill-tu" label="Skill TU" type="number" data-field="skillTu" value={inputSkill?.skillTu} onChange={changeHandler} />
 
-      <Textarea forId="active-skill-desc-en" label="Skill Description" data-field="skillDescEn" value={inputSkill?.skillDescEn} onChange={changeHandler} />
+      <Textarea forId="active-skill-desc-en" label="Skill Description" data-field="skillDescEn" value={inputSkill?.skillDescEn} onChange={changeHandler} onKeyDown={(e) => translateHandler(e, data, setData)} />
 
       <Textarea forId="active-skill-desc-id" label="Deskripsi Skill" data-field="skillDescId" value={inputSkill?.skillDescId} onChange={changeHandler} />
 
