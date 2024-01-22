@@ -223,7 +223,15 @@ export const document = {
 
 // File API
 export const file = {
-  uploadImage: async (files: File[], game: string, category: string) => {
+  /**
+   * Upload File Gambar ke Cloudinary
+   *
+   * @param files Array File yang ingin diupload
+   * @param game Game apa? Digunakan untuk main folder
+   * @param category Category apa? Digunakan untuk sub folder
+   * @returns {Promise<CloudinaryAPI.Image[]>} Kumpulan informasi tentang data yang diupload
+   */
+  uploadImage: async (files: File[], game: string, category: string): Promise<CloudinaryAPI.Image[]> => {
     const uploadPromise = files.map(async (file) => {
       try {
         const bytes = await file.arrayBuffer();
@@ -292,6 +300,12 @@ export const file = {
 
     // return result;
   },
+  /**
+   * Validasi file gambar
+   *
+   * @param files Kumpulan file yang akan divalidasi
+   * @returns Hasil validasi
+   */
   validationImage: (files: File[]) => {
     const allowedExtension = ["webp", "png"];
     const maxSizeInBytes = 1 * 1024 * 1024;
@@ -320,6 +334,11 @@ export const file = {
 //Validator Api
 export const validator = {
   character: {
+    /**
+     * Validasi Character Status
+     * @param status Data Character Status yang akan divalidasi
+     * @returns Hasil validasi
+     */
     status: (status: Evertale.Character.Status) => {
       const charStatus = status;
       const validRank = ["SSR", "SR", "R", "N"];
@@ -406,6 +425,11 @@ export const validator = {
 
       return { charStatus, success: true };
     },
+    /**
+     * Validasi Character Image
+     * @param image Data Character Image yang akan divalidasi
+     * @returns Hasil validasi
+     */
     images: (image: Evertale.Character.Image) => {
       const charImage = image;
 
@@ -424,6 +448,11 @@ export const validator = {
         charImage,
       };
     },
+    /**
+     * Validasi Character Intro
+     * @param intro Dara Character Intro yang akan divalidasi
+     * @returns Hasil validasi
+     */
     intro: (intro: Evertale.Character.Intro) => {
       const charIntro = intro;
 
@@ -480,6 +509,11 @@ export const validator = {
 
       return { charIntro, success: true };
     },
+    /**
+     * Validasi Character Profile
+     * @param profile Data Character Profile yang akan divalidasi
+     * @returns Hasil validasi
+     */
     profile: (profile: Evertale.Character.Profile) => {
       const charProfile = profile;
 
@@ -505,6 +539,11 @@ export const validator = {
       }
       return { charProfile, success: true };
     },
+    /**
+     * Validasi Character Active Skill
+     * @param activeSkill Data Character Active Skill yang akan divalidasi
+     * @returns Hasil validasi
+     */
     activeSkill: (activeSkill: Evertale.Character.ActiveSkill[]) => {
       const charActiveSkill = activeSkill;
 
@@ -522,6 +561,11 @@ export const validator = {
       }
       return { charActiveSkill, success: true };
     },
+    /**
+     * Validasi Character Passive Skill
+     * @param passiveSkill Data Character Passive Skill yang akan divalidasi
+     * @returns Hasil Validasi
+     */
     passiveSkill: (passiveSkill: Evertale.Character.PassiveSkill[]) => {
       const charPassiveSkill = passiveSkill;
 

@@ -59,6 +59,7 @@ namespace Evertale {
       skillDescId: string;
     }
     export interface PassiveSkill {
+      _id?: string;
       skillName: string;
       typeSkill: string[];
       skillDescEn: string;

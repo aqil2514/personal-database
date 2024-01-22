@@ -1,16 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 
-interface CharacterPassiveSkill {
-  skillName: String;
-  typeSkill: String;
-  skillDescEn: String;
-  skillDescId: String;
-}
-
-const CharacterPassiveSkillSchema = new Schema<CharacterPassiveSkill>(
+const CharacterPassiveSkillSchema = new Schema<Evertale.Character.PassiveSkill>(
   {
     skillName: { type: String, required: true },
-    typeSkill: { type: String, required: true },
+    typeSkill: { type: [String], required: true },
     skillDescEn: { type: String, required: true },
     skillDescId: { type: String, required: true },
   },
