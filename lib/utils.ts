@@ -223,16 +223,15 @@ export const document = {
 
 // File API
 export const file = {
-  uploadImage: async (files: any, game: string, category: string) => {
-    const result: any = [];
+  uploadImage: async (files: File[], game: string, category: string) => {
+    const uploadPromise = files.map(async (file) => {
+      try {
+        const bytes = await file.arrayBuffer();
+        const format = file.name.split(".");
+        const buffer = new Uint8Array(bytes);
 
-    for (const file of files) {
-      const bytes = await (file as File).arrayBuffer();
-      const format = (file as File).name.split(".");
-      const buffer = new Uint8Array(bytes);
-      const uploadResult: any = await new Promise((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream(
+        return new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
             {
               folder: `${game}/${category}/${format[1]}`,
               public_id: `${format[0]}`,
@@ -241,19 +240,80 @@ export const file = {
             (error, result) => {
               if (error) {
                 reject(error);
-                return { msg: "Error", error };
+              } else {
+                resolve(result);
               }
-
-              return resolve(result);
             }
-          )
-          .end(buffer);
-      });
+          );
+          uploadStream.end(buffer);
+        });
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    });
 
-      result.push(uploadResult);
+    try {
+      const uploadResult = (await Promise.all(uploadPromise)) as CloudinaryAPI.Image[];
+      return uploadResult;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
 
-    return result;
+    // const result = [];
+
+    // for (const file of files) {
+    //   const bytes = await file.arrayBuffer();
+    //   const format = file.name.split(".");
+    //   const buffer = new Uint8Array(bytes);
+    //   const uploadResult = await new Promise((resolve, reject) => {
+    //     cloudinary.uploader
+    //       .upload_stream(
+    //         {
+    //           folder: `${game}/${category}/${format[1]}`,
+    //           public_id: `${format[0]}`,
+    //           discard_original_filename: true,
+    //         },
+    //         (error, result) => {
+    //           if (error) {
+    //             reject(error);
+    //             return { msg: "Error", error };
+    //           }
+
+    //           return resolve(result);
+    //         }
+    //       )
+    //       .end(buffer);
+    //   });
+
+    //   result.push(uploadResult);
+    // }
+
+    // return result;
+  },
+  validationImage: (files: File[]) => {
+    const allowedExtension = ["webp", "png"];
+    const maxSizeInBytes = 1 * 1024 * 1024;
+
+    for (const file of files) {
+      const extension = file.type.split("/")[1];
+
+      if (!allowedExtension.includes(extension)) {
+        return {
+          status: false,
+          msg: "Gambar harus format webp atau png",
+        };
+      }
+      if (file.size > maxSizeInBytes) {
+        return {
+          status: false,
+          msg: "Maksimal ukuran gambar 1MB",
+        };
+      }
+    }
+
+    return { status: true, files };
   },
 };
 

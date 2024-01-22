@@ -7,11 +7,11 @@ import GalleryWidget from "./Widget";
 
 export default function CharImages() {
   const { data, setData } = useData();
-  const fileRef = React.useRef<any>(null);
+  const fileRef = React.useRef<null | HTMLInputElement>(null);
   const [uploadLoading, setUploadLoading] = React.useState(false);
 
-  async function uploadHandler() {
-    if (!fileRef.current.files || fileRef.current.files.length === 0) {
+  async function uploadHandler(e: React.MouseEvent<HTMLButtonElement>) {
+    if (!fileRef.current?.files || fileRef.current?.files.length === 0) {
       return;
     }
 
