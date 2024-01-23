@@ -59,7 +59,7 @@ export const LeaderSkill = ({ data, info, setData }: { data: Evertale.Character.
       }
 
       try {
-        notif(notifRef, "cyan", "Mengirim Data...", setNotifNew, 0);
+        notif(notifRef, "cyan", "Mengirim Data...", setNotifNew, false, 0);
         element.disabled = true;
 
         const res = await axios.put("/api/gamelingo/newEvertale/leaderskill", {
@@ -89,7 +89,7 @@ export const LeaderSkill = ({ data, info, setData }: { data: Evertale.Character.
       return;
     }
     if (!isThere) {
-      notif(notifRef, "orange", "Data baru terdeteksi. Tekan Enter untuk menyimpan di database", setNotifNew, 0);
+      notif(notifRef, "orange", "Data baru terdeteksi. Tekan Enter untuk menyimpan di database", setNotifNew, false, 0);
       return;
     }
   }
