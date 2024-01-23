@@ -1,6 +1,6 @@
 import { P_STYLE1, SECTION_TITLE_STYLE } from "@/app/components/Styles";
 
-export default function CharProfile({ charProfile }: { charProfile: React.ComponentState }) {
+export default function CharProfile({ charProfile }: { charProfile: Evertale.Character.Profile }) {
   return (
     <div id="charProfile">
       <h1 className={SECTION_TITLE_STYLE}>Character Profile</h1>

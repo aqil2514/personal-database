@@ -1,6 +1,6 @@
 import { P_STYLE1, SECTION_TITLE_STYLE } from "@/app/components/Styles";
 
-export default function CharIntro({ charIntro }: { charIntro: React.ComponentState }) {
+export default function CharIntro({ charIntro }: { charIntro: Evertale.Character.Intro }) {
   return (
     <div>
       <h2 className={SECTION_TITLE_STYLE}>Character Intro</h2>

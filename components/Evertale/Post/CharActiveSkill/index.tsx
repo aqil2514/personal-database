@@ -1,6 +1,6 @@
 import { P_STYLE1, SECTION_TITLE_STYLE } from "@/app/components/Styles";
 
-export default function CharActiveSkill({ charActiveSkill }: { charActiveSkill: React.ComponentState }) {
+export default function CharActiveSkill({ charActiveSkill }: { charActiveSkill: Evertale.Character.ActiveSkill[] }) {
   return (
     <div id="charActiveSkill">
       <h3 className={SECTION_TITLE_STYLE}>Active Skills</h3>

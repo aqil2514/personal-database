@@ -2,8 +2,8 @@ import useSWR from "swr";
 import { P_STYLE1, SECTION_TITLE_STYLE } from "@/app/components/Styles";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
-export default function CharStatus({ charStatus }: { charStatus: React.ComponentState }) {
-  const encodedLeaderSkill = encodeURIComponent(charStatus.charLeaderSkill);
+export default function CharStatus({ charStatus }: { charStatus: Evertale.Character.Status }) {
+  const encodedLeaderSkill = encodeURIComponent(charStatus.charLeaderSkill as string);
   const URL = `/api/gamelingo/newEvertale/leaderskill?&name=${encodedLeaderSkill}`;
 
   const { data, isLoading, error } = useSWR(URL, fetcher);

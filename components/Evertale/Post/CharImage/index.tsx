@@ -3,7 +3,7 @@ import Image from "next/image";
 const FIGURE_STYLE = "my-4 text-center";
 const IMAGE_STYILE = "max-w-screen-sm rounded block mx-auto";
 
-export default function CharImage({ charImage, charName }: { charImage: React.ComponentState; charName: React.ComponentState }) {
+export default function CharImage({ charImage, charName }: { charImage: Evertale.Character.Image; charName: string }) {
   return (
     <div id="charImage">
       <h1 className="text-center font-merriweather font-bold">{charName}</h1>
