@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { useData } from "..";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { notif } from "@/components/Utils";
 import axios from "axios";
 import { Input } from "@/components/General/Input";
@@ -16,6 +16,12 @@ export const CharTeam = ({ info }: { info: DataResponse }) => {
   const [fixNotif, setFixNotif] = useState<string>("");
   const notifRef = useRef<null | HTMLParagraphElement>(null);
   const fixNotifRef = useRef<null | HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (data.charStatus?.charTeam) {
+      setTeams(data.charStatus?.charTeam);
+    }
+  }, [data]);
 
   const charTeam: Evertale.Misc.TypeSkill = info.rss;
 

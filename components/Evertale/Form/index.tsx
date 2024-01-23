@@ -1,6 +1,6 @@
 "use client";
 
-import React, { SetStateAction, createContext, useContext, useState } from "react";
+import React, { SetStateAction, createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import CharStatus from "./CharStatus";
@@ -63,6 +63,20 @@ export default function Form() {
     charActiveSkill: [],
     charPassiveSkill: [],
   });
+
+  useEffect(() => {
+    const isThere = localStorage.getItem("evertaleCharData");
+    if (isThere) {
+      const choice = confirm("Kemajuan sebelumnya ada di LocalStorage. Lanjutkan data?");
+      if (!choice) {
+        localStorage.removeItem("evertaleCharData");
+        return;
+      }
+      setData(JSON.parse(isThere));
+      return;
+    }
+  }, []);
+
   const notifRef = React.useRef<null | HTMLParagraphElement>(null);
 
   const [sendLoading, setSendLoading] = React.useState<boolean>(false);
@@ -77,6 +91,8 @@ export default function Form() {
         data,
         action: type,
       });
+
+      localStorage.removeItem("evertaleCharData");
 
       if (res.data.redirect) {
         alert(res.data.msg);
