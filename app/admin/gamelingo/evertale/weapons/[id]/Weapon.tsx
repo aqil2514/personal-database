@@ -5,6 +5,7 @@ import Link from "next/link";
 import { PenFill } from "react-bootstrap-icons";
 import useSWR from "swr";
 import { FIGURE_STYLE, IMAGE_STYILE, P_STYLE1, SECTION_STYLE, SECTION_TITLE_STYLE } from "@/app/components/Styles";
+import Image from "next/image";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
@@ -38,7 +39,7 @@ export default function WeaponDetail({ id }: { id: string }) {
       {/* Weapon Image */}
       <div id="weap-Image">
         <figure className={FIGURE_STYLE}>
-          <img className={IMAGE_STYILE} width={720} height={720} src={weapon.weapImage.webp} alt={weapon.weapName} />
+          <Image className={IMAGE_STYILE} width={720} height={720} src={weapon.weapImage.webp} alt={weapon.weapName} />
           <figcaption>{weapon.weapName}</figcaption>
         </figure>
       </div>

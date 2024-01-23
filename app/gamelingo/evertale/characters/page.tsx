@@ -36,7 +36,7 @@ export default function Characters() {
     if (!characters) {
       getData();
     }
-  }, [isTableMode]);
+  }, [characters]);
 
   function searchHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const keyword = e.target.value.toLowerCase();
@@ -65,7 +65,7 @@ export default function Characters() {
     <p>Loading...</p>
   ) : (
     <div className="w-full p-10">
-      <h1 className="text-center font-playfair text-2xl mb-5 font-bold mb-5">Characters List</h1>
+      <h1 className="text-center font-playfair text-2xl font-bold mb-5">Characters List</h1>
       <button
         onClick={() =>
           // setIsTableMode(!isTableMode)
