@@ -57,7 +57,7 @@ export default function Verifying({ char }: { char: Evertale.Character.State }) 
       setIsChanged(false);
       return;
     } else {
-      notif(notifRef, "blue", "Ada perubahan, silahkan periksa dan verifikasi!", setNotifVerif, 0);
+      notif(notifRef, "blue", "Ada perubahan, silahkan periksa dan verifikasi!", setNotifVerif, false, 0);
       setIsChanged(true);
       return;
     }
@@ -67,7 +67,7 @@ export default function Verifying({ char }: { char: Evertale.Character.State }) 
     try {
       setIsSending(true);
       setIsActiveUE(false);
-      notif(notifRef, "green", "Mengirim perubahan ke server", setNotifVerif, 0);
+      notif(notifRef, "green", "Mengirim perubahan ke server", setNotifVerif, false, 0);
 
       const res = await axios.put("/api/gamelingo/newEvertale/chars", {
         char,

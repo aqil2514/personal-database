@@ -45,7 +45,7 @@ export default function Container({ data, setData }: { data: Evertale.Character.
       <h1 className="font-bold font-playfair text-violet-700 text-3xl">Evertale Character Gallery</h1>
       <div className="w-full h-1 bg-violet-700 my-2"></div>
       <Input forId="image-cloud-name" label="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
-      <div className="flex flex-row justify-between h-[450px] gap-4">
+      <div className="flex flex-row justify-between h-[380px] gap-4">
         <Images isSelected={imgSelected} setIsSelected={setImgSelected} res={res} />
         <Preview isSelected={imgSelected} setIsSelected={setImgSelected} />
       </div>

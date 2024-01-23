@@ -55,7 +55,7 @@ export const TypeSkill = ({ setInputSkill, inputSkill }: { setInputSkill: React.
 
       const res = await axios.put("/api/gamelingo/newEvertale", {
         data: type,
-        type: "char-team-type",
+        type: "active-skill-type",
       });
 
       notif(notifRef, "green", res.data.msg, setTypeNotif);

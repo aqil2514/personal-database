@@ -352,7 +352,7 @@ export const validator = {
           success: false,
         };
       }
-      if (charStatus.isConjured === "Non-Conjured") {
+      if (charStatus.isConjured === "Non-Conjured" || !charStatus.isConjured) {
         charStatus.isConjured = false;
       } else {
         charStatus.isConjured = true;

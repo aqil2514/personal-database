@@ -57,8 +57,8 @@ export default function CharStatus() {
         {/* IsConjured */}
         <div>
           <p>Conjured Status:</p>
-          <InputRadio forId="conjured-unit" name="isConjured" checked={charStatus.isConjured} label="Conjured" onChange={radioHandler} />
-          <InputRadio forId="non-conjured-unit" name="isConjured" checked={!charStatus.isConjured} label="Non Conjured" onChange={radioHandler} />
+          <InputRadio forId="conjured-unit" name="isConjured" checked={charStatus.isConjured as boolean} label="Conjured" onChange={radioHandler} />
+          <InputRadio forId="non-conjured-unit" name="isConjured" checked={!charStatus.isConjured as boolean} label="Non Conjured" onChange={radioHandler} />
         </div>
 
         {/* Character Team */}
