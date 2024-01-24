@@ -8,12 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const session = await getServerSession();
-
-  if (session) {
-    redirect("/admin");
-  }
-
   return (
     <div className="block w-full pt-10">
       <h1 className="font-roboto text-center">Selamat Datang di Personal Database saya</h1>

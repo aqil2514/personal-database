@@ -1,5 +1,3 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { dataEvertale } from "@/app/components/Data";
 import { Metadata } from "next";
@@ -10,12 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const session = await getServerSession();
-
-  if (!session) {
-    redirect("/gamelingo/evertale");
-  }
-
   return (
     <div className="block w-full pt-10">
       <h1 className="text-center m-2">Halaman Admin Evertale</h1>

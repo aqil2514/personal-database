@@ -8,13 +8,6 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const session = await getServerSession();
-  console.log(session);
-
-  if (!session) {
-    redirect("/");
-  }
-
   return (
     <div className="block w-full pt-10">
       <h1 className="font-roboto text-center">Halaman Admin</h1>
