@@ -6,9 +6,9 @@ import "./globals.css";
 
 import { getServerSession } from "next-auth";
 
-import SessionProvider from "./components/SessionProvider";
-import NavMenu from "./components/NavMenu";
-import Headers from "./components/Headers";
+import SessionProvider from "@/components/Layouting/SessionProvider";
+import NavMenu from "@/components/Layouting/NavMenu";
+import Headers from "@/components/Layouting/Headers";
 
 const playfair = Playfair_Display({
   weight: ["400", "600"],

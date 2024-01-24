@@ -3,7 +3,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { List } from "react-bootstrap-icons";
-import NavMobile from "./NavMobile";
+import NavMobile from "../NavMobile";
 
 const NAV_STYLE = "bg-cyan-900 p-nav py-2 flex justify-between text-white";
 const H1_STYLE = "mt-1 font-bold text-2xl font-playfair";
