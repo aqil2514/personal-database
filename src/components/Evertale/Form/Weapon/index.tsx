@@ -1,6 +1,6 @@
 "use client";
 
-import { ADD_BUTTON_STYLE, INPUT_STYLE, SECTION_TITLE_STYLE, SELECT_STYLE, TEXTAREA_STYLE } from "@/app/components/Styles";
+import { ADD_BUTTON_STYLE, INPUT_STYLE, SECTION_TITLE_STYLE, SELECT_STYLE, TEXTAREA_STYLE } from "@/components/Layouting/Styles";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";

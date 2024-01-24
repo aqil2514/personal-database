@@ -1,5 +1,5 @@
-import { SECTION_TITLE_STYLE, SECTION_STYLE } from "@/app/components/Styles";
-import Form from "./Form";
+import { SECTION_TITLE_STYLE, SECTION_STYLE } from "@/components/Layouting/Styles";
+import Form from "@/components/Evertale/Form/Weapon";
 import Navigation from "./Navigation";
 
 export default function AddWeapon() {

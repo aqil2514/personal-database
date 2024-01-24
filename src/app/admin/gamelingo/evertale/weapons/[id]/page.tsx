@@ -1,15 +1,15 @@
 import { Metadata } from "next";
-import WeaponDetail from "./Weapon";
+import EvertaleWeaponPost from "@/components/Evertale/Post/Weapon";
 
 export const metadata: Metadata = {
   title: "Info Weapon | Personal Database",
 };
 
-export default function Weapon({ params }: any) {
+export default function Weapon({ params }: Record<string, any>) {
   const { id } = params;
   return (
     <div className="w-full min-h-full">
-      <WeaponDetail id={id} />
+      <EvertaleWeaponPost id={id} />
     </div>
   );
 }

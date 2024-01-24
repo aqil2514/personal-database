@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
-import { dataEvertale } from "@/app/components/Data";
+import { dataEvertale } from "@/components/Layouting/Data";
 
 export const metadata: Metadata = {
   title: "Personal Database - Evertale",

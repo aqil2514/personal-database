@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
-import GalleryWidget from "@/components/Evertale/Form/CharImage/Widget";
+import GalleryWidget from "@/components/Evertale/Form/Character/CharImage/Widget";
 import { useCharacter } from "..";
 import Verifying from "./Verifying";
 

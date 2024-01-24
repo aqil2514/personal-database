@@ -1,4 +1,4 @@
-import { useData } from "@/components/Evertale/Form";
+import { useData } from "@/components/Evertale/Form/Character";
 import React from "react";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";

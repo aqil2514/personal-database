@@ -1,4 +1,4 @@
-import EvertalePost from "@/components/Evertale/Post";
+import EvertaleCharacterPost from "@/components/Evertale/Post/Character";
 import axios from "axios";
 import { Metadata } from "next";
 
@@ -25,5 +25,5 @@ export async function generateMetadata({ params }: { params: Record<string, stri
 }
 
 export default function Detail() {
-  return <EvertalePost />;
+  return <EvertaleCharacterPost />;
 }

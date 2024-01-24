@@ -4,7 +4,7 @@ import { Input, InputRadio } from "@/components/General/Input";
 import { Option, OptionString, Select } from "@/components/General/Select";
 import { CharTeam } from "./CharTeam";
 import { LeaderSkill } from "./LeaderSkill";
-import { charElement, charRank, charWeapon } from "../../Data";
+import { charElement, charRank, charWeapon } from "../../../Data";
 import { DataResponse } from ".";
 
 export const Data = ({ info }: { info: DataResponse }) => {

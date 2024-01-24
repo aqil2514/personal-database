@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { dataEvertale } from "@/app/components/Data";
+import { dataEvertale } from "@/components/Layouting/Data";
 import { Metadata } from "next";
 import { Button } from "@/components/General/Button";
 

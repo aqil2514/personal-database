@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { PenFill } from "react-bootstrap-icons";
 import useSWR from "swr";
-import { FIGURE_STYLE, IMAGE_STYILE, P_STYLE1, SECTION_STYLE, SECTION_TITLE_STYLE } from "@/app/components/Styles";
+import { FIGURE_STYLE, IMAGE_STYILE, P_STYLE1, SECTION_STYLE, SECTION_TITLE_STYLE } from "@/components/Layouting/Styles";
 import Image from "next/image";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
-export default function WeaponDetail({ id }: { id: string }) {
+export default function EvertaleWeaponPost({ id }: { id: string }) {
   const URL = `/api/gamelingo/newEvertale/weapon?id=${id}`;
   const router = useRouter();
   const regex = /\B(?=(\d{3})+(?!\d))/g;

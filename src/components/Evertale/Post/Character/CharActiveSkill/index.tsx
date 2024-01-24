@@ -1,4 +1,4 @@
-import { P_STYLE1, SECTION_TITLE_STYLE } from "@/app/components/Styles";
+import { P_STYLE1, SECTION_TITLE_STYLE } from "@/components/Layouting/Styles";
 
 export default function CharActiveSkill({ charActiveSkill }: { charActiveSkill: Evertale.Character.ActiveSkill[] }) {
   return (

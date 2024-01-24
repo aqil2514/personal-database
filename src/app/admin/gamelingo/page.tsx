@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
-import { dataGameLingo } from "@/app/components/Data";
+import { dataGameLingo } from "@/components/Layouting/Data";
 import { Button } from "@/components/General/Button";
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Form from "@/components/Evertale/Form";
+import Form from "@/components/Evertale/Form/Character";
 
 export const metadata: Metadata = {
   title: "Personal Database - Add Characters",

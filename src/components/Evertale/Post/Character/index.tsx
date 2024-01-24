@@ -14,7 +14,7 @@ import CharPassiveSkill from "./CharPassiveSkill";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
-export default function EvertalePost() {
+export default function EvertaleCharacterPost() {
   const { id } = useParams();
   const URL = `/api/gamelingo/newEvertale/chars?id=${id}`;
   const router = useRouter();
