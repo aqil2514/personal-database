@@ -3,35 +3,24 @@ import { document } from "@/lib/utils";
 import { Weapon } from "@/models/Evertale/Weapons";
 import { NextRequest, NextResponse } from "next/server";
 
-// export async function GET(req: NextRequest) {
-//   const searchParams = req.nextUrl.searchParams;
-//   const id = searchParams.get("id");
-//   await connectMongoDB();
-
-//   if (id) {
-//     const weapon = await Weapon.findById(id);
-
-//     return NextResponse.json({ weapon }, { status: 200 });
-//   }
-
-//   const weapons = await Weapon.find();
-//   const data = weapons.map((weapon: any) => ({
-//     weapName: weapon.weapName,
-//     weapId: weapon._id,
-//   }));
-
-//   return NextResponse.json({ data }, { status: 200 });
-// }
-
 export async function GET(req: NextRequest) {
-  const request = {
-    host: req.headers.get("Host"),
-    userAgent: req.headers.get("User-Agent"),
-    accept: req.headers.get("Accept-Language"),
-    referer: req.headers.get("Referer"),
-    ip: req.referrer,
-  };
-  return NextResponse.json({ request }, { status: 200 });
+  const searchParams = req.nextUrl.searchParams;
+  const id = searchParams.get("id");
+  await connectMongoDB();
+
+  if (id) {
+    const weapon = await Weapon.findById(id);
+
+    return NextResponse.json({ weapon }, { status: 200 });
+  }
+
+  const weapons = await Weapon.find();
+  const data = weapons.map((weapon: any) => ({
+    weapName: weapon.weapName,
+    weapId: weapon._id,
+  }));
+
+  return NextResponse.json({ data }, { status: 200 });
 }
 
 function cleanData(value: string) {

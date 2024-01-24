@@ -66,6 +66,66 @@ namespace Evertale {
       skillDescId: string;
     }
   }
+  namespace Weapon {
+    export interface State {
+      weapImage: { png: string; webp: string };
+      weapName: string;
+      weapRank: "SSR" | "SR" | "R" | "N" | "Weap Rank";
+      weapType: "Sword" | "Axe" | "Staff" | "Mace" | "GreatSword" | "GreatAxe" | "Spear" | "Hammer" | "Katana" | "Weap Type";
+      weapLore?: {
+        loreEn?: string;
+        loreId?: string;
+      };
+      weapAscend?: Ascend;
+      weapMax?: {
+        status?: {
+          power?: number;
+          cost?: number;
+          hp?: number;
+          atk?: number;
+          level?: number;
+          boost?: number;
+          potential?: number;
+        };
+      };
+    }
+
+    export interface Ascend {
+      noAscend?: NoAscend;
+      ascend1?: Ascend1;
+      fullAscend?: FullAscend;
+    }
+
+    export interface NoAscend {
+      weapSkill?: Skill;
+      status?: Status;
+    }
+
+    export interface Ascend1 {
+      weapSkill?: Skill;
+      status?: Status;
+    }
+
+    export interface FullAscend {
+      weapSkill?: Skill;
+      status?: Status;
+    }
+
+    export interface Skill {
+      skillEn?: string;
+      skillId?: string;
+    }
+
+    export interface Status {
+      power?: number;
+      hp?: number;
+      atk?: number;
+      level?: number;
+      boost?: number;
+      cost?: number;
+      potential?: number;
+    }
+  }
   namespace Misc {
     export interface TypeSkill {
       typeLeaderSkill: string[];

@@ -11,11 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Characters() {
-  const session = await getServerSession();
-
-  if (!session) {
-    redirect("/gamelingo/evertale/weapon");
-  }
 
   return (
     <div className="w-full p-10 ">
