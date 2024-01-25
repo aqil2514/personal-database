@@ -7,6 +7,7 @@ import React, { useRef } from "react";
 import WeaponStatus from "./WeaponStatus";
 import WeaponAscend from "./WeaponAscend";
 import { WeaponProvider, useWeaponData } from "@/components/Evertale/Providers";
+import WeaponImage from "./WeaponImage";
 // import { FormEvent } from "react";
 
 export default function Form() {
@@ -63,15 +64,9 @@ export default function Form() {
     <form method="post" ref={formRef} onSubmit={(e) => submitHandler(e)}>
       <WeaponProvider>
         <WeaponStatus />
+        <WeaponImage />
         <WeaponAscend />
       </WeaponProvider>
-
-      {/* Weapon Image */}
-      {/* <label htmlFor="weapImagePng">Weapon Image PNG:</label>
-      <input className={INPUT_STYLE} type="text" id="weapImagePng" name="weapImagePng" disabled={isLoading} required />
-      
-      <label htmlFor="weapImageWebp">Weapon Image Webp:</label>
-    <input className={INPUT_STYLE} type="text" id="weapImageWebp" name="weapImageWebp" disabled={isLoading} required /> */}
 
       {/* Submit Button */}
       <button type="submit" disabled={isLoading} className={ADD_BUTTON_STYLE}>

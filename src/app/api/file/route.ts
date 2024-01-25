@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
   }));
 
   return NextResponse.json({ msg: "Gambar berhasil diupload", data }, { status: 200 });
+  // return NextResponse.json({ msg: "Gambar berhasil diupload" }, { status: 200 });
 }
 
 export async function GET(req: NextRequest) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { editWeaponHandler } from "@/components/Evertale/Utils";
-import { useWeaponData } from "..";
+import { useWeaponData } from "@/components/Evertale/Providers";
 import { Input } from "@/components/General/Input";
 import { Select } from "@/components/General/Select";
 import { Textarea } from "@/components/General/Textarea";

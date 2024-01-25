@@ -4,6 +4,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   forId: string;
   label: string;
   name?: string;
+  ref?: React.MutableRefObject<null | HTMLInputElement>;
   variant?: "default";
 }
 

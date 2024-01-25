@@ -1,7 +1,7 @@
 import { Input } from "@/components/General/Input";
 import { Textarea } from "@/components/General/Textarea";
 import { TitleSection } from "@/components/General/Wrapper";
-import { useWeaponData } from "..";
+import { useWeaponData } from "@/components/Evertale/Providers";
 import { editHandler } from "./LocalUtils";
 
 export function WeaponAscendComponent({ ascend }: { ascend: "no-ascend" | "ascend-1" | "full-ascend" | "max-status" }) {
