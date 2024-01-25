@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { StateType, useData } from "..";
 import { SectionWrapper } from "@/components/General/Wrapper";
 import { Setting } from "./Setting";
 import { PreviewSkill } from "./Preview";
+import { useCharacterData } from "@/components/Evertale/Providers";
 
 export default function CharPassiveSkills() {
-  const { data, setData }: StateType = useData();
+  const { data, setData } = useCharacterData();
   const [deleteMode, setDeleteMode] = React.useState<boolean>(false);
   return (
     <SectionWrapper id="passive-skill-setting-container">

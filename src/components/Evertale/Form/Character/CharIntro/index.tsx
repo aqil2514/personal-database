@@ -1,11 +1,11 @@
-import { useData } from "..";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
 import { Textarea } from "@/components/General/Textarea";
 import axios from "axios";
 import { translateHandler } from "@/components/Utils";
+import { useCharacterData } from "@/components/Evertale/Providers";
 
 export default function CharIntro() {
-  const { data, setData } = useData();
+  const { data, setData } = useCharacterData();
 
   function changeHandler(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const field = e.target.getAttribute("data-field");

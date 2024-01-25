@@ -1,16 +1,17 @@
-import React, { SetStateAction } from "react";
+import React from "react";
 import Images from "./Images";
 import Preview from "./Preview";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
 import useSWRImmutable from "swr/immutable";
-import { StateType, useData } from "../..";
+import { GalleryWidgetProps } from "..";
+import { evertaleCharacterHandlers } from "./handlers";
 
 const fetcher = (...args: Parameters<typeof fetch>) => fetch(...args).then((res) => res.json());
 
-export default function Container({ data, setData }: { data: Evertale.Character.State; setData: React.Dispatch<SetStateAction<Evertale.Character.State>> }) {
+export default function Container<T>({ data, setData, category, game }: GalleryWidgetProps<T>) {
   const [query, setQuery] = React.useState<string>("");
-  const URL = `/api/file?game=evertale&category=characters&format=webp&q=${query}`;
+  const URL = `/api/file?game=${game.toLowerCase()}&category=${category}&format=webp&q=${query}`;
   const [imgSelected, setImgSelected] = React.useState<string[]>([]);
   const containerRef = React.useRef<null | HTMLDivElement>(null);
   const res = useSWRImmutable(URL, fetcher);
@@ -29,11 +30,8 @@ export default function Container({ data, setData }: { data: Evertale.Character.
       url.push(array.url);
     }
 
-    const f1Img = url.filter((u: string) => u.includes("01.webp")).toString();
-    const f2Img = url.filter((u: string) => u.includes("02.webp")).toString();
-    const f3Img = url.filter((u: string) => u.includes("03.webp")).toString();
+    if (game === "Evertale" && category === "characters") evertaleCharacterHandlers(url, data as Evertale.Character.State, setData as React.Dispatch<React.SetStateAction<Evertale.Character.State>>);
 
-    setData({ ...data, charImage: { f1Img, f2Img, f3Img } });
     setImgSelected([]);
 
     const element = containerRef.current?.parentElement as HTMLDivElement;
@@ -42,7 +40,9 @@ export default function Container({ data, setData }: { data: Evertale.Character.
   }
   return (
     <div ref={containerRef} className="relative w-4/5 h-full overflow-hidden bg-white rounded-xl mx-auto py-2 px-4 shadow">
-      <h1 className="font-bold font-playfair text-violet-700 text-3xl">Evertale Character Gallery</h1>
+      <h1 className="font-bold font-playfair text-violet-700 text-3xl capitalize">
+        {game} {category} Gallery
+      </h1>
       <div className="w-full h-1 bg-violet-700 my-2"></div>
       <Input forId="image-cloud-name" label="Search" value={query} onChange={(e) => setQuery(e.target.value)} />
       <div className="flex flex-row justify-between h-[380px] gap-4">

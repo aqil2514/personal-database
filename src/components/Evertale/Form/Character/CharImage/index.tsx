@@ -1,12 +1,12 @@
-import { useData } from "@/components/Evertale/Form/Character";
 import React from "react";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
-import GalleryWidget from "./Widget";
+import GalleryWidget from "@/components/General/Widget";
+import { useCharacterData } from "@/components/Evertale/Providers";
 
 export default function CharImages() {
-  const { data, setData } = useData();
+  const { data, setData } = useCharacterData();
   const fileRef = React.useRef<null | HTMLInputElement>(null);
   const [uploadLoading, setUploadLoading] = React.useState(false);
 
@@ -64,7 +64,7 @@ export default function CharImages() {
             Lihat Galeri
           </Button>
         </div>
-        <GalleryWidget data={data} setData={setData} />
+        <GalleryWidget<Evertale.Character.State> data={data} setData={setData} game="Evertale" category="characters" />
       </div>
       <Input forId="f1Img" variant="default" label="Form 1 Image" value={data?.charImage?.f1Img} disabled required />
       <Input forId="f2Img" variant="default" label="Form 2 Image" value={data?.charImage?.f2Img} disabled />

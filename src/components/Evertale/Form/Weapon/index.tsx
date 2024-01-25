@@ -6,90 +6,11 @@ import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 import WeaponStatus from "./WeaponStatus";
 import WeaponAscend from "./WeaponAscend";
+import { WeaponProvider, useWeaponData } from "@/components/Evertale/Providers";
 // import { FormEvent } from "react";
 
-const WeaponFormContext = React.createContext<WeaponFormContextTypes>({} as WeaponFormContextTypes);
-
-type WeaponFormContextTypes = {
-  data: Evertale.Weapon.State;
-  setData: React.Dispatch<React.SetStateAction<Evertale.Weapon.State>>;
-  isLoading: boolean;
-  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
 export default function Form() {
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [data, setData] = React.useState<Evertale.Weapon.State>({
-    weapName: "",
-    weapRank: "Weap Rank",
-    weapType: "Weap Type",
-    weapLore: {
-      loreEn: "",
-      loreId: "",
-    },
-    weapImage: {
-      webp: "",
-      png: "",
-    },
-    weapAscend: {
-      noAscend: {
-        weapSkill: {
-          skillEn: "",
-          skillId: "",
-        },
-        status: {
-          power: 0,
-          hp: 0,
-          atk: 0,
-          level: 0,
-          boost: 0,
-          potential: 0,
-          cost: 0,
-        },
-      },
-      ascend1: {
-        weapSkill: {
-          skillEn: "",
-          skillId: "",
-        },
-        status: {
-          power: 0,
-          hp: 0,
-          atk: 0,
-          level: 0,
-          boost: 0,
-          potential: 0,
-          cost: 0,
-        },
-      },
-      fullAscend: {
-        weapSkill: {
-          skillEn: "",
-          skillId: "",
-        },
-        status: {
-          power: 0,
-          hp: 0,
-          atk: 0,
-          level: 0,
-          boost: 0,
-          potential: 0,
-          cost: 0,
-        },
-      },
-    },
-    weapMax: {
-      status: {
-        power: 0,
-        hp: 0,
-        atk: 0,
-        level: 0,
-        boost: 0,
-        potential: 0,
-        cost: 0,
-      },
-    },
-  });
+  const { isLoading, setIsLoading } = useWeaponData();
   const formRef = useRef(null);
   const router = useRouter();
   const submitHandler = async (e: any) => {
@@ -140,10 +61,10 @@ export default function Form() {
 
   return (
     <form method="post" ref={formRef} onSubmit={(e) => submitHandler(e)}>
-      <WeaponFormContext.Provider value={{ data, setData, isLoading, setIsLoading }}>
+      <WeaponProvider>
         <WeaponStatus />
         <WeaponAscend />
-      </WeaponFormContext.Provider>
+      </WeaponProvider>
 
       {/* Weapon Image */}
       {/* <label htmlFor="weapImagePng">Weapon Image PNG:</label>
@@ -158,8 +79,4 @@ export default function Form() {
       </button>
     </form>
   );
-}
-
-export function useWeaponData() {
-  return React.useContext(WeaponFormContext);
 }

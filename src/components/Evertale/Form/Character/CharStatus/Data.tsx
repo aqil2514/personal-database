@@ -1,14 +1,14 @@
 import { SectionWrapper } from "@/components/General/Wrapper";
-import { useData } from "..";
 import { Input, InputRadio } from "@/components/General/Input";
 import { Option, OptionString, Select } from "@/components/General/Select";
 import { CharTeam } from "./CharTeam";
 import { LeaderSkill } from "./LeaderSkill";
 import { charElement, charRank, charWeapon } from "../../../Data";
 import { DataResponse } from ".";
+import { useCharacterData } from "@/components/Evertale/Providers";
 
 export const Data = ({ info }: { info: DataResponse }) => {
-  const { data, setData } = useData();
+  const { data, setData } = useCharacterData();
 
   const beforeUnloadHandler = (e: BeforeUnloadEvent) => {
     e.preventDefault();

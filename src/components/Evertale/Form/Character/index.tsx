@@ -10,59 +10,10 @@ import CharProfile from "./CharProfile";
 import CharActiveSkills from "./CharActiveSkill";
 import CharPassiveSkills from "./CharPassiveSkill";
 import { Button } from "@/components/General/Button";
-
-const FormContext = createContext<StateType>({} as StateType);
-
-export type StateType = {
-  data: Evertale.Character.State;
-  setData: React.Dispatch<SetStateAction<Evertale.Character.State>>;
-};
+import { CharacterProvider, useCharacterData } from "@/components/Evertale/Providers";
 
 export default function Form() {
-  const [data, setData] = useState<Evertale.Character.State>({
-    charStatus: {
-      charName: "",
-      charRank: undefined,
-      charConjure: "",
-      charElement: undefined,
-      charLeaderSkill: "",
-      charTeam: [],
-      charWeapon1: undefined,
-      charWeapon2: undefined,
-      isConjured: false,
-    },
-    charImage: {
-      f1Img: "",
-      f2Img: "",
-      f3Img: "",
-    },
-    charIntro: {
-      gachaIntroEn: "",
-      gachaIntroId: "",
-      gachaTextEn: "",
-      gachaTextId: "",
-      loginTextEn: "",
-      loginTextId: "",
-      text1En: "",
-      text1Id: "",
-      text2En: "",
-      text2Id: "",
-      text3En: "",
-      text3Id: "",
-      text4En: "",
-      text4Id: "",
-    },
-    charProfile: {
-      part1En: "",
-      part1Id: "",
-      part2En: "",
-      part2Id: "",
-      part3En: "",
-      part3Id: "",
-    },
-    charActiveSkill: [],
-    charPassiveSkill: [],
-  });
+  const { data, setData } = useCharacterData();
 
   useEffect(() => {
     const isThere = localStorage.getItem("evertaleCharData");
@@ -75,7 +26,7 @@ export default function Form() {
       setData(JSON.parse(isThere));
       return;
     }
-  }, []);
+  }, [setData]);
 
   const notifRef = React.useRef<null | HTMLParagraphElement>(null);
 
@@ -127,7 +78,7 @@ export default function Form() {
   };
 
   return (
-    <FormContext.Provider value={{ data, setData }}>
+    <CharacterProvider>
       <CharStatus />
       <CharImages />
       <CharIntro />
@@ -146,10 +97,6 @@ export default function Form() {
           Lihat Data
         </Button>
       </div>
-    </FormContext.Provider>
+    </CharacterProvider>
   );
-}
-
-export function useData() {
-  return useContext(FormContext);
 }

@@ -1,10 +1,10 @@
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
-import { useData } from "..";
 import { Textarea } from "@/components/General/Textarea";
 import { translateHandler } from "@/components/Utils";
+import { useCharacterData } from "@/components/Evertale/Providers";
 
 export default function CharProfile() {
-  const { data, setData } = useData();
+  const { data, setData } = useCharacterData();
 
   function changeHandler(e: React.ChangeEvent<HTMLTextAreaElement>) {
     const field = e.target.getAttribute("data-field") as string;

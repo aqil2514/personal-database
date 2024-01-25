@@ -1,7 +1,6 @@
 "use client";
 
-import React, { RefObject, useRef, useState } from "react";
-import { StateType, useData } from "..";
+import React, { useRef, useState } from "react";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
 import { Input } from "@/components/General/Input";
 import { Textarea } from "@/components/General/Textarea";
@@ -10,9 +9,10 @@ import { TypeSkill } from "./TypeSkill";
 import { PreviewSkill } from "./Preview";
 import { notif } from "@/components/Utils";
 import axios from "axios";
+import { useCharacterData } from "@/components/Evertale/Providers";
 
 export default function CharActiveSkills() {
-  const { data, setData }: StateType = useData();
+  const { data, setData } = useCharacterData();
   const [inputSkill, setInputSkill] = useState<Evertale.Character.ActiveSkill>({ skillName: "", typeSkill: [], skillTarget: "", skillTu: 0, skillSpirit: 0, skillDescEn: "", skillDescId: "" });
   const [typeNotif, setTypeNotif] = useState<string>("");
   const [nameNotif, setNameNotif] = useState<string>("");

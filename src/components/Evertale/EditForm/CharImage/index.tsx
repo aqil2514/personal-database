@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
-import GalleryWidget from "@/components/Evertale/Form/Character/CharImage/Widget";
+import GalleryWidget from "@/components/General/Widget";
 import { useCharacter } from "..";
 import Verifying from "./Verifying";
 
@@ -70,7 +70,7 @@ export default function CharImages() {
               Lihat Galeri
             </Button>
           </div>
-          <GalleryWidget data={char} setData={setChar} />
+          <GalleryWidget<Evertale.Character.State> data={char} setData={setChar} game="Evertale" category="characters" />
         </div>
         <Input forId="f1Img" variant="default" label="Form 1 Image" value={charImage.f1Img} disabled required />
         <Input forId="f2Img" variant="default" label="Form 2 Image" value={charImage.f2Img} disabled />

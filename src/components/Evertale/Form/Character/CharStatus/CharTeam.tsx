@@ -1,14 +1,14 @@
 import { useRouter } from "next/navigation";
-import { useData } from "..";
 import { useEffect, useRef, useState } from "react";
 import { notif } from "@/components/Utils";
 import axios from "axios";
 import { Input } from "@/components/General/Input";
 import { Button } from "@/components/General/Button";
 import { DataResponse } from ".";
+import { useCharacterData } from "@/components/Evertale/Providers";
 
 export const CharTeam = ({ info }: { info: DataResponse }) => {
-  const { data, setData } = useData();
+  const { data, setData } = useCharacterData();
   const router = useRouter();
   const [teams, setTeams] = useState<string[]>([]);
   const [team, setTeam] = useState<string>("");
