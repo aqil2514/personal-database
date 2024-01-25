@@ -7,3 +7,9 @@ export function evertaleCharacterHandlers(url: string[], data: Evertale.Characte
 
   setData({ ...data, charImage: { f1Img, f2Img, f3Img } });
 }
+export function evertaleWeaponHandlers(url: string[], data: Evertale.Weapon.State, setData: React.Dispatch<React.SetStateAction<Evertale.Weapon.State>>) {
+  const imgWebp = url.find((img) => img.endsWith(".webp")) as string;
+  const imgPng = url.find((img) => img.endsWith(".png")) as string;
+
+  setData({ ...data, weapImage: { png: imgPng, webp: imgWebp } });
+}

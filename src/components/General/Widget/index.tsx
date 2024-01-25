@@ -3,7 +3,7 @@ import Container from "./Container";
 
 export interface GalleryWidgetProps<T> {
   game: "Evertale";
-  category: "characters";
+  category: "characters" | "weapons";
   data: T;
   setData: React.Dispatch<React.SetStateAction<T>>;
 }

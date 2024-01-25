@@ -66,12 +66,11 @@ export default function Form() {
         <WeaponStatus />
         <WeaponImage />
         <WeaponAscend />
+        {/* Submit Button */}
+        <button type="submit" disabled={isLoading} className={ADD_BUTTON_STYLE}>
+          {isLoading ? "Mengirim Data..." : "Tambah Data"}
+        </button>
       </WeaponProvider>
-
-      {/* Submit Button */}
-      <button type="submit" disabled={isLoading} className={ADD_BUTTON_STYLE}>
-        {isLoading ? "Mengirim Data..." : "Tambah Data"}
-      </button>
     </form>
   );
 }

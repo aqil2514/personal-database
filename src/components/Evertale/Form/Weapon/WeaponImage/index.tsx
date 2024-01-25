@@ -1,6 +1,7 @@
 import { useWeaponData } from "@/components/Evertale/Providers";
 import { Button } from "@/components/General/Button";
 import { Input } from "@/components/General/Input";
+import GalleryWidget from "@/components/General/Widget";
 import { notif } from "@/components/Utils";
 import axios, { isAxiosError } from "axios";
 import React from "react";
@@ -35,8 +36,6 @@ export default function WeaponImage() {
       const imgPng = imgInfo.find((img) => img.url.endsWith(".png"))!.url;
 
       setData({ ...data, weapImage: { png: imgPng, webp: imgWebp } });
-      //   console.log("webp", imgWebp);
-      //   console.log("png", imgPng);
 
       notif(notifRef, "green", apiData.msg, setNotifP, false);
     } catch (error) {
@@ -55,6 +54,12 @@ export default function WeaponImage() {
     }
   }
 
+  function clickHandler() {
+    const widget = document.getElementById("container-image") as HTMLDivElement;
+    widget.classList.replace("invisible", "visible");
+    widget.classList.replace("opacity-0", "opacity-1");
+  }
+
   return (
     <>
       {/* Weapon Image */}
@@ -66,7 +71,12 @@ export default function WeaponImage() {
         <Button variant="upload" disabled={isUploading} type="button" onClick={uploadHandler}>
           {isUploading ? "Uploading..." : "Upload"}
         </Button>
+        <Button variant="default" type="button" disabled={isUploading} onClick={clickHandler}>
+          Lihat Galeri
+        </Button>
       </div>
+      <GalleryWidget<Evertale.Weapon.State> data={data} setData={setData} game="Evertale" category="weapons" />
+
       <Input forId="weapImagePng" value={data.weapImage.png} readOnly label="Weapon Image PNG" disabled={isUploading} />
       <Input forId="weapImageWebp" value={data.weapImage.webp} readOnly label="Weapon Image WEBP" disabled={isUploading} />
     </>

@@ -43,15 +43,27 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ msg: "Search Parameter tidak lengkap" }, { status: 422 });
   }
 
-  const result = await cloudinary.api.resources({
-    type: "upload",
-    prefix: `${game}/${category}/${format}/${q}`,
-  });
+  if (game === "evertale" && category === "characters") {
+    const result = await cloudinary.api.resources({
+      type: "upload",
+      prefix: `${game}/${category}/${format}/${q}`,
+    });
 
-  const data = result.resources.map((image: CloudinaryAPI.Image) => ({
-    url: image.secure_url,
-    name: image.public_id.split("/")[3],
-  }));
+    const data = result.resources.map((image: CloudinaryAPI.Image) => ({
+      url: image.secure_url,
+      name: image.public_id.split("/")[3],
+    }));
+    return NextResponse.json({ msg: "Sukses", data }, { status: 200 });
+  } else if (game === "evertale" && category === "weapons") {
+    const result = await cloudinary.api.resources({
+      type: "upload",
+      prefix: `${game}/${category}/${q}`,
+    });
 
-  return NextResponse.json({ msg: "Sukses", data }, { status: 200 });
+    const data = result.resources.map((image: CloudinaryAPI.Image) => ({
+      url: image.secure_url,
+      name: `${image.public_id.split("/")[3]}.${image.public_id.split("/")[2]}`,
+    }));
+    return NextResponse.json({ msg: "Sukses", data }, { status: 200 });
+  }
 }
