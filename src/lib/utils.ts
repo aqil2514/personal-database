@@ -163,7 +163,7 @@ export const document = {
       },
     },
     db: {
-      create: async (data: any) => {
+      create: async (game: "Evertale" | "Mobile Legends" | "Genshin Impact", data: any) => {
         await connectMongoDB();
         const session = mongoose.startSession();
         try {
@@ -220,6 +220,12 @@ export const document = {
     },
   },
 };
+
+// DOCUMENT TOOLS API START
+
+// EVERTALE SECTION
+
+// DOCUMENT TOOLS API END
 
 // File API
 export const file = {
@@ -584,4 +590,133 @@ export const validator = {
       return { charPassiveSkill, success: true };
     },
   },
+  weapon: {
+    identity: (data: Evertale.Weapon.State): Utils.Validator.ResultValidator => {
+      const allowedRank = ["SSR", "SR", "R", "N"];
+      const allowedType = ["Sword", "Axe", "Staff", "Mace", "GreatSword", "GreatAxe", "Spear", "Hammer", "Katana"];
+      if (!data.weapName) {
+        const result: Utils.Validator.ResultValidator = {
+          msg: `Nama senjata tidak boleh kosong`,
+          ref: "weapon-name",
+          status: false,
+        };
+
+        return result;
+      }
+      if (!allowedRank.includes(data.weapRank)) {
+        const result: Utils.Validator.ResultValidator = {
+          msg: "Hanya SSR, SR, R, N saja yang diizinkan",
+          ref: "weapRank",
+          status: false,
+        };
+        return result;
+      }
+      if (!allowedType.includes(data.weapType)) {
+        const result: Utils.Validator.ResultValidator = {
+          msg: `Hanya ${allowedType.join(", ")} saja yang diizinkan`,
+          ref: "weapType",
+          status: false,
+        };
+        return result;
+      }
+      if (!data.weapLore?.loreEn) {
+        const result: Utils.Validator.ResultValidator = {
+          msg: `Lore tidak boleh kosong`,
+          ref: "weapLoreEn",
+          status: false,
+        };
+        return result;
+      }
+      if (!data.weapLore.loreId) {
+        const result: Utils.Validator.ResultValidator = {
+          msg: `Lore tidak boleh kosong`,
+          ref: "weapLoreId",
+          status: false,
+        };
+        return result;
+      }
+
+      const result: Utils.Validator.ResultValidator = {
+        msg: "sukses",
+        status: true,
+      };
+
+      return result;
+    },
+    image: (data: Evertale.Weapon.State): Utils.Validator.ResultValidator => {
+      const png: string = data.weapImage.png;
+      const webp: string = data.weapImage.webp;
+      if (!png.endsWith(".png")) {
+        const result = {
+          msg: "Image 1 Harus Png",
+          status: false,
+        };
+        return result;
+      }
+      if (!webp.endsWith(".webp")) {
+        const result = {
+          msg: "Image 2 Harus webp",
+          status: false,
+        };
+        return result;
+      }
+
+      return {
+        msg: "Validasi lolos",
+        status: true,
+      };
+    },
+    ascend: (data: Evertale.Weapon.State): Utils.Validator.ResultValidator => {
+      const weaponAscend = data.weapAscend as Evertale.Weapon.Ascend;
+      const noAscend = weaponAscend.noAscend;
+
+      if (!noAscend?.weapSkill?.skillEn) return resultValidator("Weapon Skill wajib diisi", false, "nAWeapSkillEn");
+      if (!noAscend?.weapSkill?.skillId) return resultValidator("Weapon Skill wajib diisi", false, "nAWeapSkillId");
+
+      if (!noAscend.status?.atk) return resultValidator("Atk belum diisi", false, "naATK");
+      if (!noAscend.status?.boost && noAscend.status?.boost !== 0) return resultValidator("Boost belum diisi", false, "naBoost");
+      if (!noAscend.status?.cost) return resultValidator("Cost belum diisi", false, "naCost");
+      if (!noAscend.status?.potential && noAscend.status?.potential !== 0) return resultValidator("Potential belum diisi", false, "naPotential");
+      if (!noAscend.status?.level) return resultValidator("Level belum diisi", false, "naLvl");
+      if (!noAscend.status?.hp) return resultValidator("HP belum diisi", false, "naHP");
+      if (!noAscend.status?.power) return resultValidator("Power belum diisi", false, "naPower");
+
+      return resultValidator("sukses", true, undefined, data);
+    },
+    adjust: (data: Evertale.Weapon.State): Evertale.Weapon.State => {
+      const weaponAscend = data.weapAscend as Evertale.Weapon.Ascend;
+
+      if (weaponAscend!.noAscend!.status) weaponMapping("noAscend", data);
+      if (!weaponAscend.ascend1!.weapSkill!.skillEn) data!.weapAscend!.ascend1 = undefined;
+      else if (weaponAscend.ascend1!.weapSkill!.skillEn) weaponMapping("ascend1", data);
+      if (!weaponAscend.fullAscend!.weapSkill!.skillEn) data!.weapAscend!.fullAscend = undefined;
+      else if (weaponAscend.fullAscend!.weapSkill!.skillEn) weaponMapping("fullAscend", data);
+
+      return data;
+    },
+  },
 };
+
+function resultValidator(msg: string, status: boolean, ref?: string, data?: any): Utils.Validator.ResultValidator {
+  return {
+    msg,
+    status,
+    ref,
+    data,
+  };
+}
+
+// Weapon API TOOLS START
+
+function weaponMapping(field: keyof Evertale.Weapon.Ascend, data: Evertale.Weapon.State) {
+  data!.weapAscend![field]!.status!.atk = Number(data!.weapAscend![field]!.status!.atk);
+  data!.weapAscend![field]!.status!.boost = Number(data!.weapAscend![field]!.status!.boost);
+  data!.weapAscend![field]!.status!.cost = Number(data!.weapAscend![field]!.status!.cost);
+  data!.weapAscend![field]!.status!.hp = Number(data!.weapAscend![field]!.status!.hp);
+  data!.weapAscend![field]!.status!.level = Number(data!.weapAscend![field]!.status!.level);
+  data!.weapAscend![field]!.status!.potential = Number(data!.weapAscend![field]!.status!.potential);
+  data!.weapAscend![field]!.status!.power = Number(data!.weapAscend![field]!.status!.power);
+  return data;
+}
+
+// Weapon API TOOLS END

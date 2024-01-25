@@ -35,8 +35,8 @@ export default function WeaponStatus() {
       </Select>
 
       {/* Weapon Lore  */}
-      <Textarea forId="weapLoreEn" label="Weapon English Lore" />
-      <Textarea forId="weapLoreId" label="Weapon Indonesian Lore" />
+      <Textarea forId="weapLoreEn" value={data.weapLore?.loreEn} onChange={(e) => setData({ ...data, weapLore: { ...data.weapLore, loreEn: e.target.value } })} label="Weapon English Lore" />
+      <Textarea forId="weapLoreId" value={data.weapLore?.loreId} onChange={(e) => setData({ ...data, weapLore: { ...data.weapLore, loreId: e.target.value } })} label="Weapon Indonesian Lore" />
     </>
   );
 }
