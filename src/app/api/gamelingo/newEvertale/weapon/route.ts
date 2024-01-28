@@ -215,6 +215,7 @@ export async function POST(req: NextRequest) {
 
   const final = validator.weapon.adjust(data);
 
+  await connectMongoDB()
   const weapon = await Weapon.create(final);
   await Post.create({
     title: weapon.weapName,

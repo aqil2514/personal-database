@@ -22,7 +22,7 @@ export default function WeaponButton() {
       notif(notifRef, "green", "Data berhasil ditambah", setNotifState);
 
       setTimeout(() => {
-        router.replace("/admin/gamelingo/evertale/weapons/add");
+        router.replace("/admin/gamelingo/evertale/weapons");
       }, 3000);
     } catch (error) {
       if (isAxiosError(error)) {
