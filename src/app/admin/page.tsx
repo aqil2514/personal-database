@@ -1,7 +1,5 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
 import { Metadata } from "next";
-import Data from "../components/Data";
+import Data from "@/components/Layouting/Data";
 
 export const metadata: Metadata = {
   title: "Personal Database - Admin",
