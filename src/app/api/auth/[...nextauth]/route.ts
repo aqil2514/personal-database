@@ -9,5 +9,12 @@ const handler = NextAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     }),
   ],
+  callbacks: {
+    async signIn({ user }) {
+      if (user.email === "muhamadaqil383@gmail.com") return true;
+
+      return false;
+    },
+  },
 });
 export { handler as GET, handler as POST };
