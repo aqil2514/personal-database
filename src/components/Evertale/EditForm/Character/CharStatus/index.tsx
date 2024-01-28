@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { SectionWrapper, TitleSection } from "@/components/General/Wrapper";
 import { useCharacter } from "..";
 import { Input, InputRadio } from "@/components/General/Input";
-import { editChangeHandler } from "../../Utils";
+import { editChangeHandler } from "../../../Utils";
 import { CharTeam } from "./CharTeam";
 import { LeaderSkill } from "./LeaderSkill";
 import { Option, OptionString, Select } from "@/components/General/Select";

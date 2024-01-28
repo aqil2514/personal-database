@@ -215,7 +215,7 @@ export async function POST(req: NextRequest) {
 
   const final = validator.weapon.adjust(data);
 
-  await connectMongoDB()
+  await connectMongoDB();
   const weapon = await Weapon.create(final);
   await Post.create({
     title: weapon.weapName,
@@ -231,141 +231,34 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PUT(req: NextRequest) {
-  const form = await req.json();
-  const {
-    weapName,
-    weapImagePng,
-    weapImageWebp,
-    weapEnLore,
-    weapIdLore,
-    weapRank,
-    weapType,
-    naWeapEnSkill,
-    naWeapIdSkill,
-    naPower,
-    naHP,
-    naATK,
-    naLvl,
-    naBoost,
-    naPot,
-    naCost,
-    a1WeapEnSkill,
-    a1WeapIdSkill,
-    a1Power,
-    a1HP,
-    a1ATK,
-    a1Lvl,
-    a1Boost,
-    a1Pot,
-    a1Cost,
-    faWeapEnSkill,
-    faWeapIdSkill,
-    faPower,
-    faHP,
-    faATK,
-    faLvl,
-    faBoost,
-    faPot,
-    faCost,
-    maxPower,
-    maxHP,
-    maxATK,
-    maxLvl,
-    maxBoost,
-    maxPot,
-  } = form.data;
+  const body = await req.json();
+  const searchParams = req.nextUrl.searchParams;
+  const id = searchParams.get("id");
+  const data: Evertale.Weapon.State = body.data;
 
-  //   Image Validator
-  const isImgValidate = document.weapon.validator.image(weapImagePng, weapImageWebp);
-  if (!isImgValidate?.status) {
-    return NextResponse.json({ msg: isImgValidate?.msg }, { status: 422 });
+  if (!id) {
+    return NextResponse.json({ msg: "id tidak ada" }, { status: 422 });
   }
 
-  //   wpIdentityValidator
-  const isIdentityValidate = document.weapon.validator.weaponIdentity(weapRank, weapType, weapName, weapEnLore, weapIdLore);
-  if (!isIdentityValidate?.status) {
-    return NextResponse.json({ msg: isIdentityValidate?.msg }, { status: 422 });
+  const identityValidator = validator.weapon.identity(data);
+  if (identityValidator.status === false) {
+    return NextResponse.json({ msg: identityValidator.msg, ref: identityValidator.ref }, { status: 422 });
   }
 
-  //   ascend Validator
-  const iswpAscendValidator = document.weapon.validator.weaponAscend(naWeapEnSkill, naWeapIdSkill, Number(naPower), Number(naHP), Number(naATK), Number(naLvl), Number(naBoost), Number(naPot), Number(naCost));
-  if (!iswpAscendValidator?.status) {
-    return NextResponse.json({ msg: iswpAscendValidator?.msg }, { status: 422 });
+  const imageValidator = validator.weapon.image(data);
+  if (imageValidator.status === false) {
+    return NextResponse.json({ msg: imageValidator.msg }, { status: 422 });
   }
 
-  const data = {
-    weapName,
-    weapImage: {
-      png: weapImagePng,
-      webp: weapImageWebp,
-    },
-    weapLore: {
-      loreEn: weapEnLore,
-      loreId: weapIdLore,
-    },
-    weapRank,
-    weapType,
-    weapAscend: {
-      noAscend: {
-        weapSkill: {
-          skillEn: naWeapEnSkill,
-          skillId: naWeapIdSkill,
-        },
-        status: {
-          power: Number(naPower),
-          hp: Number(naHP),
-          atk: Number(naATK),
-          level: Number(naLvl),
-          boost: Number(naBoost),
-          potential: Number(naPot),
-          cost: Number(naCost),
-        },
-      },
-      ascend1: {
-        weapSkill: {
-          skillEn: a1WeapEnSkill,
-          skillId: a1WeapIdSkill,
-        },
-        status: {
-          power: Number(a1Power),
-          hp: Number(a1HP),
-          atk: Number(a1ATK),
-          level: Number(a1Lvl),
-          boost: Number(a1Boost),
-          potential: Number(a1Pot),
-          cost: Number(a1Cost),
-        },
-      },
-      fullAscend: {
-        weapSkill: {
-          skillEn: faWeapEnSkill,
-          skillId: faWeapIdSkill,
-        },
-        status: {
-          power: Number(faPower),
-          hp: Number(faHP),
-          atk: Number(faATK),
-          level: Number(faLvl),
-          boost: Number(faBoost),
-          potential: Number(faPot),
-          cost: Number(faCost),
-        },
-      },
-    },
-    weapMax: {
-      status: {
-        power: Number(maxPower),
-        hp: Number(maxHP),
-        atk: Number(maxATK),
-        level: Number(maxLvl),
-        boost: Number(maxBoost),
-        potential: Number(maxPot),
-      },
-    },
-  };
+  const ascendValidator = validator.weapon.ascend(data);
+  if (ascendValidator.status === false) {
+    return NextResponse.json({ msg: ascendValidator.msg, ref: ascendValidator.ref }, { status: 422 });
+  }
+
+  const final = validator.weapon.adjust(data);
 
   await connectMongoDB();
-  await Weapon.findByIdAndUpdate(form.id, data);
+  await Weapon.findByIdAndUpdate(id, final);
 
   return NextResponse.json({ msg: "Ubah data berhasil" }, { status: 200 });
 }

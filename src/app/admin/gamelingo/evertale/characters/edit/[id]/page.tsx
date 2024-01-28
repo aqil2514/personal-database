@@ -1,4 +1,4 @@
-import EditForm from "@/components/Evertale/EditForm";
+import EditForm from "@/components/Evertale/EditForm/Character";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
