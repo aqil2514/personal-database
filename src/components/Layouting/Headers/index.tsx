@@ -43,7 +43,7 @@ export default function Headers() {
         </Link>
         <div>
           <List className={MENU_STYLE} onClick={() => setIsMobile(!isMobile)}></List>
-          <button className={SIGN_STYLE} onClick={() => signIn("google", { callbackUrl: "/admin" })}>
+          <button className={SIGN_STYLE} onClick={() => signIn("github", { callbackUrl: "/admin" })}>
             SignIn
           </button>
         </div>
