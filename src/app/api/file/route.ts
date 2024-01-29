@@ -20,26 +20,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ msg: "Tidak ada parameter category" }, { status: 422 });
   }
 
-  console.log("success validation");
-
   const files = formData.getAll("files") as File[];
-
-  console.log("start second validation");
 
   const validation = file.validationImage(files);
   if (!validation?.status) {
     return NextResponse.json({ msg: validation?.msg }, { status: 422 });
   }
 
-  console.log("start uploading");
+  try {
+    const result: CloudinaryAPI.Image[] = await file.uploadImage(files, game, category);
+    const data = result.map((img) => ({
+      url: img.secure_url,
+      name: img.public_id.split("/")[3],
+    }));
 
-  const result: CloudinaryAPI.Image[] = await file.uploadImage(files, game, category);
-  const data = result.map((img) => ({
-    url: img.secure_url,
-    name: img.public_id.split("/")[3],
-  }));
+    return NextResponse.json({ msg: "Gambar berhasil diupload", data }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+  }
 
-  return NextResponse.json({ msg: "Gambar berhasil diupload", data }, { status: 200 });
   // return NextResponse.json({ msg: "Gambar berhasil diupload" }, { status: 200 });
 }
 
