@@ -2,13 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { file } from "@/lib/utils";
 import { v2 as cloudinary } from "cloudinary";
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_NAME,
-  api_key:process.env.CLOUDINARY_API_KEY,
-  api_secret:process.env.CLOUDINARY_SECRET
-})
-
 export async function POST(req: NextRequest) {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET,
+  });
   const formData = await req.formData();
   const searchParams = req.nextUrl.searchParams;
   const game = searchParams.get("game");
@@ -21,12 +20,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ msg: "Tidak ada parameter category" }, { status: 422 });
   }
 
+  console.log("success validation");
+
   const files = formData.getAll("files") as File[];
+
+  console.log("start second validation");
 
   const validation = file.validationImage(files);
   if (!validation?.status) {
     return NextResponse.json({ msg: validation?.msg }, { status: 422 });
   }
+
+  console.log("start uploading");
 
   const result: CloudinaryAPI.Image[] = await file.uploadImage(files, game, category);
   const data = result.map((img) => ({
