@@ -5,12 +5,37 @@ import { useWeaponData } from "@/components/Evertale/Providers";
 import { Input } from "@/components/General/Input";
 import { Select } from "@/components/General/Select";
 import { Textarea } from "@/components/General/Textarea";
+import axios from "axios";
 
 export default function WeaponStatus() {
   const { data, setData, isLoading } = useWeaponData();
   const weaponRank: string[] = ["Weap Rank", "SSR", "SR", "R", "N"];
   const weaponType: string[] = ["Weap Type", "Sword", "Axe", "Staff", "Mace", "GreatSword", "GreatAxe", "Spear", "Hammer", "Katana"];
 
+  async function translateHandler(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    const text = data.weapLore?.loreEn;
+    const el = e.target as HTMLTextAreaElement;
+    if (e.ctrlKey && e.key === "Enter") {
+      try {
+        const res = await axios.post("/api/translate", {
+          text,
+        });
+
+        const translated: string = res.data.translatedText;
+        setData({ ...data, weapLore: { ...data.weapLore, loreId: translated } });
+        const pElement = document.createElement("p");
+        pElement.innerText = "Berhasil diterjemahkan";
+        pElement.classList.add("text-green-600");
+        pElement.classList.add("font-bold");
+        el.after(pElement);
+        setTimeout(() => {
+          pElement.remove();
+        }, 3000);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
   return (
     <>
       {/* Weapon Name  */}
@@ -35,7 +60,7 @@ export default function WeaponStatus() {
       </Select>
 
       {/* Weapon Lore  */}
-      <Textarea forId="weapLoreEn" value={data.weapLore?.loreEn} onChange={(e) => setData({ ...data, weapLore: { ...data.weapLore, loreEn: e.target.value } })} label="Weapon English Lore" />
+      <Textarea forId="weapLoreEn" value={data.weapLore?.loreEn} onChange={(e) => setData({ ...data, weapLore: { ...data.weapLore, loreEn: e.target.value } })} onKeyDown={translateHandler} label="Weapon English Lore" />
       <Textarea forId="weapLoreId" value={data.weapLore?.loreId} onChange={(e) => setData({ ...data, weapLore: { ...data.weapLore, loreId: e.target.value } })} label="Weapon Indonesian Lore" />
     </>
   );

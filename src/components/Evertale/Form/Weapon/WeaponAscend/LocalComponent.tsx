@@ -3,6 +3,7 @@ import { Textarea } from "@/components/General/Textarea";
 import { TitleSection } from "@/components/General/Wrapper";
 import { useWeaponData } from "@/components/Evertale/Providers";
 import { editHandler } from "./LocalUtils";
+import axios from "axios";
 
 export function WeaponAscendComponent({ ascend }: { ascend: "no-ascend" | "ascend-1" | "full-ascend" | "max-status" }) {
   if (ascend === "no-ascend") return <NoAscend />;
@@ -14,11 +15,35 @@ export function WeaponAscendComponent({ ascend }: { ascend: "no-ascend" | "ascen
 function NoAscend() {
   const { data, setData } = useWeaponData();
   const noAscend = data.weapAscend?.noAscend;
+  async function translateHandler(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    const text = data.weapAscend?.noAscend?.weapSkill?.skillEn;
+    const el = e.target as HTMLTextAreaElement;
+    if (e.ctrlKey && e.key === "Enter") {
+      try {
+        const res = await axios.post("/api/translate", {
+          text,
+        });
+
+        const translated: string = res.data.translatedText;
+        setData({ ...data, weapAscend: { ...data.weapAscend, noAscend: { ...data.weapAscend?.noAscend, weapSkill: { ...data.weapAscend?.noAscend?.weapSkill, skillId: translated } } } });
+        const pElement = document.createElement("p");
+        pElement.innerText = "Berhasil diterjemahkan";
+        pElement.classList.add("text-green-600");
+        pElement.classList.add("font-bold");
+        el.after(pElement);
+        setTimeout(() => {
+          pElement.remove();
+        }, 3000);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
   return (
     <>
       <TitleSection id="no-ascend">No Ascend</TitleSection>
 
-      <Textarea forId="nAWeapSkillEn" value={noAscend?.weapSkill?.skillEn} onChange={(e) => editHandler(data, setData, e, "null", "null", "null", true, true, "en")} label="Weapon English Skill" />
+      <Textarea forId="nAWeapSkillEn" value={noAscend?.weapSkill?.skillEn} onChange={(e) => editHandler(data, setData, e, "null", "null", "null", true, true, "en")} onKeyDown={translateHandler} label="Weapon English Skill" />
       <Textarea forId="nAWeapSkillId" value={noAscend?.weapSkill?.skillId} onChange={(e) => editHandler(data, setData, e, "null", "null", "null", true, true, "id")} label="Weapon Indonesian Skill" />
 
       <Input type="number" forId="naPower" value={noAscend?.status?.power} label="Weapon Power" onChange={(e) => editHandler(data, setData, e, "noAscend", "status", "power")} />

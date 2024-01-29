@@ -33,18 +33,13 @@ export function notif(ref: React.RefObject<HTMLParagraphElement>, textColor: str
  *Translate Handler Function
  *
  * @param {React.KeyboardEvent<HTMLTextAreaElement>} e - Elemen HTML TextArea yang menjadi sasaran
- * @param {Evertale.Character.State} data - UseState yang sesuai dengan interface EvertaleCharacterState
- * @param {keyof Evertale.Character.State} section - Mengikuti interface Evertale Character State
- * @param {React.Dispatch<React.SetStateAction<Evertale.Character.State>>} setData - Pasangan useState data
+ * @param {any} data - UseState
+ * @param {any} section - Mengikuti interface Evertale Character State
+ * @param {React.Dispatch<React.SetStateAction<any>>} setData - Pasangan useState data
  * @returns {Promise<void>}
  */
 
-export async function translateHandler(
-  e: React.KeyboardEvent<HTMLTextAreaElement>,
-  section: keyof Evertale.Character.State,
-  data: Evertale.Character.State,
-  setData: React.Dispatch<React.SetStateAction<Evertale.Character.State>>
-): Promise<void> {
+export async function translateHandler(e: React.KeyboardEvent<HTMLTextAreaElement>, section: any, data: any, setData: React.Dispatch<React.SetStateAction<any>>): Promise<void> {
   if (e.ctrlKey && e.key === "Enter") {
     const element = e.target as HTMLTextAreaElement;
     const field = element.getAttribute("data-field");
