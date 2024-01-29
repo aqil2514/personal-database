@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { file } from "@/lib/utils";
-import { v2 as cloudinary } from "cloudinary";
+import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_SECRET,
+  secure: true,
+});
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -23,7 +30,7 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const result: CloudinaryAPI.Image[] = await file.uploadImage(files, game, category);
+    const result: UploadApiResponse[] = await file.uploadImage(files, game, category);
     const data = result.map((img) => ({
       url: img.secure_url,
       name: img.public_id.split("/")[3],

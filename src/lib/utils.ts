@@ -3,7 +3,7 @@ import connectMongoDB from "./mongoose";
 import Post from "@/models/General/Post";
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
-import { v2 as cloudinary } from "cloudinary";
+import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
 
 // DOCUMENT API
 
@@ -237,39 +237,33 @@ export const file = {
    * @param category Category apa? Digunakan untuk sub folder
    * @returns {Promise<CloudinaryAPI.Image[]>} Kumpulan informasi tentang data yang diupload
    */
-  uploadImage: async (files: File[], game: string, category: string): Promise<CloudinaryAPI.Image[]> => {
-    const uploadPromise = files.map(async (file) => {
-      try {
-        const bytes = await file.arrayBuffer();
-        const format = file.name.split(".");
-        const buffer = new Uint8Array(bytes);
-
-        return new Promise((resolve, reject) => {
-          const uploadStream = cloudinary.uploader.upload_stream(
-            {
-              folder: `${game}/${category}/${format[1]}`,
-              public_id: `${format[0]}`,
-              discard_original_filename: true,
-            },
-            (error, result) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(result);
-              }
-            }
-          );
-          uploadStream.end(buffer);
-        });
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-    });
-
+  uploadImage: async (files: File[], game: string, category: string): Promise<UploadApiResponse[]> => {
     try {
-      const uploadResult = (await Promise.all(uploadPromise)) as CloudinaryAPI.Image[];
-      return uploadResult;
+      const uploadPromises = files.map(async (file) => {
+        try {
+          const fileBuffer = await file.arrayBuffer();
+          const format = file.name.split(".");
+          const mime = file.type;
+          const encoding = "base64";
+          const base64Data = Buffer.from(fileBuffer).toString("base64");
+          const fileUri = `data:${mime};${encoding},${base64Data}`;
+
+          const result = await cloudinary.uploader.upload(fileUri, {
+            invalidate: true,
+            folder: `${game}/${category}/${format[1]}`,
+            public_id: format[0],
+            discard_original_filename: true,
+          });
+
+          return result;
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
+      });
+
+      const uploadResults = await Promise.all(uploadPromises);
+      return uploadResults;
     } catch (error) {
       console.error(error);
       throw error;
