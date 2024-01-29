@@ -3,11 +3,6 @@ import { file } from "@/lib/utils";
 import { v2 as cloudinary } from "cloudinary";
 
 export async function POST(req: NextRequest) {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_SECRET,
-  });
   const formData = await req.formData();
   const searchParams = req.nextUrl.searchParams;
   const game = searchParams.get("game");

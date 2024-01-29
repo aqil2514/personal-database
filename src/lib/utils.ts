@@ -245,7 +245,6 @@ export const file = {
         const buffer = new Uint8Array(bytes);
 
         return new Promise((resolve, reject) => {
-          console.log("Upstreaming start");
           const uploadStream = cloudinary.uploader.upload_stream(
             {
               folder: `${game}/${category}/${format[1]}`,
@@ -260,7 +259,6 @@ export const file = {
               }
             }
           );
-          console.log("Upstream end");
           uploadStream.end(buffer);
         });
       } catch (error) {
@@ -270,44 +268,12 @@ export const file = {
     });
 
     try {
-      console.log("Promise all start");
       const uploadResult = (await Promise.all(uploadPromise)) as CloudinaryAPI.Image[];
       return uploadResult;
     } catch (error) {
       console.error(error);
       throw error;
     }
-
-    // const result = [];
-
-    // for (const file of files) {
-    //   const bytes = await file.arrayBuffer();
-    //   const format = file.name.split(".");
-    //   const buffer = new Uint8Array(bytes);
-    //   const uploadResult = await new Promise((resolve, reject) => {
-    //     cloudinary.uploader
-    //       .upload_stream(
-    //         {
-    //           folder: `${game}/${category}/${format[1]}`,
-    //           public_id: `${format[0]}`,
-    //           discard_original_filename: true,
-    //         },
-    //         (error, result) => {
-    //           if (error) {
-    //             reject(error);
-    //             return { msg: "Error", error };
-    //           }
-
-    //           return resolve(result);
-    //         }
-    //       )
-    //       .end(buffer);
-    //   });
-
-    //   result.push(uploadResult);
-    // }
-
-    // return result;
   },
   /**
    * Validasi file gambar
