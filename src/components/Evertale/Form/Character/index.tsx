@@ -13,20 +13,21 @@ import { Button } from "@/components/General/Button";
 import { CharacterProvider, useCharacterData } from "@/components/Evertale/Providers";
 
 export default function Form() {
-  const { data, setData } = useCharacterData();
+  const { data } = useCharacterData();
 
-  useEffect(() => {
-    const isThere = localStorage.getItem("evertaleCharData");
-    if (isThere) {
-      const choice = confirm("Kemajuan sebelumnya ada di LocalStorage. Lanjutkan data?");
-      if (!choice) {
-        localStorage.removeItem("evertaleCharData");
-        return;
-      }
-      setData(JSON.parse(isThere));
-      return;
-    }
-  }, [setData]);
+  // useEffect(() => {
+  //   const isThere = localStorage.getItem("evertaleCharData");
+  //   if (isThere) {
+  //     const choice = confirm("Kemajuan sebelumnya ada di LocalStorage. Lanjutkan data?");
+  //     if (!choice) {
+  //       localStorage.removeItem("evertaleCharData");
+  //       return;
+  //     }
+  //     console.log(isThere)
+  //     setData(JSON.parse(isThere));
+  //     return;
+  //   }
+  // }, [setData]);
 
   const notifRef = React.useRef<null | HTMLParagraphElement>(null);
 
@@ -38,6 +39,7 @@ export default function Form() {
   const sendingHandler = async (type: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
     try {
       setLoading(true);
+      console.log(data);
       const res = await axios.post("/api/gamelingo/newEvertale/chars", {
         data,
         action: type,

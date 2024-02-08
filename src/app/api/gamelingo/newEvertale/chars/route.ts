@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const { data, action } = await req.json();
+  console.log(data);
   const {
     charStatus,
     charImage,
