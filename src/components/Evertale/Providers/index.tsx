@@ -53,11 +53,16 @@ export function CharacterProvider({ children }: { children: React.ReactNode }) {
     charActiveSkill: [],
     charPassiveSkill: [],
   });
+
   return <CharacterDataContext.Provider value={{ data, setData }}>{children}</CharacterDataContext.Provider>;
 }
 
 export function useCharacterData() {
-  return React.useContext(CharacterDataContext);
+  const context = React.useContext(CharacterDataContext);
+  if (!context) {
+    throw new Error("useCharacterData must be used within a CharacterProvider");
+  }
+  return context;
 }
 
 //** Weapon Providers */
