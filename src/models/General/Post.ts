@@ -1,60 +1,48 @@
-import mongoose, { Schema } from "mongoose";
-import Character from "../Evertale/Character";
-import { Document, ObjectId } from "mongodb";
+import mongoose, { Model, Schema } from "mongoose";
+import Character from "../Evertale/Characters";
 import { Weapon } from "../Evertale/Weapons";
 import { Accessory } from "../Evertale/Accessories";
+import { generalConnection } from "@/lib/mongoose";
+import { CharacterEN, CharacterID } from "../GenshinImpact/Character";
+import { ENWeapon, IDWeapon } from "../GenshinImpact/Weapon";
+import { ENArtifact, IDArtifact } from "../GenshinImpact/Artifact";
+import { ENMaterial, IDMaterial } from "../GenshinImpact/Material";
+import { CommentSchema } from "./Comment";
+import { User } from "./User";
 
-interface PostDocument extends Document {
-  title: string;
-  game: {
-    name: "Evertale" | "Genshin Impact" | "Mobile Legends";
-    topic: string;
-  };
-  content: ObjectId;
-  author: string;
-  tags: string[];
-  comment: Comment[];
-}
-
-interface Comment {
-  author: string;
-  avatar: string;
-  text: string;
-  likes: number;
-  replies: Reply[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface Reply {
-  author: string;
-  avatar: string;
-  text: string;
-  likes: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const PostSchema = new Schema<PostDocument>(
+const PostSchema = new Schema<General.PostDocument>(
   {
     title: {
       type: String,
       required: true,
     },
+    lang: { type: String, enum: ["Indonesian", "English", "English & Indonesian"], required: true },
     game: {
       name: { type: String, enum: ["Evertale", "Genshin Impact", "Mobile Legends"], required: true },
       topic: { type: String, required: true },
     },
     content: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.ObjectId,
       required: true,
-      ref: function () {
+      ref: function (this: General.PostDocument) {
         if (this.game.name === "Evertale") {
           if (this.game.topic === "Character") return Character;
-          if (this.game.topic === "Weapon") return Weapon;
-          if (this.game.topic === "Accessory") return Accessory;
+          else if (this.game.topic === "Weapon") return Weapon;
+          else if (this.game.topic === "Accessory") return Accessory;
+        } else if (this.game.name === "Genshin Impact") {
+          if (this.lang === "Indonesian") {
+            if (this.game.topic === "Character") return CharacterID;
+            else if (this.game.topic === "Weapon") return IDWeapon;
+            else if (this.game.topic === "Artifact") return IDArtifact;
+            else if (this.game.topic === "Material") return IDMaterial;
+          } else if (this.lang === "English") {
+            if (this.game.topic === "Character") return CharacterEN;
+            else if (this.game.topic === "Weapon") return ENWeapon;
+            else if (this.game.topic === "Artifact") return ENArtifact;
+            else if (this.game.topic === "Material") return ENMaterial;
+          }
         }
-        return "nothing";
+        return null;
       },
     },
     author: {
@@ -65,29 +53,11 @@ const PostSchema = new Schema<PostDocument>(
       type: [String],
       default: [],
     },
-    comment: [
-      {
-        author: { type: String, ref: "User", required: true },
-        avatar: { type: String, ref: "User", default: "/no-profile.png" },
-        text: { type: String, required: true },
-        likes: { type: Number, default: 0 },
-        replies: [
-          {
-            author: { type: String, ref: "User", required: true },
-            avatar: { type: String, ref: "User", default: "/no-profile.png" },
-            text: { type: String, required: true },
-            likes: { type: Number, default: 0 },
-            createdAt: { type: Date, required: true, default: new Date() },
-            updateAt: { type: Date, required: true, default: new Date() },
-          },
-        ],
-        createdAt: { type: Date, required: true, default: new Date() },
-        updatedAt: { type: Date, required: true, default: new Date() },
-      },
-    ],
+    comment: [CommentSchema],
   },
   { timestamps: true }
 );
 
-const Post = mongoose.models.Post2 || mongoose.model("Post2", PostSchema);
-export default Post;
+interface PostModel extends Model<General.PostDocument> {}
+
+export const Post = generalConnection.models.post || generalConnection.model("post", PostSchema);

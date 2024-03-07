@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import Character from "@/models/Evertale/Character";
-import connectMongoDB from "@/lib/mongoose";
-import Post from "@/models/General/Post";
 import { ObjectId } from "mongodb";
 import { validator } from "@/lib/utils";
+import Character from "@/models/Evertale/Characters";
+import { Post } from "@/models/General/Post";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
-
-  await connectMongoDB();
 
   if (id) {
     const char: Evertale.Character.State | null = await Character.findById(id);
@@ -91,7 +88,6 @@ export async function POST(req: NextRequest) {
   if (action === "see") {
     return NextResponse.json({ msg: "Data berhasil diverifikasi", charData, redirect: false }, { status: 200 });
   } else if (action === "add") {
-    await connectMongoDB();
     const newChar = await Character.create(charData);
     await Post.create({
       title: newChar.charStatus.charName,
@@ -100,7 +96,7 @@ export async function POST(req: NextRequest) {
         topic: "Character",
       },
       content: newChar._id,
-      author: "Admin GameLingo",
+      author: "Muhamad Aqil Maulana",
     });
     return NextResponse.json({ msg: "Data berhasil ditambah", redirect: true }, { status: 200 });
   }

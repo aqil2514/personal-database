@@ -1,15 +1,13 @@
 import { getPassiveSkills } from "@/lib/mongodb/evertale";
-import connectMongoDB from "@/lib/mongoose";
-import Character from "@/models/Evertale/Character";
+import Character from "@/models/Evertale/Characters";
 import LeaderSkill from "@/models/Evertale/LeaderSkill";
-import Passive from "@/models/Evertale/PassiveSkills";
+import PassiveSkill from "@/models/Evertale/PassiveSkill";
 import { TypeSkill } from "@/models/Evertale/TypeSkills";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category");
-  await connectMongoDB();
 
   if (category === "lschar") {
     const ls = await LeaderSkill.find();
@@ -17,7 +15,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ lsData }, { status: 200 });
   } else if (category === "passive") {
-    const passive = await Passive.find();
+    const passive = await PassiveSkill.find();
 
     return NextResponse.json({ passive }, { status: 200 });
   } else if (category === "chars") {
@@ -92,8 +90,6 @@ export async function PUT(req: NextRequest) {
 export async function OPTIONS(req: NextRequest) {
   const { category, activity } = await req.json();
 
-  await connectMongoDB();
-
   if (category === "passive") {
     if (activity === "migration") {
       const oldPassive = await getPassiveSkills();
@@ -104,7 +100,7 @@ export async function OPTIONS(req: NextRequest) {
           skillDescEn: old.descEN,
           skillDescId: old.descID,
         };
-        await Passive.create(newPassive);
+        await PassiveSkill.create(newPassive);
       }
       return NextResponse.json({ msg: "Migration success" }, { status: 200 });
     } else if (activity === "configuration") {
@@ -121,7 +117,7 @@ export async function OPTIONS(req: NextRequest) {
       //   }
       // );
 
-      const data = await Passive.find({
+      const data = await PassiveSkill.find({
         // skillName: {
         //   $regex: new RegExp(searchTerm, "i"),
         // },

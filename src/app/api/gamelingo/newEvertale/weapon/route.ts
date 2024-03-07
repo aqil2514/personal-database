@@ -1,13 +1,11 @@
-import connectMongoDB from "@/lib/mongoose";
 import { document, validator } from "@/lib/utils";
 import { Weapon } from "@/models/Evertale/Weapons";
-import Post from "@/models/General/Post";
+import { Post } from "@/models/General/Post";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
-  await connectMongoDB();
 
   if (id) {
     const weapon = await Weapon.findById(id);
@@ -215,7 +213,6 @@ export async function POST(req: NextRequest) {
 
   const final = validator.weapon.adjust(data);
 
-  await connectMongoDB();
   const weapon = await Weapon.create(final);
   await Post.create({
     title: weapon.weapName,
@@ -224,7 +221,7 @@ export async function POST(req: NextRequest) {
       topic: "Weapon",
     },
     content: weapon._id,
-    author: "Admin GameLingo",
+    author: "Muhamad Aqil Maulana",
   });
 
   return NextResponse.json({ msg: "Berhasil tambah data", final }, { status: 200 });
@@ -257,7 +254,6 @@ export async function PUT(req: NextRequest) {
 
   const final = validator.weapon.adjust(data);
 
-  await connectMongoDB();
   await Weapon.findByIdAndUpdate(id, final);
 
   return NextResponse.json({ msg: "Ubah data berhasil" }, { status: 200 });

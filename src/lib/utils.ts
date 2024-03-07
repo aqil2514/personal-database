@@ -1,9 +1,8 @@
-import { Weapon } from "@/models/Evertale/Weapons";
-import connectMongoDB from "./mongoose";
-import Post from "@/models/General/Post";
 import { ObjectId } from "mongodb";
 import mongoose from "mongoose";
 import { UploadApiResponse, v2 as cloudinary } from "cloudinary";
+import { Weapon } from "@/models/Evertale/Weapons";
+import { Post } from "@/models/General/Post";
 
 // DOCUMENT API
 
@@ -164,7 +163,6 @@ export const document = {
     },
     db: {
       create: async (game: "Evertale" | "Mobile Legends" | "Genshin Impact", data: any) => {
-        await connectMongoDB();
         const session = mongoose.startSession();
         try {
           try {
@@ -178,7 +176,7 @@ export const document = {
                 topic: "Weapon",
               },
               content: newWeap._id,
-              author: "Admin GameLingo",
+              author: "Muhamad Aqil Maulana",
             });
 
             (await session).commitTransaction();
@@ -195,7 +193,6 @@ export const document = {
         }
       },
       delete: async (id: string) => {
-        await connectMongoDB();
         const session = mongoose.startSession();
         try {
           (await session).startTransaction();
@@ -237,6 +234,7 @@ export const file = {
    * @param category Category apa? Digunakan untuk sub folder
    * @returns {Promise<CloudinaryAPI.Image[]>} Kumpulan informasi tentang data yang diupload
    */
+  // SOLVED CODE
   uploadImage: async (files: File[], game: string, category: string): Promise<UploadApiResponse[]> => {
     try {
       const uploadPromises = files.map(async (file) => {

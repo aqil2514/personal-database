@@ -1,11 +1,9 @@
-import connectMongoDB from "@/lib/mongoose";
-import Character from "@/models/Evertale/Character";
-import Passive from "@/models/Evertale/PassiveSkills";
+import Character from "@/models/Evertale/Characters";
+import PassiveSkill from "@/models/Evertale/PassiveSkill";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  await connectMongoDB();
-  const passives = await Passive.find();
+  const passives = await PassiveSkill.find();
   const chars: Evertale.Character.State[] = await Character.find();
   const passiveSkill = chars
     .map((char) => ({
